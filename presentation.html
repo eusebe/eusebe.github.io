@@ -2099,9 +2099,27 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </tbody>
 </table>
 <p><a href="df.csv" class="btn btn-sm btn-outline-primary" download="df.csv">⬇ Télécharger les données <code>df.csv</code></a></p>
-<p>On suppose que les relations entre les variables suivent le schéma causal ci-dessous (DAG en temps discret), où <span class="math inline">\(L_t\)</span> est le facteur de confusion à la visite <span class="math inline">\(t\)</span>, <span class="math inline">\(A_t\)</span> le traitement, et <span class="math inline">\(Y_t\)</span> l’indicateur de décès :</p>
-<p><span class="math display">\[X \to A_0 \leftarrow L_0 \to Y_1, \quad A_0 \to L_1 \leftarrow Y_1, \quad A_1 \leftarrow L_1 \to Y_2, \ldots\]</span></p>
-<p>En particulier : <span class="math inline">\(X\)</span> et <span class="math inline">\(L_0\)</span> sont des facteurs de confusion <strong>initiaux</strong> ; <span class="math inline">\(L\)</span> est aussi influencé par le traitement passé, ce qui en fait un <strong>facteur de confusion dépendant du temps</strong> (cf.&nbsp;Partie 3 pour les implications).</p>
+<p>On suppose que les relations entre les variables suivent le DAG (<em>directed acyclic graph</em>) en temps discret ci-dessous, où <span class="math inline">\(Y_t\)</span> désigne l’indicateur de décès à la période <span class="math inline">\(t\)</span> (<span class="math inline">\(t = 1, 2, 3\)</span>) :</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="presentation_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Lecture du DAG :</strong></p>
+<ul>
+<li>
+<span class="math inline">\(X\)</span> (bleu foncé) — facteur de confusion <strong>initial</strong> : influence <span class="math inline">\(A_0\)</span>, <span class="math inline">\(L_0\)</span> <strong>et</strong> <span class="math inline">\(Y_1\)</span>.</li>
+<li>
+<span class="math inline">\(L_t\)</span> (bleu clair) — facteur de confusion <strong>dépendant du temps</strong> : influencé par le traitement passé <span class="math inline">\(A_{t-1}\)</span> et l’état de santé <span class="math inline">\(Y_t\)</span>, il prédit à son tour <span class="math inline">\(A_t\)</span> et <span class="math inline">\(Y_{t+1}\)</span>.</li>
+<li>
+<span class="math inline">\(A_t\)</span> (rouge) — exposition à chaque période, influencée par <span class="math inline">\(X\)</span>, <span class="math inline">\(L_t\)</span> et les valeurs passées.</li>
+<li>
+<span class="math inline">\(Y_t\)</span> (gris) — indicateur de décès, influencé par <span class="math inline">\(A_{t-1}\)</span> et <span class="math inline">\(L_{t-1}\)</span>.</li>
+</ul>
+<p>La structure <span class="math inline">\(L_t \leftarrow A_{t-1}\)</span> et <span class="math inline">\(L_t \to A_t \to Y_{t+1}\)</span> fait de <span class="math inline">\(L\)</span> un <strong>médiateur-confondant</strong> dépendant du temps : les méthodes standards (régression ajustée sur <span class="math inline">\(L\)</span>) ne suffisent pas — c’est l’objet des Parties 2 et 3.</p>
 </section><section id="chargement-et-exploration" class="level2"><h2 class="anchored" data-anchor-id="chargement-et-exploration">Chargement et exploration</h2>
 <p><em>Chargez les données et affichez les premières lignes. Vérifiez les dimensions de la base et le nombre d’individus distincts.</em></p>
 <div id="qwebr-insertion-location-2"></div>
