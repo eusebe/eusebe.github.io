@@ -384,37 +384,7 @@
     "href": "conclusion.html#discussion",
     "title": "Conclusion",
     "section": "Discussion",
-    "text": "Discussion\nCe que nous apprenons de chaque analyse\n\nAnalyse brute : la différence de survie observée entre \\(A_0=1\\) et \\(A_0=0\\) n’est pas interprétable causalement. Les groupes ne sont pas comparables à l’inclusion (\\(X\\), \\(L_0\\) diffèrent).\nAnalogue-ITT (G-computation Cox et IPTW — Q1) : après ajustement sur les caractéristiques initiales, ces deux méthodes estiment le même estimand : l’effet d’initier l’exposition au temps 0, quelle que soit la compliance ultérieure. C’est l’estimand le plus proche d’un essai clinique en intention de traiter. La G-computation ajuste via un modèle du résultat ; l’IPTW via un modèle de l’exposition — si les deux convergent, la confiance dans le résultat est renforcée.\nAnalogue per-protocol (IPTW × IPCW — Q2) : en censurant artificiellement les individus qui dévient de leur stratégie et en corrigeant ce biais par IPCW, on estime l’effet d’initier et de maintenir l’exposition. Cet estimand est plus proche d’un essai per-protocol.\nConvergence des méthodes (Q1)\nSi G-computation et IPTW convergent vers la même différence de survie, cela renforce la confiance dans le résultat — au moins l’un des deux modèles est bien spécifié (double robustesse partielle).\nSi ITT-analogue et per-protocol divergent, la compliance joue un rôle : l’exposition doit être maintenue pour produire un effet, ou bien les individus qui arrêtent diffèrent de ceux qui continuent pour des raisons non mesurées.",
-    "crumbs": [
-      "Conclusion"
-    ]
-  },
-  {
-    "objectID": "conclusion.html#hypothèses-clés",
-    "href": "conclusion.html#hypothèses-clés",
-    "title": "Conclusion",
-    "section": "Hypothèses clés",
-    "text": "Hypothèses clés\n\n\n\n\n\n\n\nHypothèse\nG-computation / IPTW\nIPCW (per-protocol)\n\n\n\nEchangeabilité conditionnelle\nSur \\(X\\), \\(L_0\\)\n\nSur \\(X\\), \\(L_0\\), \\(L_t\\) au cours du temps\n\n\nPositivité\nA l’inclusion\nA chaque visite\n\n\nNon-interférence\nOui\nOui\n\n\nCohérence\nOui\nOui\n\n\n\n\n\n\n\n\n\nImportant\n\n\n\nL’IPCW ne corrige pas les facteurs de confusion non mesurés. Si \\(L_t\\) ne capture pas tous les déterminants de la déviation qui prédisent aussi le décès, un biais résiduel demeure.",
-    "crumbs": [
-      "Conclusion"
-    ]
-  },
-  {
-    "objectID": "conclusion.html#pour-aller-plus-loin",
-    "href": "conclusion.html#pour-aller-plus-loin",
-    "title": "Conclusion",
-    "section": "Pour aller plus loin",
-    "text": "Pour aller plus loin\n\n\nDoublement robuste : AIPW (Augmented IPTW) combine G-computation et IPTW — consistant si au moins l’un des deux modèles est correct.\n\nDonnées continues / nombreuses covariables : TMLE ou apprentissage automatique pour les modèles de nuisance.\n\nStratégies dynamiques : clonage-censure-pondération ou g-computation structurelle pour des règles d’exposition dépendant des valeurs passées.\n\nPackage R : lmtp (Longitudinal Modified Treatment Policies) unifie ces approches.",
-    "crumbs": [
-      "Conclusion"
-    ]
-  },
-  {
-    "objectID": "conclusion.html#références",
-    "href": "conclusion.html#références",
-    "title": "Conclusion",
-    "section": "Références",
-    "text": "Références\n\nHernán MA, Robins JM. Causal Inference: What If. Chapman & Hall/CRC, 2020. Libre accès : www.hsph.harvard.edu/miguel-hernan/causal-inference-book/\nHernán MA, Robins JM. Using Big Data to Emulate a Target Trial When a Randomized Trial Is Not Available. Am J Epidemiol. 2016;183(8):758-764.\nLodi S, et al. Effect estimates in randomized trials and observational studies: comparing apples with apples. Am J Epidemiol. 2019;188(8):1569-1577.",
+    "text": "Discussion\nCe que nous apprenons de chaque analyse\n\nAnalyse brute : la différence de survie observée entre \\(A_0=1\\) et \\(A_0=0\\) n’est pas interprétable causalement. Les groupes ne sont pas comparables à l’inclusion (\\(X\\), \\(L_0\\) diffèrent).\nAnalogue-ITT (G-computation Cox et IPTW — Q1) : après ajustement sur les caractéristiques initiales, ces deux méthodes estiment le même estimand : l’effet d’initier l’exposition au temps 0, quelle que soit la compliance ultérieure. C’est l’estimand le plus proche d’un essai clinique en intention de traiter. La G-computation ajuste via un modèle du résultat ; l’IPTW via un modèle de l’exposition — si les deux convergent, la confiance dans le résultat est renforcée.\nAnalogue per-protocol (IPTW × IPCW — Q2) : en censurant artificiellement les individus qui dévient de leur stratégie et en corrigeant ce biais par IPCW, on estime l’effet d’initier et de maintenir l’exposition. Cet estimand est plus proche d’un essai per-protocol.",
     "crumbs": [
       "Conclusion"
     ]

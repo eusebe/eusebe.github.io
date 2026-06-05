@@ -171,12 +171,8 @@ window.Quarto = {
 <a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a>
   <ul class="collapse">
 <li><a href="#ce-que-nous-apprenons-de-chaque-analyse" id="toc-ce-que-nous-apprenons-de-chaque-analyse" class="nav-link" data-scroll-target="#ce-que-nous-apprenons-de-chaque-analyse">Ce que nous apprenons de chaque analyse</a></li>
-  <li><a href="#convergence-des-m%C3%A9thodes-q1" id="toc-convergence-des-méthodes-q1" class="nav-link" data-scroll-target="#convergence-des-m%C3%A9thodes-q1">Convergence des méthodes (Q1)</a></li>
   </ul>
 </li>
-  <li><a href="#hypoth%C3%A8ses-cl%C3%A9s" id="toc-hypothèses-clés" class="nav-link" data-scroll-target="#hypoth%C3%A8ses-cl%C3%A9s">Hypothèses clés</a></li>
-  <li><a href="#pour-aller-plus-loin" id="toc-pour-aller-plus-loin" class="nav-link" data-scroll-target="#pour-aller-plus-loin">Pour aller plus loin</a></li>
-  <li><a href="#r%C3%A9f%C3%A9rences" id="toc-références" class="nav-link" data-scroll-target="#r%C3%A9f%C3%A9rences">Références</a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -274,77 +270,10 @@ useful. Consider adding a newdata argument.</code></pre>
 <li><p><strong>Analyse brute :</strong> la différence de survie observée entre <span class="math inline">\(A_0=1\)</span> et <span class="math inline">\(A_0=0\)</span> n’est pas interprétable causalement. Les groupes ne sont pas comparables à l’inclusion (<span class="math inline">\(X\)</span>, <span class="math inline">\(L_0\)</span> diffèrent).</p></li>
 <li><p><strong>Analogue-ITT (G-computation Cox et IPTW — Q1) :</strong> après ajustement sur les caractéristiques initiales, ces deux méthodes estiment le même estimand : l’effet d’<em>initier</em> l’exposition au temps 0, quelle que soit la compliance ultérieure. C’est l’estimand le plus proche d’un essai clinique en intention de traiter. La G-computation ajuste via un modèle du résultat ; l’IPTW via un modèle de l’exposition — si les deux convergent, la confiance dans le résultat est renforcée.</p></li>
 <li><p><strong>Analogue per-protocol (IPTW × IPCW — Q2) :</strong> en censurant artificiellement les individus qui dévient de leur stratégie et en corrigeant ce biais par IPCW, on estime l’effet d’<em>initier et de maintenir</em> l’exposition. Cet estimand est plus proche d’un essai per-protocol.</p></li>
-</ul></section><section id="convergence-des-méthodes-q1" class="level3"><h3 class="anchored" data-anchor-id="convergence-des-méthodes-q1">Convergence des méthodes (Q1)</h3>
-<p>Si G-computation et IPTW convergent vers la même différence de survie, cela renforce la confiance dans le résultat — au moins l’un des deux modèles est bien spécifié (double robustesse partielle).</p>
-<p>Si ITT-analogue et per-protocol divergent, la compliance joue un rôle : l’exposition doit être maintenue pour produire un effet, ou bien les individus qui arrêtent diffèrent de ceux qui continuent pour des raisons non mesurées.</p>
-</section></section><section id="hypothèses-clés" class="level2"><h2 class="anchored" data-anchor-id="hypothèses-clés">Hypothèses clés</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 39%">
-<col style="width: 39%">
-</colgroup>
-<thead><tr class="header">
-<th>Hypothèse</th>
-<th>G-computation / IPTW</th>
-<th>IPCW (per-protocol)</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>Echangeabilité conditionnelle</td>
-<td>Sur <span class="math inline">\(X\)</span>, <span class="math inline">\(L_0\)</span>
-</td>
-<td>Sur <span class="math inline">\(X\)</span>, <span class="math inline">\(L_0\)</span>, <span class="math inline">\(L_t\)</span> au cours du temps</td>
-</tr>
-<tr class="even">
-<td>Positivité</td>
-<td>A l’inclusion</td>
-<td>A chaque visite</td>
-</tr>
-<tr class="odd">
-<td>Non-interférence</td>
-<td>Oui</td>
-<td>Oui</td>
-</tr>
-<tr class="even">
-<td>Cohérence</td>
-<td>Oui</td>
-<td>Oui</td>
-</tr>
-</tbody>
-</table>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>L’IPCW ne corrige pas les facteurs de confusion non mesurés.</strong> Si <span class="math inline">\(L_t\)</span> ne capture pas tous les déterminants de la déviation qui prédisent aussi le décès, un biais résiduel demeure.</p>
-</div>
-</div>
-</section><section id="pour-aller-plus-loin" class="level2"><h2 class="anchored" data-anchor-id="pour-aller-plus-loin">Pour aller plus loin</h2>
-<ul>
-<li>
-<strong>Doublement robuste :</strong> AIPW (Augmented IPTW) combine G-computation et IPTW — consistant si <em>au moins l’un</em> des deux modèles est correct.</li>
-<li>
-<strong>Données continues / nombreuses covariables :</strong> TMLE ou apprentissage automatique pour les modèles de nuisance.</li>
-<li>
-<strong>Stratégies dynamiques :</strong> clonage-censure-pondération ou g-computation structurelle pour des règles d’exposition dépendant des valeurs passées.</li>
-<li>
-<strong>Package R :</strong> <code>lmtp</code> (Longitudinal Modified Treatment Policies) unifie ces approches.</li>
-</ul></section><section id="références" class="level2"><h2 class="anchored" data-anchor-id="références">Références</h2>
-<ul>
-<li>Hernán MA, Robins JM. <em>Causal Inference: What If.</em> Chapman &amp; Hall/CRC, 2020. Libre accès : www.hsph.harvard.edu/miguel-hernan/causal-inference-book/</li>
-<li>Hernán MA, Robins JM. Using Big Data to Emulate a Target Trial When a Randomized Trial Is Not Available. <em>Am J Epidemiol.</em> 2016;183(8):758-764.</li>
-<li>Lodi S, et al.&nbsp;Effect estimates in randomized trials and observational studies: comparing apples with apples. <em>Am J Epidemiol.</em> 2019;188(8):1569-1577.</li>
 </ul>
 
 
-</section></main><!-- /main --><script>
+</section></section></main><!-- /main --><script>
 
 /* update total correct if #webex-total_correct exists */
 update_total_correct = function() {
