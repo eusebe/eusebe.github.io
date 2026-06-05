@@ -34,7 +34,7 @@
     "href": "index.html#structure-du-tp",
     "title": "TP — Inférence causale en épidémiologie",
     "section": "Structure du TP",
-    "text": "Structure du TP\n\n\n\n\n\n\n\n\n\nPartie\nMéthode\nQuestion\nDurée estimée\n\n\n\n\nPrésentation\nAnalyse brute (Kaplan-Meier)\nDescription\n~10 min\n\n\nPartie 1\nG-computation\nQ1 — effet de l’exposition initiale\n~20 min\n\n\nPartie 2\nIPTW\nQ1 — même objectif, approche différente\n~25 min\n\n\nPartie 3\nIPTW + IPCW\nQ2 — effet de l’exposition maintenue\n~30 min\n\n\nConclusion\nComparaison des résultats\nSynthèse\n~5 min",
+    "text": "Structure du TP\n\n\n\n\n\n\n\n\n\nPartie\nMéthode\nQuestion\nDurée estimée\n\n\n\n\nPrésentation\nAnalyse brute (Kaplan-Meier)\nDescription\n~10 min\n\n\nPartie 1\nG-computation\nQ1 — effet de l’exposition initiale\n~20 min\n\n\nPartie 2\nIPTW\nQ1 — même objectif, approche différente\n~25 min\n\n\nPartie 3\nIPTW + IPCW\nQ2 — effet de l’exposition maintenue\n~30 min\n\n\nConclusion\nComparaison des résultats\nSynthèse\n~5 min\n\n\n\nLes durées annoncées sont approximatives, vous pourrez terminer chez vous ce que vous n’auriez pas eu le temps de faire aujourd’hui. Vous pouvez télécharger le pdf de ce TP via le lien tout en bas de cette page.",
     "crumbs": [
       "Introduction"
     ]
@@ -44,7 +44,7 @@
     "href": "index.html#comment-utiliser-ce-tp",
     "title": "TP — Inférence causale en épidémiologie",
     "section": "Comment utiliser ce TP",
-    "text": "Comment utiliser ce TP\nLes exercices utilisent WebR : le code R s’exécute directement dans votre navigateur, sans installation.\n\nChaque bloc de code peut être modifié et exécuté avec le bouton Run Code\nLes solutions sont cachées sous chaque exercice — essayez d’abord !\nLes variables créées sur une page ne sont pas disponibles sur les pages suivantes ; elles sont reconstruites automatiquement dans chaque section (voir Note sur la session R au début de chaque partie).\n\nPour commencer, cliquez sur Présentation des données dans le menu à gauche.\n\n⬇ Télécharger la version PDF du TP (avec les corrections)",
+    "text": "Comment utiliser ce TP\nLes exercices utilisent WebR : le code R s’exécute directement dans votre navigateur, sans installation.\n\nChaque bloc de code peut être modifié et exécuté avec le bouton Run Code\nLes solutions sont cachées sous chaque exercice — essayez d’abord !\nLes variables créées sur une page ne sont pas disponibles sur les pages suivantes ; elles sont reconstruites automatiquement dans chaque section (voir Note sur la session R au début de chaque partie).\n\nPour commencer, cliquez sur Présentation des données dans le menu à gauche.\n\n⬇ Télécharger la version PDF du TP (avec les corrections) ⬇ Télécharger les données df.csv",
     "crumbs": [
       "Introduction"
     ]
