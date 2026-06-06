@@ -236,7 +236,7 @@ window.Quarto = {
 <section id="scénario" class="level2">
 <h2 class="anchored" data-anchor-id="scénario">Scénario</h2>
 <p>Nous disposons d’une <strong>étude de cohorte observationnelle</strong> dont l’objectif est d’évaluer l’effet d’une exposition <span class="math inline">\(A\)</span> (par exemple un traitement médical) sur la <strong>survie à 3 ans</strong>.</p>
-<p>Les patients sont suivis pendant 3 ans avec des visites annuelles. À chaque visite, leur statut d’exposition peut changer : un patient initialement exposé peut arrêter, et inversement. Un facteur de confusion <span class="math inline">\(L\)</span>, dépendant du temps, est mesuré à chaque visite. Une covariable initiale <span class="math inline">\(X\)</span> est également disponible.</p>
+<p>Les patients sont suivis pendant 3 ans avec des visites annuelles. À chaque visite, leur statut d’exposition peut changer : un patient initialement exposé peut arrêter, et inversement. Un facteur de confusion <span class="math inline">\(L\)</span>, dépendant du temps, est mesuré à chaque visite. Une covariable initiale <span class="math inline">\(X\)</span> (non dépendante du temps) est également disponible.</p>
 </section>
 <section id="deux-questions-causales" class="level2">
 <h2 class="anchored" data-anchor-id="deux-questions-causales">Deux questions causales</h2>
@@ -253,7 +253,7 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <p><strong>Quelle serait la survie si tout le monde avait été exposé dès le début de l’étude (<span class="math inline">\(A_0 = 1\)</span>), et quelle serait la survie si personne ne l’avait été (<span class="math inline">\(A_0 = 0\)</span>) ?</strong></p>
 <p>Cette question porte sur l’<em>initiation</em> de l’exposition au temps 0, indépendamment de ce qui se passe ensuite (les patients peuvent arrêter ou débuter le traitement par la suite).</p>
-<p>→ Abordée en <strong>Parties 1 et 2</strong> (G-computation puis IPTW)</p>
+<p>→ Abordée en <strong>Partie 1</strong> (G-computation) et <strong>Partie 2</strong> (IPTW)</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -267,7 +267,7 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <p><strong>Quelle serait la survie si tout le monde avait été exposé et l’était resté tout au long du suivi (<span class="math inline">\(\bar{a} = 1\)</span>), et si personne n’avait jamais été exposé (<span class="math inline">\(\bar{a} = 0\)</span>) ?</strong></p>
-<p>Cette question porte sur le <em>maintien</em> de l’exposition tout au long du suivi. Elle nécessite de traiter les déviations de traitement comme une forme de censure.</p>
+<p>Cette question porte sur le <em>maintien</em> de l’exposition tout au long du suivi. Elle peut être traitée en censurant artificiellement les individus qui dévient de leur stratégie d’exposition.</p>
 <p>→ Abordée en <strong>Partie 3</strong> (IPTW + IPCW)</p>
 </div>
 </div>
@@ -322,19 +322,19 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<p><em>Les durées annoncées sont approximatives, vous pourrez terminer chez vous ce que vous n’auriez pas eu le temps de faire aujourd’hui. Vous pouvez télécharger le pdf de ce TP via le lien tout en bas de cette page.</em></p>
+<p><em>Les durées annoncées sont approximatives, vous pourrez terminer chez vous ce que vous n’auriez pas eu le temps de faire aujourd’hui. Vous pouvez télécharger le pdf de ce TP et le fichier de données <code>df.csv</code> via les liens tout en bas de cette page.</em></p>
 </section>
 <section id="comment-utiliser-ce-tp" class="level2">
 <h2 class="anchored" data-anchor-id="comment-utiliser-ce-tp">Comment utiliser ce TP</h2>
-<p>Les exercices utilisent <strong>WebR</strong> : le code R s’exécute directement dans votre navigateur, sans installation.</p>
+<p>Les exercices utilisent <strong>WebR</strong> : le code R s’exécute directement dans votre navigateur, sans installation. Si vous préférez, vous pouvez télécharger le fichier <code>df.csv</code> et exécuter les commandes dans une session locale de RStudio.</p>
 <ul>
-<li>Chaque bloc de code peut être modifié et exécuté avec le bouton <strong>Run Code</strong></li>
+<li>Chaque bloc de code peut être modifié et exécuté avec le bouton <strong>Run Code</strong> (raccourci : <code>Ctrl+R</code> sur Windows, <code>Cmd+R</code> sur Mac)</li>
 <li>Les <strong>solutions</strong> sont là pour être consultées librement et sans hésitation. L’objectif de ce TP n’est pas de retrouver le code depuis une page blanche, mais de <strong>suivre et comprendre chaque étape</strong> : lisez-les comme un exemple commenté, exécutez-les, modifiez-les. Certaines analyses mobilisent des compétences R avancées — c’est normal de s’appuyer sur les solutions.</li>
 <li>Les variables créées sur une page ne sont <strong>pas disponibles</strong> sur les pages suivantes ; elles sont reconstruites automatiquement dans chaque section (voir <em>Note sur la session R</em> au début de chaque partie).</li>
 </ul>
 <p>Pour commencer, cliquez sur <strong>Présentation des données</strong> dans le menu à gauche.</p>
 <hr>
-<p><a href="tp-inference-causale.pdf" class="btn btn-sm btn-outline-secondary" download="tp-inference-causale.pdf">⬇ Télécharger la version PDF du TP (avec les corrections)</a> <a href="df.csv" class="btn btn-sm btn-outline-primary" download="df.csv">⬇ Télécharger les données <code>df.csv</code></a></p>
+<p><a href="tp-inference-causale.pdf" class="btn btn-sm btn-outline-secondary" download="tp-inference-causale.pdf">⬇ Télécharger la version PDF du TP (avec les corrections)</a> <a href="df.csv" class="btn btn-sm btn-outline-primary" download="df.csv">⬇ Télécharger les données <code>df.csv</code></a> <a href="correction.R" class="btn btn-sm btn-outline-success" download="correction.R">⬇ Télécharger le script R de correction</a></p>
 
 
 </section>

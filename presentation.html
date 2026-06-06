@@ -2062,6 +2062,10 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <p>Dans ce TP, nous utiliserons un jeu de données simulées (<code>df.csv</code>) contenant des informations sur <strong>2000 individus</strong> suivis dans le cadre d’une étude de cohorte observationnelle. L’objectif est d’évaluer l’effet d’un traitement <span class="math inline">\(A\)</span> (exposé/non exposé, pouvant changer au cours du temps) sur la <strong>mortalité à 3 ans</strong>.</p>
 <p>Les données sont au <strong>format long</strong> (<em>counting process</em>) : chaque individu contribue une ligne par période d’observation (ici, une ligne par visite annuelle).</p>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
 <thead><tr class="header">
 <th>Variable</th>
 <th>Description</th>
@@ -2090,11 +2094,11 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </tr>
 <tr class="even">
 <td><code>L</code></td>
-<td>Facteur de confusion <strong>dépendant du temps</strong> (0/1)</td>
+<td>Facteur de confusion <strong>dépendant du temps</strong> (continu)</td>
 </tr>
 <tr class="odd">
 <td><code>X</code></td>
-<td>Covariable <strong>initiale</strong> (continue)</td>
+<td>Facteur de confusion <strong>initial</strong> (binaire 0/1, non dépendant du temps)</td>
 </tr>
 </tbody>
 </table>
@@ -2118,9 +2122,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <span class="math inline">\(A_t\)</span> (rouge) — exposition à chaque période, influencée par <span class="math inline">\(X\)</span>, <span class="math inline">\(L_t\)</span> et les valeurs passées.</li>
 <li>
 <span class="math inline">\(Y_t\)</span> (gris) — indicateur de décès, influencé par <span class="math inline">\(A_{t-1}\)</span> et <span class="math inline">\(L_{t-1}\)</span>.</li>
-</ul>
-<p>La structure <span class="math inline">\(L_t \leftarrow A_{t-1}\)</span> et <span class="math inline">\(L_t \to A_t \to Y_{t+1}\)</span> fait de <span class="math inline">\(L\)</span> un <strong>médiateur-confondant</strong> dépendant du temps : les méthodes standards (régression ajustée sur <span class="math inline">\(L\)</span>) ne suffisent pas — c’est l’objet des Parties 2 et 3.</p>
-</section><section id="chargement-et-exploration" class="level2"><h2 class="anchored" data-anchor-id="chargement-et-exploration">Chargement et exploration</h2>
+</ul></section><section id="chargement-et-exploration" class="level2"><h2 class="anchored" data-anchor-id="chargement-et-exploration">Chargement et exploration</h2>
 <p><em>Chargez les données et affichez les premières lignes. Vérifiez les dimensions de la base et le nombre d’individus distincts.</em></p>
 <div id="qwebr-insertion-location-2"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -2147,7 +2149,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Format long :</strong> chaque individu a autant de lignes qu’il a eu de périodes de suivi (en général 1 à 3, selon s’il est décédé ou perdu de vue). La colonne <code>T.start</code>/<code>T.stop</code> délimite chaque période. Le dernier enregistrement par individu indique son statut final (<span class="math inline">\(D\)</span>) et son temps total de suivi.</p>
+<p><strong>Format long :</strong> chaque individu a autant de lignes qu’il a eu de périodes de suivi (en général 1 à 3, selon s’il est décédé ou perdu de vue précocement). La colonne <code>T.start</code>/<code>T.stop</code> délimite chaque période. Le dernier enregistrement par individu indique son statut final (<span class="math inline">\(D\)</span>) et son temps total de suivi.</p>
 </div>
 </div>
 </section><section id="analyse-brute-non-ajustée" class="level2"><h2 class="anchored" data-anchor-id="analyse-brute-non-ajustée">Analyse brute (non ajustée)</h2>
