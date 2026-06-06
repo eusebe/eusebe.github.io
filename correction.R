@@ -568,6 +568,84 @@ cat("Survie à 3 ans - ā=0 :", round(s3.pp[1], 3), "\n")
 cat("Survie à 3 ans - ā=1 :", round(s3.pp[2], 3), "\n")
 cat("Différence S(ā=1) - S(ā=0) :", round(s3.pp[2] - s3.pp[1], 3), "\n")
 
+# ~~~ BONUS - Intervalle de confiance par bootstrap
+# (section bonus : a faire chez vous)
+
+set.seed(42)
+B    <- 200
+diff_boot <- numeric(B)
+ids  <- unique(df$id)
+
+for (b in 1:B) {
+  ## 1. Ré-échantillonnage par individu avec nouveaux IDs uniques
+  ids_b <- sample(ids, replace = TRUE)
+  df_b  <- do.call(rbind, lapply(seq_along(ids_b), function(j) {
+    rows    <- df[df$id == ids_b[j], ]
+    rows$id <- j
+    rows
+  }))
+
+  ## 2. IPTW : score de propension et poids stabilisés
+  df_base_b        <- df_b |>
+    group_by(id) |>
+    summarise(A0 = first(A), L0 = first(L), X = first(X)) |>
+    ungroup()
+  mod_b            <- glm(A0 ~ X + L0, data = df_base_b, family = "binomial")
+  df_base_b$ps     <- predict(mod_b, type = "response")
+  p.A1_b           <- mean(df_base_b$A0)
+  df_base_b$iptw.s <- ifelse(df_base_b$A0 == 1,
+                              p.A1_b / df_base_b$ps,
+                              (1 - p.A1_b) / (1 - df_base_b$ps))
+  df_b <- df_b |> left_join(df_base_b |> select(id, iptw.s), by = "id")
+
+  ## 3. Censure artificielle et poids IPCW stabilisés pour la stratégie ā=1
+  df1_b <- df_b[df_b$A0 == 1, ] |>
+    group_by(id) |>
+    mutate(cumsumA = cumsum(A == 1),
+           switchA = if_else(cumsumA == T.start + 1, 0L, 1L),
+           switchA = cumsum(switchA)) |>
+    filter(switchA <= 1) |> ungroup()
+  wt1_b          <- glm(switchA ~ as.factor(T.start) + X + L,
+                        family = "binomial", data = df1_b)
+  wt1_num_b      <- glm(switchA ~ as.factor(T.start),
+                        family = "binomial", data = df1_b)
+  df1_b$wt.denom <- 1 - predict(wt1_b, type = "response", newdata = df1_b)
+  df1_b$wt.num   <- 1 - predict(wt1_num_b, type = "response", newdata = df1_b)
+  df1_b <- df1_b[df1_b$switchA == 0, ] |>
+    group_by(id) |>
+    mutate(wt.s = cumprod(wt.num / wt.denom)) |> ungroup()
+
+  ## 4. Censure artificielle et poids IPCW stabilisés pour la stratégie ā=0
+  df0_b <- df_b[df_b$A0 == 0, ] |>
+    group_by(id) |>
+    mutate(cumsumA = cumsum(A == 0),
+           switchA = if_else(cumsumA == T.start + 1, 0L, 1L),
+           switchA = cumsum(switchA)) |>
+    filter(switchA <= 1) |> ungroup()
+  wt0_b          <- glm(switchA ~ as.factor(T.start) + X + L,
+                        family = "binomial", data = df0_b)
+  wt0_num_b      <- glm(switchA ~ as.factor(T.start),
+                        family = "binomial", data = df0_b)
+  df0_b$wt.denom <- 1 - predict(wt0_b, type = "response", newdata = df0_b)
+  df0_b$wt.num   <- 1 - predict(wt0_num_b, type = "response", newdata = df0_b)
+  df0_b <- df0_b[df0_b$switchA == 0, ] |>
+    group_by(id) |>
+    mutate(wt.s = cumprod(wt.num / wt.denom)) |> ungroup()
+
+  ## 5. Poids combinés et KM per-protocol
+  dfpp_b         <- rbind(df1_b, df0_b)
+  dfpp_b$comb.wt <- dfpp_b$iptw.s * dfpp_b$wt.s
+  km_b           <- survfit(Surv(T.start, T.stop, D) ~ A0,
+                            data = dfpp_b, weights = comb.wt)
+  s3_b           <- summary(km_b, times = 3)$surv
+  diff_boot[b]   <- s3_b[2] - s3_b[1]
+}
+
+## L'estimée est celle de l'Étape 6, pas la moyenne des bootstrap
+cat("Différence de survie à 3 ans (per-protocol) :\n")
+cat("  Estimée :", round(s3.pp[2] - s3.pp[1], 3), "\n")
+cat("  IC 95%  :", round(quantile(diff_boot, c(0.025, 0.975)), 3), "\n")
+
 
 # ========================================================================
 # Conclusion : comparaison des methodes
