@@ -57,24 +57,30 @@ summary(km_brut, times = 3)
 
 # --- Étape 0 - Créer la base baseline
 
+## On résume df (format long) en une ligne par individu :
+## - first() pour les covariables mesurées à t=0
+## - last() pour le temps de suivi total et le statut final
 df_base <- df |>
   group_by(id) |>
   summarise(
-    A0   = first(A),
-    L0   = first(L),
-    X    = first(X),
-    time = last(T.stop),
-    D    = last(D)
+    A0   = first(A),     # exposition initiale
+    L0   = first(L),     # facteur de confusion initial
+    X    = first(X),     # covariable initiale
+    time = last(T.stop), # temps total de suivi
+    D    = last(D)       # décès (0/1) : statut en fin de suivi
   )
 
 head(df_base)
-nrow(df_base)
+nrow(df_base)  # doit valoir le nombre d'individus distincts
 
 # --- Étape 1 - Estimer les modèles de résultat
 
+## Régression logistique sur D dans chaque groupe d'exposition séparément :
+## on ajuste sur X et L0 pour contrôler la confusion
+## (deux modèles séparés = équivalent à une interaction complète avec A0)
 mod1 <- glm(D ~ X + L0,
             data   = df_base[df_base$A0 == 1, ],
-            family = binomial)
+            family = binomial)  # critère binaire -> famille binomiale (logit)
 
 mod0 <- glm(D ~ X + L0,
             data   = df_base[df_base$A0 == 0, ],
@@ -113,15 +119,19 @@ B <- 200
 ate_boot <- numeric(B)
 
 for (b in 1:B) {
+  ## Ré-échantillonnage avec remise (même taille que df_base)
   idx  <- sample(nrow(df_base), replace = TRUE)
   df_b <- df_base[idx, ]
 
+  ## Réajuster les deux modèles sur l'échantillon bootstrap
   m1 <- glm(D ~ X + L0, data = df_b[df_b$A0 == 1, ], family = binomial)
   m0 <- glm(D ~ X + L0, data = df_b[df_b$A0 == 0, ], family = binomial)
 
+  ## Prédire pour tous les individus du bootstrap sous chaque scénario
   y1_b <- predict(m1, newdata = df_b, type = "response")
   y0_b <- predict(m0, newdata = df_b, type = "response")
 
+  ## Stocker l'ATE de cet échantillon bootstrap
   ate_boot[b] <- mean(y1_b) - mean(y0_b)
 }
 
@@ -131,6 +141,10 @@ cat("IC 95% :", round(quantile(ate_boot, c(0.025, 0.975)), 3), "\n")
 
 # --- Étape 1 - Un modèle de Cox avec interaction
 
+## Un seul modèle de Cox avec interaction A0 × covariables.
+## Hypothèse : les deux groupes partagent le même risque de base h0(t).
+## Deux modèles séparés lèveraient cette contrainte.
+## Surv(time, D) : time = temps de suivi total, D = indicateur de décès
 mod_cox <- coxph(Surv(time, D) ~ A0 * (X + L0), data = df_base)
 
 summary(mod_cox)
@@ -142,6 +156,8 @@ df1 <- df_base; df1$A0 <- 1
 df0 <- df_base; df0$A0 <- 0
 
 ## Hazard cumulatif de base unique (estimateur de Breslow)
+## centered = FALSE : hazard de base au niveau de référence (X=0, L0=0, A0=0)
+## suppressWarnings : Cox avec interaction génère un avertissement sans danger
 bh <- suppressWarnings(basehaz(mod_cox, centered = FALSE))
 head(bh)  # time = temps d'événement, hazard = H0(t) cumulé
 
@@ -162,6 +178,8 @@ head(data.frame(
 t_grid <- sort(unique(df_base$time))
 
 ## 2. H0(t) unique évalué sur t_grid via une fonction en escalier
+## stepfun crée une fonction en escalier : c(0, bh$hazard) indique que
+## le hazard cumulatif vaut 0 avant le premier temps d'événement
 H_fun  <- stepfun(bh$time, c(0, bh$hazard))
 H_grid <- H_fun(t_grid)   # vecteur longueur T
 
@@ -180,6 +198,7 @@ head(data.frame(t     = round(t_grid, 2),
 
 # --- Étape 4 - Visualisation des courbes de survie contrefactuelles
 
+## type = "s" : courbe en escalier, adaptée aux estimateurs de survie discrets
 plot(t_grid, S1_marg, type = "s", col = "blue", lwd = 2,
      ylim = c(0, 1),
      xlab = "Temps (années)",
@@ -193,7 +212,8 @@ legend("bottomleft",
 
 # --- Étape 5 - Différence de survie à [formule] ans
 
-## Dernier temps <= 3 dans la grille
+## t_grid ne contient pas nécessairement exactement t=3 : on prend
+## le dernier temps d'événement inférieur ou égal à 3
 idx3 <- max(which(t_grid <= 3))
 
 S1_3 <- S1_marg[idx3]
@@ -216,19 +236,20 @@ for (b in 1:B) {
   idx <- sample(nrow(df_base), replace = TRUE)
   db  <- df_base[idx, ]
 
-  ## 2. Modèle de Cox avec interaction
+  ## 2. Modèle de Cox avec interaction sur l'échantillon bootstrap
   m <- suppressWarnings(coxph(Surv(time, D) ~ A0 * (X + L0), data = db))
 
-  ## 3. Basehaz et prédicteurs linéaires (un seul modèle avec interaction)
+  ## 3. Bases contrefactuelles, hazard de base et prédicteurs linéaires
   db1 <- db; db1$A0 <- 1
   db0 <- db; db0$A0 <- 0
   bhb  <- suppressWarnings(basehaz(m, centered = FALSE))
   lp1b <- predict(m, newdata = db1, type = "lp")
   lp0b <- predict(m, newdata = db0, type = "lp")
 
-  ## 4. H0 au temps 3 (dernière valeur <= 3 dans la baseline hazard)
+  ## 4. H0(3) : dernier hazard cumulatif <= 3 (0 si aucun événement avant 3 ans)
   H_3b <- if (any(bhb$time <= 3)) tail(bhb$hazard[bhb$time <= 3], 1) else 0
 
+  ## S_i(3) = exp(-H0(3) * exp(lp_i)), puis moyenne sur les individus
   S1_boot[b] <- mean(exp(-H_3b * exp(lp1b)))
   S0_boot[b] <- mean(exp(-H_3b * exp(lp0b)))
 }
@@ -253,53 +274,58 @@ df_base <- df |>
   summarise(A0 = first(A), L0 = first(L), X = first(X)) |>
   ungroup()
 
-## Modèle de propension
+## Modèle de propension : on modélise l'exposition A0 en fonction des covariables
+## (à la différence de la G-computation qui modélisait l'outcome D)
 mod.ps <- glm(A0 ~ X + L0, data = df_base, family = "binomial")
 
-## Score de propension prédit
+## type = "response" : probabilités prédites P(A0=1 | X, L0), pas le log-odds
 df_base$ps <- predict(mod.ps, type = "response")
 
 ## Distribution du PS par groupe
 summary(df_base$ps[df_base$A0 == 1])
 summary(df_base$ps[df_base$A0 == 0])
 
-## Histogrammes superposés
-par(mfrow = c(1, 2))
+## Vérifier le chevauchement : si les deux distributions sont bien distinctes,
+## la positivité est menacée et les poids seront instables
 hist(df_base$ps[df_base$A0 == 1], breaks = 20, col = "#AC182E80",
-     main = "A0 = 1", xlab = "Score de propension", xlim = c(0, 1))
-hist(df_base$ps[df_base$A0 == 0], breaks = 20, col = "#1D276980",
-     main = "A0 = 0", xlab = "Score de propension", xlim = c(0, 1))
-par(mfrow = c(1, 1))
+     main = "Distribution du score de propension",
+     xlab = "Score de propension", xlim = c(0, 1))
+hist(df_base$ps[df_base$A0 == 0], breaks = 20, col = "#1D276980", add = TRUE)
+legend("topright", legend = c("A0 = 1", "A0 = 0"),
+       fill = c("#AC182E80", "#1D276980"), bty = "n")
 
 # --- Étape 2 - Calculer les poids IPTW
 
-## Poids non stabilisés
+## Poids non stabilisés : w = 1/ps si exposé, 1/(1-ps) si non exposé
 df_base$iptw <- (df_base$A0 == 1) / df_base$ps +
                 (df_base$A0 == 0) / (1 - df_base$ps)
 
-## Probabilité marginale d'être exposé (numérateur des poids stabilisés)
+## Numérateur des poids stabilisés : probabilité marginale d'exposition
+## (sans covariables) — réduit la variance des poids par rapport aux non stabilisés
 p.A1 <- mean(df_base$A0)
 p.A0 <- 1 - p.A1
 
-## Poids stabilisés
+## Poids stabilisés : w^s = P(A0) / ps si exposé, P(1-A0) / (1-ps) si non exposé
 df_base$iptw.s <- ifelse(df_base$A0 == 1,
                          p.A1 / df_base$ps,
                          p.A0 / (1 - df_base$ps))
 
-## Distribution des poids
+## Les poids stabilisés ont une moyenne proche de 1 : vérifier des valeurs
+## extrêmes (> 10-20) qui signaleraient un problème de positivité
 cat("Poids non stabilisés - moyenne:", round(mean(df_base$iptw), 3),
     " / max:", round(max(df_base$iptw), 2), "\n")
 cat("Poids stabilisés     - moyenne:", round(mean(df_base$iptw.s), 3),
     " / max:", round(max(df_base$iptw.s), 2), "\n")
 
-## Fusion dans df (pour l'analyse de survie en format long)
+## Fusionner dans df (format long) pour l'analyse de survie pondérée
 df <- df |> left_join(df_base |> select(id, ps, iptw, iptw.s), by = "id")
 
 # --- Étape 3 - Vérifier l'équilibre
 
 library(cobalt)
 
-## Tableau des différences standardisées (avant et après pondération)
+## bal.tab() : différences standardisées (SMD) pour chaque covariable
+## binary = "std" : SMD pour les variables binaires, un = TRUE : affiche aussi avant pondération
 bal <- bal.tab(A0 ~ X + L0,
                data    = df_base,
                weights = df_base$iptw.s,
@@ -308,7 +334,7 @@ bal <- bal.tab(A0 ~ X + L0,
                un      = TRUE)
 bal
 
-## Love plot avant/après
+## Love plot : SMD < 0,1 après pondération indique un équilibre satisfaisant
 love.plot(bal,
           thresholds = c(m = 0.1),
           colors     = c("#AC182E", "#1D2769"),
