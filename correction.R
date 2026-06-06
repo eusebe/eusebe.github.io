@@ -343,6 +343,8 @@ love.plot(bal,
 
 # --- Étape 4 - Analyse de survie pondérée (Kaplan-Meier)
 
+## Surv(T.start, T.stop, D) : format comptage (plusieurs lignes par individu)
+## weights = iptw.s : chaque observation est pondérée par son poids IPTW stabilisé
 km.iptw <- survfit(Surv(T.start, T.stop, D) ~ A0,
                    data    = df,
                    weights = iptw.s)
@@ -363,9 +365,10 @@ cat("Diff. survie = S(a0=1) - S(a0=0)   =", round(s3[2] - s3[1], 3), "\n")
 
 # --- Comparaison G-computation vs IPTW
 
-## Ajouter D final à df_base
+## D final : statut décès à la fin du suivi (dernière ligne par individu)
 df_base$D <- df |> group_by(id) |> summarise(D = last(D)) |> pull(D)
 
+## Moyenne pondérée de D dans chaque groupe : équivalent IPTW du critère binaire
 m1_bin <- weighted.mean(df_base$D[df_base$A0 == 1],
                         df_base$iptw.s[df_base$A0 == 1])
 m0_bin <- weighted.mean(df_base$D[df_base$A0 == 0],
@@ -394,6 +397,9 @@ cat("ATE + diff(survie) =", round(ate_iptw_bin + (s3[2] - s3[1]), 3),
 
 # --- Étape 1 - Définir les deux groupes de stratégie
 
+## On sépare les individus selon leur stratégie initiale A0 :
+## les poids IPCW et la censure artificielle seront calculés séparément
+## dans chaque groupe (déviation = arrêt pour df.1, initiation pour df.0)
 df.1 <- df[df$A0 == 1, ]
 df.0 <- df[df$A0 == 0, ]
 
@@ -405,38 +411,41 @@ cat("Individus avec A0=0 :", length(unique(df.0$id)), "\n")
 df.1 <- df.1 |>
   group_by(id) |>
   mutate(
+    ## cumsumA compte le nombre de visites où A=1 depuis le début
     cumsumA = cumsum(A == 1),
-    ## Si A=1 à toutes les visites, cumsumA == T.start + 1
+    ## Si l'individu n'a jamais dévié, cumsumA = nombre de visites écoulées = T.start + 1
+    ## Si cumsumA < T.start + 1, il y a eu au moins une visite avec A=0 -> déviation
     switchA = if_else(cumsumA == T.start + 1, 0L, 1L),
+    ## cumsum(switchA) : une fois la déviation détectée, switchA reste >= 1
     switchA = cumsum(switchA)
   ) |>
-  filter(switchA <= 1) |>
+  filter(switchA <= 1) |>  # garder jusqu'à la première déviation incluse
   ungroup()
 
 table(df.1$switchA)
 
 # --- Étape 3 - Modèle de déviation et poids IPCW (groupe A0 = 1)
 
-## Modèle poolé de déviation dans df.1 (avec covariables)
+## Régression logistique poolée : modélise P(switch=1) à chaque visite
+## as.factor(T.start) : effet du temps, X et L : covariables de confusion
 wt.mod.1 <- glm(switchA ~ as.factor(T.start) + X + L,
                 family = "binomial", data = df.1)
-
-## Dénominateur : P(no switch | X, L)
+## 1 - predict(...) : probabilité de NE PAS dévier à cette visite
 df.1$wt.denom <- 1 - predict(wt.mod.1, type = "response", newdata = df.1)
 
-## Numérateur : P(no switch) marginal (modèle sans covariables)
+## Numérateur : même modèle sans covariables (probabilité marginale de ne pas dévier)
 wt.mod.1.num  <- glm(switchA ~ as.factor(T.start),
                      family = "binomial", data = df.1)
 df.1$wt.num   <- 1 - predict(wt.mod.1.num, type = "response", newdata = df.1)
 
-## Supprimer la ligne de déviation
+## Supprimer la ligne de déviation : on ne garde que les périodes sans déviation
 df.1 <- df.1[df.1$switchA == 0, ]
 
-## Poids IPCW non stabilisés et stabilisés
+## cumprod : produit cumulé des termes période par période -> poids croissant dans le temps
 df.1 <- df.1 |>
   group_by(id) |>
-  mutate(wt   = cumprod(1 / wt.denom),
-         wt.s = cumprod(wt.num / wt.denom)) |>
+  mutate(wt   = cumprod(1 / wt.denom),          # non stabilisé
+         wt.s = cumprod(wt.num / wt.denom)) |>  # stabilisé
   ungroup()
 
 cat("Poids non stabilisés - moy:", round(mean(df.1$wt), 3),
@@ -446,7 +455,8 @@ cat("Poids stabilisés     - moy:", round(mean(df.1$wt.s), 3),
 
 # --- Étape 4 - Répéter pour le groupe A0 = 0
 
-## Censure artificielle dans df.0
+## Même logique que pour df.1, mais la déviation est ici A=1 (passage de 0 à 1)
+## cumsumA compte donc le nombre de visites où A=0
 df.0 <- df.0 |>
   group_by(id) |>
   mutate(
