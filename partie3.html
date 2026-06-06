@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.9.38">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="G-computation, IPTW et IPCW : application pas-à-pas.">
-<title>4&nbsp; IPCW – TP Inférence causale en épidémiologie</title>
+<title>3&nbsp; IPCW – TP Inférence causale en épidémiologie</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -1689,7 +1689,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./partie3.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">IPCW</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./partie3.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">IPCW</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -1719,31 +1719,31 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./presentation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Présentation des données</span></span></a>
+ <span class="menu-text">Présentation des données</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./partie1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">G-computation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">G-computation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./partie2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">IPTW</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">IPTW</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./partie3.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">IPCW</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">IPCW</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./conclusion.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Conclusion</span></span></a>
   </div>
 </li>
     </ul>
@@ -2049,7 +2049,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 }
 </script><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">
-<span class="chapter-number">4</span>&nbsp; <span class="chapter-title">IPCW</span>
+<span class="chapter-number">3</span>&nbsp; <span class="chapter-title">IPCW</span>
 </h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Montrer tout le code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Cacher tout le code</a></li></ul></div></div>
 </div>
 
@@ -2242,8 +2242,10 @@ Note
 <span>     xlab <span class="op">=</span> <span class="st">"Temps (années)"</span>, ylab <span class="op">=</span> <span class="st">"Probabilité de survie"</span>,</span>
 <span>     main <span class="op">=</span> <span class="st">"Kaplan-Meier per-protocol (IPTW × IPCW)"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span><span class="op">(</span><span class="st">"bottomleft"</span>,</span>
-<span>       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Stratégie ā=0 (jamais exposé)"</span>,</span>
-<span>                  <span class="st">"Stratégie ā=1 (toujours exposé)"</span><span class="op">)</span>,</span>
+<span>       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span></span>
+<span>         <span class="st">"Stratégie "</span> <span class="op">~</span> <span class="fu">bar</span><span class="op">(</span><span class="va">a</span><span class="op">)</span> <span class="op">*</span> <span class="st">"=0 (jamais exposé)"</span>,</span>
+<span>         <span class="st">"Stratégie "</span> <span class="op">~</span> <span class="fu">bar</span><span class="op">(</span><span class="va">a</span><span class="op">)</span> <span class="op">*</span> <span class="st">"=1 (toujours exposé)"</span></span>
+<span>       <span class="op">)</span>,</span>
 <span>       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#1D2769"</span>, <span class="st">"#AC182E"</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span>, bty <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## Différence de survie à 3 ans (ā=1 moins ā=0)</span></span>
@@ -2335,7 +2337,10 @@ Note
 <span>  <span class="va">df_base_b</span><span class="op">$</span><span class="va">iptw.s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">df_base_b</span><span class="op">$</span><span class="va">A0</span> <span class="op">==</span> <span class="fl">1</span>,</span>
 <span>                              <span class="va">p.A1_b</span> <span class="op">/</span> <span class="va">df_base_b</span><span class="op">$</span><span class="va">ps</span>,</span>
 <span>                              <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">p.A1_b</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">df_base_b</span><span class="op">$</span><span class="va">ps</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">df_b</span> <span class="op">&lt;-</span> <span class="va">df_b</span> <span class="op">|&gt;</span> <span class="fu">left_join</span><span class="op">(</span><span class="va">df_base_b</span> <span class="op">|&gt;</span> <span class="fu">select</span><span class="op">(</span><span class="va">id</span>, <span class="va">iptw.s</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span>  <span class="co">## Supprimer les anciens poids hérités de df avant de joindre les nouveaux</span></span>
+<span>  <span class="va">df_b</span> <span class="op">&lt;-</span> <span class="va">df_b</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="fu">any_of</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ps"</span>, <span class="st">"iptw"</span>, <span class="st">"iptw.s"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">left_join</span><span class="op">(</span><span class="va">df_base_b</span> <span class="op">|&gt;</span> <span class="fu">select</span><span class="op">(</span><span class="va">id</span>, <span class="va">iptw.s</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="co">## 3. Censure artificielle et poids IPCW stabilisés pour la stratégie ā=1</span></span>
 <span>  <span class="va">df1_b</span> <span class="op">&lt;-</span> <span class="va">df_b</span><span class="op">[</span><span class="va">df_b</span><span class="op">$</span><span class="va">A0</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span> <span class="op">|&gt;</span></span>
@@ -3045,12 +3050,12 @@ window.onload = function() {
   });
   </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="./partie2.html" class="pagination-link" aria-label="IPTW">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">IPTW</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">IPTW</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./conclusion.html" class="pagination-link" aria-label="Conclusion">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Conclusion</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Conclusion</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

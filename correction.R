@@ -209,8 +209,10 @@ plot(t_grid, S1_marg, type = "s", col = "blue", lwd = 2,
      main = "G-computation (Cox) - Courbes contrefactuelles")
 lines(t_grid, S0_marg, type = "s", col = "red", lwd = 2)
 legend("bottomleft",
-       c("Scénario a₀=1 (tous exposés)",
-         "Scénario a₀=0 (aucun exposé)"),
+       legend = expression(
+         "Scénario " ~ a[0] * "=1 (tous exposés)",
+         "Scénario " ~ a[0] * "=0 (aucun exposé)"
+       ),
        col = c("blue", "red"), lty = 1, lwd = 2, bty = "n")
 
 # --- Étape 5 - Différence de survie à [formule] ans
@@ -419,11 +421,14 @@ for (b in 1:B) {
   df_base_b$ps <- predict(mod_b, type = "response")
 
   ## 3. Poids IPTW stabilisés et fusion dans df_b
+  ## (on supprime d'abord les anciens poids hérités de df pour éviter les conflits)
   p.A1_b           <- mean(df_base_b$A0)
   df_base_b$iptw.s <- ifelse(df_base_b$A0 == 1,
                               p.A1_b / df_base_b$ps,
                               (1 - p.A1_b) / (1 - df_base_b$ps))
-  df_b <- df_b |> left_join(df_base_b |> select(id, iptw.s), by = "id")
+  df_b <- df_b |>
+    select(-any_of(c("ps", "iptw", "iptw.s"))) |>
+    left_join(df_base_b |> select(id, iptw.s), by = "id")
 
   ## 4. KM pondéré et différence de survie à 3 ans
   km_b         <- survfit(Surv(T.start, T.stop, D) ~ A0, data = df_b, weights = iptw.s)
@@ -558,8 +563,10 @@ plot(km.pp,
      xlab = "Temps (années)", ylab = "Probabilité de survie",
      main = "Kaplan-Meier per-protocol (IPTW × IPCW)")
 legend("bottomleft",
-       legend = c("Stratégie ā=0 (jamais exposé)",
-                  "Stratégie ā=1 (toujours exposé)"),
+       legend = expression(
+         "Stratégie " ~ bar(a) * "=0 (jamais exposé)",
+         "Stratégie " ~ bar(a) * "=1 (toujours exposé)"
+       ),
        col = c("#1D2769", "#AC182E"), lwd = 2, bty = "n")
 
 ## Différence de survie à 3 ans (ā=1 moins ā=0)
@@ -596,7 +603,10 @@ for (b in 1:B) {
   df_base_b$iptw.s <- ifelse(df_base_b$A0 == 1,
                               p.A1_b / df_base_b$ps,
                               (1 - p.A1_b) / (1 - df_base_b$ps))
-  df_b <- df_b |> left_join(df_base_b |> select(id, iptw.s), by = "id")
+  ## Supprimer les anciens poids hérités de df avant de joindre les nouveaux
+  df_b <- df_b |>
+    select(-any_of(c("ps", "iptw", "iptw.s"))) |>
+    left_join(df_base_b |> select(id, iptw.s), by = "id")
 
   ## 3. Censure artificielle et poids IPCW stabilisés pour la stratégie ā=1
   df1_b <- df_b[df_b$A0 == 1, ] |>
