@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.9.38">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta name="description" content="G-computation, IPTW et IPCW — application pas-à-pas.">
-<title>Présentation des données – TP — Inférence causale en épidémiologie</title>
+<meta name="description" content="G-computation, IPTW et IPCW : application pas-à-pas.">
+<title>Présentation des données – TP Inférence causale en épidémiologie</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -1700,7 +1700,7 @@ window.Quarto = {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">TP — Inférence causale en épidémiologie</a> 
+      <a href="./">TP Inférence causale en épidémiologie</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -2196,11 +2196,11 @@ Note
 </div>
 </div>
 </section><section id="ce-que-nous-observons-ce-que-nous-voulons-estimer" class="level2"><h2 class="anchored" data-anchor-id="ce-que-nous-observons-ce-que-nous-voulons-estimer">Ce que nous observons, ce que nous voulons estimer</h2>
-<p>L’analyse brute met en évidence une différence de survie entre les groupes <span class="math inline">\(A_0 = 0\)</span> et <span class="math inline">\(A_0 = 1\)</span>. Mais cette différence <strong>n’a pas d’interprétation causale directe</strong> : les deux groupes ne sont pas comparables à l’inclusion — les individus exposés et non exposés diffèrent sur <span class="math inline">\(X\)</span> et <span class="math inline">\(L_0\)</span>, qui prédisent à la fois l’exposition et le décès.</p>
+<p>L’analyse brute met en évidence une différence de survie entre les groupes <span class="math inline">\(A_0 = 0\)</span> et <span class="math inline">\(A_0 = 1\)</span>. Mais cette différence <strong>n’a pas d’interprétation causale directe</strong> : les deux groupes ne sont pas comparables à l’inclusion (les individus exposés et non exposés diffèrent sur <span class="math inline">\(X\)</span> et <span class="math inline">\(L_0\)</span>, qui prédisent à la fois l’exposition et le décès).</p>
 <p>Les parties suivantes vont estimer deux effets causaux distincts à partir de ces données :</p>
 <ul>
 <li>
-<strong>Parties 1 et 2</strong> : effet de l’<em>initiation</em> de l’exposition au temps 0, ajusté sur les facteurs de confusion initiaux — d’abord par G-computation, puis par IPTW.</li>
+<strong>Parties 1 et 2</strong> : effet de l’<em>initiation</em> de l’exposition au temps 0, ajusté sur les facteurs de confusion initiaux (d’abord par G-computation, puis par IPTW).</li>
 <li>
 <strong>Partie 3</strong> : effet du <em>maintien</em> de l’exposition tout au long du suivi, en traitant les déviations de stratégie comme une censure artificielle (IPTW + IPCW).</li>
 </ul>

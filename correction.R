@@ -1,10 +1,5 @@
 # ========================================================================
 # Script de correction : TP Inference causale en epidemiologie
-# Rennes, 24 juin 2026 : David Hajage
-#
-# Ce fichier est genere automatiquement a partir des blocs de correction
-# des fichiers QMD du TP. Pour le mettre a jour, modifier les blocs
-# solution dans les .qmd puis relancer le rendu Quarto.
 # ========================================================================
 
 library(survival)
@@ -60,7 +55,7 @@ summary(km_brut, times = 3)
 # Partie 1 : G-computation
 # ========================================================================
 
-# --- Étape 0 — Créer la base baseline
+# --- Étape 0 - Créer la base baseline
 
 df_base <- df |>
   group_by(id) |>
@@ -75,7 +70,7 @@ df_base <- df |>
 head(df_base)
 nrow(df_base)
 
-# --- Étape 1 — Estimer les modèles de résultat
+# --- Étape 1 - Estimer les modèles de résultat
 
 mod1 <- glm(D ~ X + L0,
             data   = df_base[df_base$A0 == 1, ],
@@ -88,7 +83,7 @@ mod0 <- glm(D ~ X + L0,
 summary(mod1)
 summary(mod0)
 
-# --- Étape 2 — Prédire les devenirs contrefactuels
+# --- Étape 2 - Prédire les devenirs contrefactuels
 
 ## Probabilité de décès si tout le monde avait A0 = 1
 y1 <- predict(mod1, newdata = df_base, type = "response")
@@ -100,7 +95,7 @@ head(data.frame(id = df_base$id, A0_obs = df_base$A0,
                 pred_A0_1 = round(y1, 3),
                 pred_A0_0 = round(y0, 3)))
 
-# --- Étape 3 — Calculer l'effet causal moyen (ATE)
+# --- Étape 3 - Calculer l'effet causal moyen (ATE)
 
 E_Y1 <- mean(y1)
 E_Y0 <- mean(y0)
@@ -110,7 +105,7 @@ cat("E(D^0)                       =", round(E_Y0, 3), "\n")
 cat("ATE = E(D^1) - E(D^0)        =", round(E_Y1 - E_Y0, 3), "\n")
 cat("RR  = E(D^1) / E(D^0)        =", round(E_Y1 / E_Y0, 3), "\n")
 
-# ~~~ BONUS — Intervalle de confiance par bootstrap
+# ~~~ BONUS - Intervalle de confiance par bootstrap
 # (section bonus : a faire chez vous)
 
 set.seed(123)
@@ -134,13 +129,13 @@ for (b in 1:B) {
 cat("ATE    :", round(E_Y1 - E_Y0, 3), "\n")
 cat("IC 95% :", round(quantile(ate_boot, c(0.025, 0.975)), 3), "\n")
 
-# --- Étape 1 — Un modèle de Cox avec interaction
+# --- Étape 1 - Un modèle de Cox avec interaction
 
 mod_cox <- coxph(Surv(time, D) ~ A0 * (X + L0), data = df_base)
 
 summary(mod_cox)
 
-# --- Étape 2 — Hazard cumulatif de base et prédicteurs linéaires individuels
+# --- Étape 2 - Hazard cumulatif de base et prédicteurs linéaires individuels
 
 ## Bases contrefactuelles
 df1 <- df_base; df1$A0 <- 1
@@ -161,7 +156,7 @@ head(data.frame(
   lp_si_A0   = round(lp0, 3)
 ))
 
-# --- Étape 3 — Courbes de survie individuelles et marginalisation
+# --- Étape 3 - Courbes de survie individuelles et marginalisation
 
 ## 1. Grille de temps : tous les temps d'événement de df_base
 t_grid <- sort(unique(df_base$time))
@@ -183,20 +178,20 @@ head(data.frame(t     = round(t_grid, 2),
                 S_a1  = round(S1_marg, 3),
                 S_a0  = round(S0_marg, 3)))
 
-# --- Étape 4 — Visualisation des courbes de survie contrefactuelles
+# --- Étape 4 - Visualisation des courbes de survie contrefactuelles
 
 plot(t_grid, S1_marg, type = "s", col = "blue", lwd = 2,
      ylim = c(0, 1),
      xlab = "Temps (années)",
      ylab = "Probabilité de survie",
-     main = "G-computation (Cox) — Courbes contrefactuelles")
+     main = "G-computation (Cox) - Courbes contrefactuelles")
 lines(t_grid, S0_marg, type = "s", col = "red", lwd = 2)
 legend("bottomleft",
        c("Scénario a₀=1 (tous exposés)",
          "Scénario a₀=0 (aucun exposé)"),
        col = c("blue", "red"), lty = 1, lwd = 2, bty = "n")
 
-# --- Étape 5 — Différence de survie à [formule] ans
+# --- Étape 5 - Différence de survie à [formule] ans
 
 ## Dernier temps <= 3 dans la grille
 idx3 <- max(which(t_grid <= 3))
@@ -250,7 +245,7 @@ cat("  IC 95%  :", round(quantile(diff_boot, c(0.025, 0.975)), 3), "\n")
 # Partie 2 : IPTW
 # ========================================================================
 
-# --- Étape 1 — Estimer le score de propension
+# --- Étape 1 - Estimer le score de propension
 
 ## Base une ligne par individu
 df_base <- df |>
@@ -276,7 +271,7 @@ hist(df_base$ps[df_base$A0 == 0], breaks = 20, col = "#1D276980",
      main = "A0 = 0", xlab = "Score de propension", xlim = c(0, 1))
 par(mfrow = c(1, 1))
 
-# --- Étape 2 — Calculer les poids IPTW
+# --- Étape 2 - Calculer les poids IPTW
 
 ## Poids non stabilisés
 df_base$iptw <- (df_base$A0 == 1) / df_base$ps +
@@ -300,7 +295,7 @@ cat("Poids stabilisés     - moyenne:", round(mean(df_base$iptw.s), 3),
 ## Fusion dans df (pour l'analyse de survie en format long)
 df <- df |> left_join(df_base |> select(id, ps, iptw, iptw.s), by = "id")
 
-# --- Étape 3 — Vérifier l'équilibre
+# --- Étape 3 - Vérifier l'équilibre
 
 library(cobalt)
 
@@ -320,7 +315,7 @@ love.plot(bal,
           shapes     = c("circle", "triangle"),
           title      = "Équilibre avant/après IPTW")
 
-# --- Étape 4 — Analyse de survie pondérée (Kaplan-Meier)
+# --- Étape 4 - Analyse de survie pondérée (Kaplan-Meier)
 
 km.iptw <- survfit(Surv(T.start, T.stop, D) ~ A0,
                    data    = df,
@@ -371,7 +366,7 @@ cat("ATE + diff(survie) =", round(ate_iptw_bin + (s3[2] - s3[1]), 3),
 # Partie 3 : IPCW
 # ========================================================================
 
-# --- Étape 1 — Définir les deux groupes de stratégie
+# --- Étape 1 - Définir les deux groupes de stratégie
 
 df.1 <- df[df$A0 == 1, ]
 df.0 <- df[df$A0 == 0, ]
@@ -379,7 +374,7 @@ df.0 <- df[df$A0 == 0, ]
 cat("Individus avec A0=1 :", length(unique(df.1$id)), "\n")
 cat("Individus avec A0=0 :", length(unique(df.0$id)), "\n")
 
-# --- Étape 2 — Censure artificielle dans le groupe A0 = 1
+# --- Étape 2 - Censure artificielle dans le groupe A0 = 1
 
 df.1 <- df.1 |>
   group_by(id) |>
@@ -394,7 +389,7 @@ df.1 <- df.1 |>
 
 table(df.1$switchA)
 
-# --- Étape 3 — Modèle de déviation et poids IPCW (groupe A0 = 1)
+# --- Étape 3 - Modèle de déviation et poids IPCW (groupe A0 = 1)
 
 ## Modèle poolé de déviation dans df.1 (avec covariables)
 wt.mod.1 <- glm(switchA ~ as.factor(T.start) + X + L,
@@ -423,7 +418,7 @@ cat("Poids non stabilisés - moy:", round(mean(df.1$wt), 3),
 cat("Poids stabilisés     - moy:", round(mean(df.1$wt.s), 3),
     " / max:", round(max(df.1$wt.s), 2), "\n")
 
-# --- Étape 4 — Répéter pour le groupe A0 = 0
+# --- Étape 4 - Répéter pour le groupe A0 = 0
 
 ## Censure artificielle dans df.0
 df.0 <- df.0 |>
@@ -457,7 +452,7 @@ df.0          <- df.0 |>
 dfpp <- rbind(df.1, df.0)
 cat("Lignes dans dfpp :", nrow(dfpp), "\n")
 
-# --- Étape 5 — Poids combinés IPTW × IPCW
+# --- Étape 5 - Poids combinés IPTW × IPCW
 
 ## Poids combinés : IPTW stabilisé × IPCW stabilisé
 dfpp$comb.wt <- dfpp$iptw.s * dfpp$wt.s
@@ -467,7 +462,7 @@ cat("Poids IPCW stabilisés - moy:", round(mean(dfpp$wt.s), 3),
 cat("Poids combinés        - moy:", round(mean(dfpp$comb.wt), 3),
     " / max:", round(max(dfpp$comb.wt), 2), "\n")
 
-# --- Étape 6 — Analyse de survie per-protocol
+# --- Étape 6 - Analyse de survie per-protocol
 
 km.pp <- survfit(Surv(T.start, T.stop, D) ~ A0,
                  data    = dfpp,
@@ -550,7 +545,7 @@ dfpp$comb.wt <- dfpp$iptw.s * dfpp$wt.s
 km.pp        <- survfit(Surv(T.start, T.stop, D) ~ A0, data = dfpp, weights = comb.wt)
 s3.pp        <- summary(km.pp, times = 3)$surv
 
-## G-computation Cox (méthode du Bonus — Partie 1)
+## G-computation Cox (méthode du Bonus - Partie 1)
 ## Modèle poolé avec interaction A0 × (X, L0) pour éviter l'extrapolation
 ## instable des modèles séparés sur sous-groupes
 df_base <- df |>
@@ -596,9 +591,9 @@ lines(km.pp, col = c(col0, col1), lwd = 2, lty = 4, conf.int = FALSE)
 ## Légende méthodes
 legend("bottomleft", bty = "n", lwd = 2, lty = 1:4, col = "gray30",
        legend = c("KM brut (non ajusté)",
-                  "G-computation Cox — analogue-ITT [Bonus P.1]",
-                  "IPTW — analogue-ITT",
-                  "IPTW × IPCW — per-protocol"))
+                  "G-computation Cox - analogue-ITT [Bonus P.1]",
+                  "IPTW - analogue-ITT",
+                  "IPTW × IPCW - per-protocol"))
 
 ## Légende groupes
 legend("topright", bty = "n", lwd = 3, lty = 1,
@@ -609,16 +604,16 @@ legend("topright", bty = "n", lwd = 3, lty = 1,
 
 res <- data.frame(
   Analyse    = c("KM brut (non ajusté)",
-                 "Q1 — G-computation Cox [Bonus P.1]",
-                 "Q1 — IPTW",
-                 "Q2 — IPTW × IPCW (per-protocol)"),
-  Estimand   = c("—",
+                 "Q1 - G-computation Cox [Bonus P.1]",
+                 "Q1 - IPTW",
+                 "Q2 - IPTW × IPCW (per-protocol)"),
+  Estimand   = c("-",
                  "Analogue-ITT : effet d'initier l'exposition",
                  "Analogue-ITT : effet d'initier l'exposition",
                  "Analogue per-protocol : effet de maintenir l'exposition"),
   Ajustement = c("Aucun",
-                 "Confusion initiale (X, L₀) — modèle du résultat",
-                 "Confusion initiale (X, L₀) — modèle de l'exposition",
+                 "Confusion initiale (X, L₀) - modèle du résultat",
+                 "Confusion initiale (X, L₀) - modèle de l'exposition",
                  "Confusion initiale + déviation de stratégie"),
   S3_A0      = round(c(s3.brut[1], s3.gcomp[1], s3.iptw[1], s3.pp[1]), 3),
   S3_A1      = round(c(s3.brut[2], s3.gcomp[2], s3.iptw[2], s3.pp[2]), 3),
@@ -626,6 +621,6 @@ res <- data.frame(
 )
 knitr::kable(res, align = "llllrrr",
              col.names = c("Analyse", "Estimand", "Ajustement",
-                           "S(3) — A₀=0", "S(3) — A₀=1",
+                           "S(3) - A₀=0", "S(3) - A₀=1",
                            "Δ survie"))
 

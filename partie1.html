@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.9.38">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta name="description" content="G-computation, IPTW et IPCW — application pas-à-pas.">
-<title>G-computation – TP — Inférence causale en épidémiologie</title>
+<meta name="description" content="G-computation, IPTW et IPCW : application pas-à-pas.">
+<title>G-computation – TP Inférence causale en épidémiologie</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -1700,7 +1700,7 @@ window.Quarto = {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">TP — Inférence causale en épidémiologie</a> 
+      <a href="./">TP Inférence causale en épidémiologie</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -1754,24 +1754,24 @@ window.Quarto = {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
    
   <ul>
-<li><a href="#objectif-question-1" id="toc-objectif-question-1" class="nav-link active" data-scroll-target="#objectif-question-1">Objectif — Question 1</a></li>
+<li><a href="#objectif---question-1" id="toc-objectif---question-1" class="nav-link active" data-scroll-target="#objectif---question-1">Objectif - Question 1</a></li>
   <li><a href="#note-sur-la-session-r" id="toc-note-sur-la-session-r" class="nav-link" data-scroll-target="#note-sur-la-session-r">Note sur la session R</a></li>
-  <li><a href="#%C3%A9tape-0-cr%C3%A9er-la-base-baseline" id="toc-étape-0-créer-la-base-baseline" class="nav-link" data-scroll-target="#%C3%A9tape-0-cr%C3%A9er-la-base-baseline">Étape 0 — Créer la base <em>baseline</em></a></li>
-  <li><a href="#%C3%A9tape-1-estimer-les-mod%C3%A8les-de-r%C3%A9sultat" id="toc-étape-1-estimer-les-modèles-de-résultat" class="nav-link" data-scroll-target="#%C3%A9tape-1-estimer-les-mod%C3%A8les-de-r%C3%A9sultat">Étape 1 — Estimer les modèles de résultat</a></li>
-  <li><a href="#%C3%A9tape-2-pr%C3%A9dire-les-devenirs-contrefactuels" id="toc-étape-2-prédire-les-devenirs-contrefactuels" class="nav-link" data-scroll-target="#%C3%A9tape-2-pr%C3%A9dire-les-devenirs-contrefactuels">Étape 2 — Prédire les devenirs contrefactuels</a></li>
-  <li><a href="#%C3%A9tape-3-calculer-leffet-causal-moyen-ate" id="toc-étape-3-calculer-leffet-causal-moyen-ate" class="nav-link" data-scroll-target="#%C3%A9tape-3-calculer-leffet-causal-moyen-ate">Étape 3 — Calculer l’effet causal moyen (ATE)</a></li>
+  <li><a href="#%C3%A9tape-0---cr%C3%A9er-la-base-baseline" id="toc-étape-0---créer-la-base-baseline" class="nav-link" data-scroll-target="#%C3%A9tape-0---cr%C3%A9er-la-base-baseline">Étape 0 - Créer la base <em>baseline</em></a></li>
+  <li><a href="#%C3%A9tape-1---estimer-les-mod%C3%A8les-de-r%C3%A9sultat" id="toc-étape-1---estimer-les-modèles-de-résultat" class="nav-link" data-scroll-target="#%C3%A9tape-1---estimer-les-mod%C3%A8les-de-r%C3%A9sultat">Étape 1 - Estimer les modèles de résultat</a></li>
+  <li><a href="#%C3%A9tape-2---pr%C3%A9dire-les-devenirs-contrefactuels" id="toc-étape-2---prédire-les-devenirs-contrefactuels" class="nav-link" data-scroll-target="#%C3%A9tape-2---pr%C3%A9dire-les-devenirs-contrefactuels">Étape 2 - Prédire les devenirs contrefactuels</a></li>
+  <li><a href="#%C3%A9tape-3---calculer-leffet-causal-moyen-ate" id="toc-étape-3---calculer-leffet-causal-moyen-ate" class="nav-link" data-scroll-target="#%C3%A9tape-3---calculer-leffet-causal-moyen-ate">Étape 3 - Calculer l’effet causal moyen (ATE)</a></li>
   <li><a href="#interpr%C3%A9tation" id="toc-interprétation" class="nav-link" data-scroll-target="#interpr%C3%A9tation">Interprétation</a></li>
-  <li><a href="#bonus-intervalle-de-confiance-par-bootstrap" id="toc-bonus-intervalle-de-confiance-par-bootstrap" class="nav-link" data-scroll-target="#bonus-intervalle-de-confiance-par-bootstrap">BONUS — Intervalle de confiance par bootstrap</a></li>
+  <li><a href="#bonus---intervalle-de-confiance-par-bootstrap" id="toc-bonus---intervalle-de-confiance-par-bootstrap" class="nav-link" data-scroll-target="#bonus---intervalle-de-confiance-par-bootstrap">BONUS - Intervalle de confiance par bootstrap</a></li>
   <li>
-<a href="#bonus-2-g-computation-sur-crit%C3%A8re-censur%C3%A9" id="toc-bonus-2-g-computation-sur-critère-censuré" class="nav-link" data-scroll-target="#bonus-2-g-computation-sur-crit%C3%A8re-censur%C3%A9">BONUS 2 — G-computation sur critère censuré</a>
+<a href="#bonus-2---g-computation-sur-crit%C3%A8re-censur%C3%A9" id="toc-bonus-2---g-computation-sur-critère-censuré" class="nav-link" data-scroll-target="#bonus-2---g-computation-sur-crit%C3%A8re-censur%C3%A9">BONUS 2 - G-computation sur critère censuré</a>
   <ul class="collapse">
 <li><a href="#pourquoi-changer-dapproche" id="toc-pourquoi-changer-dapproche" class="nav-link" data-scroll-target="#pourquoi-changer-dapproche">Pourquoi changer d’approche ?</a></li>
   <li><a href="#principe" id="toc-principe" class="nav-link" data-scroll-target="#principe">Principe</a></li>
-  <li><a href="#%C3%A9tape-1-un-mod%C3%A8le-de-cox-avec-interaction" id="toc-étape-1-un-modèle-de-cox-avec-interaction" class="nav-link" data-scroll-target="#%C3%A9tape-1-un-mod%C3%A8le-de-cox-avec-interaction">Étape 1 — Un modèle de Cox avec interaction</a></li>
-  <li><a href="#%C3%A9tape-2-hazard-cumulatif-de-base-et-pr%C3%A9dicteurs-lin%C3%A9aires-individuels" id="toc-étape-2-hazard-cumulatif-de-base-et-prédicteurs-linéaires-individuels" class="nav-link" data-scroll-target="#%C3%A9tape-2-hazard-cumulatif-de-base-et-pr%C3%A9dicteurs-lin%C3%A9aires-individuels">Étape 2 — Hazard cumulatif de base et prédicteurs linéaires individuels</a></li>
-  <li><a href="#%C3%A9tape-3-courbes-de-survie-individuelles-et-marginalisation" id="toc-étape-3-courbes-de-survie-individuelles-et-marginalisation" class="nav-link" data-scroll-target="#%C3%A9tape-3-courbes-de-survie-individuelles-et-marginalisation">Étape 3 — Courbes de survie individuelles et marginalisation</a></li>
-  <li><a href="#%C3%A9tape-4-visualisation-des-courbes-de-survie-contrefactuelles" id="toc-étape-4-visualisation-des-courbes-de-survie-contrefactuelles" class="nav-link" data-scroll-target="#%C3%A9tape-4-visualisation-des-courbes-de-survie-contrefactuelles">Étape 4 — Visualisation des courbes de survie contrefactuelles</a></li>
-  <li><a href="#%C3%A9tape-5-diff%C3%A9rence-de-survie-%C3%A0-t-3-ans" id="toc-étape-5-différence-de-survie-à-t-3-ans" class="nav-link" data-scroll-target="#%C3%A9tape-5-diff%C3%A9rence-de-survie-%C3%A0-t-3-ans">Étape 5 — Différence de survie à <span class="math inline">\(t = 3\)</span> ans</a></li>
+  <li><a href="#%C3%A9tape-1---un-mod%C3%A8le-de-cox-avec-interaction" id="toc-étape-1---un-modèle-de-cox-avec-interaction" class="nav-link" data-scroll-target="#%C3%A9tape-1---un-mod%C3%A8le-de-cox-avec-interaction">Étape 1 - Un modèle de Cox avec interaction</a></li>
+  <li><a href="#%C3%A9tape-2---hazard-cumulatif-de-base-et-pr%C3%A9dicteurs-lin%C3%A9aires-individuels" id="toc-étape-2---hazard-cumulatif-de-base-et-prédicteurs-linéaires-individuels" class="nav-link" data-scroll-target="#%C3%A9tape-2---hazard-cumulatif-de-base-et-pr%C3%A9dicteurs-lin%C3%A9aires-individuels">Étape 2 - Hazard cumulatif de base et prédicteurs linéaires individuels</a></li>
+  <li><a href="#%C3%A9tape-3---courbes-de-survie-individuelles-et-marginalisation" id="toc-étape-3---courbes-de-survie-individuelles-et-marginalisation" class="nav-link" data-scroll-target="#%C3%A9tape-3---courbes-de-survie-individuelles-et-marginalisation">Étape 3 - Courbes de survie individuelles et marginalisation</a></li>
+  <li><a href="#%C3%A9tape-4---visualisation-des-courbes-de-survie-contrefactuelles" id="toc-étape-4---visualisation-des-courbes-de-survie-contrefactuelles" class="nav-link" data-scroll-target="#%C3%A9tape-4---visualisation-des-courbes-de-survie-contrefactuelles">Étape 4 - Visualisation des courbes de survie contrefactuelles</a></li>
+  <li><a href="#%C3%A9tape-5---diff%C3%A9rence-de-survie-%C3%A0-t-3-ans" id="toc-étape-5---différence-de-survie-à-t-3-ans" class="nav-link" data-scroll-target="#%C3%A9tape-5---diff%C3%A9rence-de-survie-%C3%A0-t-3-ans">Étape 5 - Différence de survie à <span class="math inline">\(t = 3\)</span> ans</a></li>
   <li><a href="#intervalle-de-confiance-par-bootstrap-mod%C3%A8le-de-cox" id="toc-intervalle-de-confiance-par-bootstrap-modèle-de-cox" class="nav-link" data-scroll-target="#intervalle-de-confiance-par-bootstrap-mod%C3%A8le-de-cox">Intervalle de confiance par bootstrap (modèle de Cox)</a></li>
   </ul>
 </li>
@@ -2075,7 +2075,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 
 </header><div id="qwebr-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<section id="objectif-question-1" class="level2"><h2 class="anchored" data-anchor-id="objectif-question-1">Objectif — Question 1</h2>
+<section id="objectif---question-1" class="level2"><h2 class="anchored" data-anchor-id="objectif---question-1">Objectif - Question 1</h2>
 <p>Cette partie répond à la <strong>Question 1</strong> : quel serait l’effet d’une exposition initiale universelle (<span class="math inline">\(a_0 = 1\)</span> pour tous) par rapport à une absence totale d’exposition (<span class="math inline">\(a_0 = 0\)</span> pour tous) ?</p>
 <p>On souhaite estimer les <strong>courbes de survie contrefactuelles</strong> :</p>
 <p><span class="math display">\[S^{a_0=1}(t) = P(T^{a_0=1} &gt; t) \quad \text{et} \quad S^{a_0=0}(t) = P(T^{a_0=0} &gt; t)\]</span></p>
@@ -2090,7 +2090,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Simplification pédagogique :</strong> pour cette partie, le critère de jugement est traité comme binaire (décès en fin de suivi, oui/non) : on estime <span class="math inline">\(\widehat{P}(D=1 \mid a_0=1)\)</span> et <span class="math inline">\(\widehat{P}(D=1 \mid a_0=0)\)</span>, c’est-à-dire deux proportions de décès contrefactuelles. On peut effectuer une G-computation pour estimer directement la courbe de survie complète, mais c’est techniquement plus complexe — une section bonus en bas de cette page en montre la mise en œuvre, à consulter et à faire chez vous. La Partie 2 traitera le critère censuré directement via l’IPTW.</p>
+<p><strong>Simplification pédagogique :</strong> pour cette partie, le critère de jugement est traité comme binaire (décès en fin de suivi, oui/non) : on estime <span class="math inline">\(\widehat{P}(D=1 \mid a_0=1)\)</span> et <span class="math inline">\(\widehat{P}(D=1 \mid a_0=0)\)</span>, c’est-à-dire deux proportions de décès contrefactuelles. On peut effectuer une G-computation pour estimer directement la courbe de survie complète, mais c’est techniquement plus complexe (une section bonus en bas de cette page en montre la mise en œuvre, à consulter et à faire chez vous). La Partie 2 traitera le critère censuré directement via l’IPTW.</p>
 </div>
 </div>
 </section><section id="note-sur-la-session-r" class="level2"><h2 class="anchored" data-anchor-id="note-sur-la-session-r">Note sur la session R</h2>
@@ -2113,7 +2113,7 @@ Note
 6     2       2   2.5      0     0 -1.96      0     1  2.10</code></pre>
 </div>
 </div>
-</section><section id="étape-0-créer-la-base-baseline" class="level2"><h2 class="anchored" data-anchor-id="étape-0-créer-la-base-baseline">Étape 0 — Créer la base <em>baseline</em>
+</section><section id="étape-0---créer-la-base-baseline" class="level2"><h2 class="anchored" data-anchor-id="étape-0---créer-la-base-baseline">Étape 0 - Créer la base <em>baseline</em>
 </h2>
 <p>La G-computation s’applique sur une base <strong>une ligne par individu</strong>, avec les valeurs initiales des covariables et le statut final.</p>
 <p><em>Créez <code>df_base</code> contenant : <code>id</code>, <code>A0</code>, <code>L0</code>, <code>X</code>, <code>time</code> (temps total de suivi = dernière valeur de <code>T.stop</code>), et <code>D</code> (statut final = dernière valeur de <code>D</code>).</em></p>
@@ -2134,8 +2134,8 @@ Note
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">df_base</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>La base comporte <strong>2000</strong> lignes — une par individu. La variable <code>D</code> indique si l’individu est décédé avant la fin du suivi (3 ans).</p>
-</section><section id="étape-1-estimer-les-modèles-de-résultat" class="level2"><h2 class="anchored" data-anchor-id="étape-1-estimer-les-modèles-de-résultat">Étape 1 — Estimer les modèles de résultat</h2>
+<p>La base comporte <strong>2000</strong> lignes (une par individu). La variable <code>D</code> indique si l’individu est décédé avant la fin du suivi (3 ans).</p>
+</section><section id="étape-1---estimer-les-modèles-de-résultat" class="level2"><h2 class="anchored" data-anchor-id="étape-1---estimer-les-modèles-de-résultat">Étape 1 - Estimer les modèles de résultat</h2>
 <p>La G-computation ajuste le modèle d’outcome (<span class="math inline">\(D\)</span>) séparément selon le groupe d’exposition <span class="math inline">\(A_0\)</span>, en contrôlant pour les facteurs de confusion <span class="math inline">\(X\)</span> et <span class="math inline">\(L_0\)</span>.</p>
 <p><em>Estimez deux modèles de régression logistique sur <code>D</code> : <code>mod1</code> sur les individus avec <code>A0 = 1</code>, <code>mod0</code> sur les individus avec <code>A0 = 0</code>.</em></p>
 <div id="qwebr-insertion-location-3"></div>
@@ -2153,7 +2153,7 @@ Note
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mod0</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-</section><section id="étape-2-prédire-les-devenirs-contrefactuels" class="level2"><h2 class="anchored" data-anchor-id="étape-2-prédire-les-devenirs-contrefactuels">Étape 2 — Prédire les devenirs contrefactuels</h2>
+</section><section id="étape-2---prédire-les-devenirs-contrefactuels" class="level2"><h2 class="anchored" data-anchor-id="étape-2---prédire-les-devenirs-contrefactuels">Étape 2 - Prédire les devenirs contrefactuels</h2>
 <p>Pour chaque individu (quelle que soit son exposition réelle), on prédit le risque de décès <strong>comme s’il avait été exposé</strong> (via <code>mod1</code>) et <strong>comme s’il n’avait pas été exposé</strong> (via <code>mod0</code>).</p>
 <p><em>Calculez les vecteurs <code>y1</code> et <code>y0</code> : probabilités de décès prédites sous <span class="math inline">\(a_0=1\)</span> et <span class="math inline">\(a_0=0\)</span>.</em></p>
 <div id="qwebr-insertion-location-4"></div>
@@ -2170,7 +2170,7 @@ Note
 <span>                pred_A0_0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">y0</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-</section><section id="étape-3-calculer-leffet-causal-moyen-ate" class="level2"><h2 class="anchored" data-anchor-id="étape-3-calculer-leffet-causal-moyen-ate">Étape 3 — Calculer l’effet causal moyen (ATE)</h2>
+</section><section id="étape-3---calculer-leffet-causal-moyen-ate" class="level2"><h2 class="anchored" data-anchor-id="étape-3---calculer-leffet-causal-moyen-ate">Étape 3 - Calculer l’effet causal moyen (ATE)</h2>
 <p><em>Calculez <span class="math inline">\(\widehat{E}(Y^1) = \overline{y_1}\)</span>, <span class="math inline">\(\widehat{E}(Y^0) = \overline{y_0}\)</span>, puis l’ATE et le RR.</em></p>
 <div id="qwebr-insertion-location-5"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -2212,7 +2212,7 @@ Note
 </div>
 <p>La Partie 2 répondra à la même <strong>Question 1</strong> en utilisant une approche différente (IPTW), ce qui permettra un contrôle croisé des deux estimations.</p>
 <p>Pour continuer, cliquez sur <strong>IPTW</strong> dans le menu à gauche.</p>
-</section><section id="bonus-intervalle-de-confiance-par-bootstrap" class="level2"><h2 class="anchored" data-anchor-id="bonus-intervalle-de-confiance-par-bootstrap">BONUS — Intervalle de confiance par bootstrap</h2>
+</section><section id="bonus---intervalle-de-confiance-par-bootstrap" class="level2"><h2 class="anchored" data-anchor-id="bonus---intervalle-de-confiance-par-bootstrap">BONUS - Intervalle de confiance par bootstrap</h2>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2226,7 +2226,7 @@ Note
 <p>Cette section est à faire <strong>chez vous</strong>, à votre rythme. Elle n’est pas traitée en TP.</p>
 </div>
 </div>
-<p>Le bootstrap sert ici uniquement à estimer un <strong>intervalle de confiance</strong> autour de l’ATE calculé à l’Étape 3 — il ne modifie pas l’estimation elle-même.</p>
+<p>Le bootstrap sert ici uniquement à estimer un <strong>intervalle de confiance</strong> autour de l’ATE calculé à l’Étape 3 : il ne modifie pas l’estimation elle-même.</p>
 <p><em>Estimez un intervalle de confiance à 95% par bootstrap (<span class="math inline">\(B = 200\)</span> ré-échantillons).</em></p>
 <div id="qwebr-insertion-location-6"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -2253,7 +2253,7 @@ Note
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"IC 95% :"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">ate_boot</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.025</span>, <span class="fl">0.975</span><span class="op">)</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<hr></section><section id="bonus-2-g-computation-sur-critère-censuré" class="level2"><h2 class="anchored" data-anchor-id="bonus-2-g-computation-sur-critère-censuré">BONUS 2 — G-computation sur critère censuré</h2>
+<hr></section><section id="bonus-2---g-computation-sur-critère-censuré" class="level2"><h2 class="anchored" data-anchor-id="bonus-2---g-computation-sur-critère-censuré">BONUS 2 - G-computation sur critère censuré</h2>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2292,7 +2292,7 @@ Note
 </ul>
 <p>La courbe de survie <strong>marginale</strong> (contrefactuelle) s’obtient en moyennant sur l’ensemble de la population :</p>
 <p><span class="math display">\[\hat{S}^{a_0}(t) = \frac{1}{n} \sum_{i=1}^n \hat{S}_i^{a_0}(t)\]</span></p>
-<hr></section><section id="étape-1-un-modèle-de-cox-avec-interaction" class="level3"><h3 class="anchored" data-anchor-id="étape-1-un-modèle-de-cox-avec-interaction">Étape 1 — Un modèle de Cox avec interaction</h3>
+<hr></section><section id="étape-1---un-modèle-de-cox-avec-interaction" class="level3"><h3 class="anchored" data-anchor-id="étape-1---un-modèle-de-cox-avec-interaction">Étape 1 - Un modèle de Cox avec interaction</h3>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2315,11 +2315,11 @@ Note
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mod_cox</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<hr></section><section id="étape-2-hazard-cumulatif-de-base-et-prédicteurs-linéaires-individuels" class="level3"><h3 class="anchored" data-anchor-id="étape-2-hazard-cumulatif-de-base-et-prédicteurs-linéaires-individuels">Étape 2 — Hazard cumulatif de base et prédicteurs linéaires individuels</h3>
+<hr></section><section id="étape-2---hazard-cumulatif-de-base-et-prédicteurs-linéaires-individuels" class="level3"><h3 class="anchored" data-anchor-id="étape-2---hazard-cumulatif-de-base-et-prédicteurs-linéaires-individuels">Étape 2 - Hazard cumulatif de base et prédicteurs linéaires individuels</h3>
 <p>L’estimation des courbes contrefactuelles nécessite deux ingrédients :</p>
 <ul>
 <li>Le <strong>hazard cumulatif de base</strong> <span class="math inline">\(\hat{H}_0(t)\)</span> : c’est une fonction en escalier qui augmente à chaque temps d’événement. On l’obtient avec <code>basehaz(mod_cox, centered = FALSE)</code>, qui renvoie un data frame avec les colonnes <code>time</code> et <code>hazard</code>.</li>
-<li>Le <strong>prédicteur linéaire individuel</strong> <span class="math inline">\(\hat{\text{lp}}_i^{a_0}\)</span> : calculé dans deux bases contrefactuelles — l’une où tous les individus ont <span class="math inline">\(A_0=1\)</span>, l’autre où tous ont <span class="math inline">\(A_0=0\)</span>. On l’obtient avec <code>predict(mod_cox, newdata = ..., type = "lp")</code>.</li>
+<li>Le <strong>prédicteur linéaire individuel</strong> <span class="math inline">\(\hat{\text{lp}}_i^{a_0}\)</span> : calculé dans deux bases contrefactuelles : l’une où tous les individus ont <span class="math inline">\(A_0=1\)</span>, l’autre où tous ont <span class="math inline">\(A_0=0\)</span>. On l’obtient avec <code>predict(mod_cox, newdata = ..., type = "lp")</code>.</li>
 </ul>
 <p><em>Créez les bases contrefactuelles <code>df1</code> (A0=1 pour tous) et <code>df0</code> (A0=0 pour tous), extrayez le hazard cumulatif de base, et calculez les prédicteurs linéaires sous chaque scénario.</em></p>
 <div id="qwebr-insertion-location-8"></div>
@@ -2345,7 +2345,7 @@ Note
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<hr></section><section id="étape-3-courbes-de-survie-individuelles-et-marginalisation" class="level3"><h3 class="anchored" data-anchor-id="étape-3-courbes-de-survie-individuelles-et-marginalisation">Étape 3 — Courbes de survie individuelles et marginalisation</h3>
+<hr></section><section id="étape-3---courbes-de-survie-individuelles-et-marginalisation" class="level3"><h3 class="anchored" data-anchor-id="étape-3---courbes-de-survie-individuelles-et-marginalisation">Étape 3 - Courbes de survie individuelles et marginalisation</h3>
 <p>On dispose maintenant de tout ce qu’il faut pour calculer <span class="math inline">\(\hat{S}_i^{a_0}(t)\)</span> pour chaque individu <span class="math inline">\(i\)</span> et chaque temps <span class="math inline">\(t\)</span>, puis d’en faire la moyenne.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -2386,7 +2386,7 @@ Astuce
 <span>                S_a0  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">S0_marg</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<hr></section><section id="étape-4-visualisation-des-courbes-de-survie-contrefactuelles" class="level3"><h3 class="anchored" data-anchor-id="étape-4-visualisation-des-courbes-de-survie-contrefactuelles">Étape 4 — Visualisation des courbes de survie contrefactuelles</h3>
+<hr></section><section id="étape-4---visualisation-des-courbes-de-survie-contrefactuelles" class="level3"><h3 class="anchored" data-anchor-id="étape-4---visualisation-des-courbes-de-survie-contrefactuelles">Étape 4 - Visualisation des courbes de survie contrefactuelles</h3>
 <p><em>Tracez les deux courbes de survie marginales contrefactuelles sur le même graphique.</em></p>
 <div id="qwebr-insertion-location-10"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -2395,7 +2395,7 @@ Astuce
 <span>     ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>     xlab <span class="op">=</span> <span class="st">"Temps (années)"</span>,</span>
 <span>     ylab <span class="op">=</span> <span class="st">"Probabilité de survie"</span>,</span>
-<span>     main <span class="op">=</span> <span class="st">"G-computation (Cox) — Courbes contrefactuelles"</span><span class="op">)</span></span>
+<span>     main <span class="op">=</span> <span class="st">"G-computation (Cox) - Courbes contrefactuelles"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html">lines</a></span><span class="op">(</span><span class="va">t_grid</span>, <span class="va">S0_marg</span>, type <span class="op">=</span> <span class="st">"s"</span>, col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span><span class="op">(</span><span class="st">"bottomleft"</span>,</span>
 <span>       <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Scénario a₀=1 (tous exposés)"</span>,</span>
@@ -2403,7 +2403,7 @@ Astuce
 <span>       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"red"</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">1</span>, lwd <span class="op">=</span> <span class="fl">2</span>, bty <span class="op">=</span> <span class="st">"n"</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<hr></section><section id="étape-5-différence-de-survie-à-t-3-ans" class="level3"><h3 class="anchored" data-anchor-id="étape-5-différence-de-survie-à-t-3-ans">Étape 5 — Différence de survie à <span class="math inline">\(t = 3\)</span> ans</h3>
+<hr></section><section id="étape-5---différence-de-survie-à-t-3-ans" class="level3"><h3 class="anchored" data-anchor-id="étape-5---différence-de-survie-à-t-3-ans">Étape 5 - Différence de survie à <span class="math inline">\(t = 3\)</span> ans</h3>
 <p><em>Calculez <span class="math inline">\(\hat{S}^{a_0=1}(3)\)</span>, <span class="math inline">\(\hat{S}^{a_0=0}(3)\)</span>, et la différence de survie à 3 ans. Comparez avec l’ATE obtenu par G-computation logistique.</em></p>
 <div id="qwebr-insertion-location-11"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -2426,7 +2426,7 @@ Astuce
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Discussion — comparaison avec l’approche binaire
+<span class="screen-reader-only">Astuce</span>Discussion - comparaison avec l’approche binaire
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>

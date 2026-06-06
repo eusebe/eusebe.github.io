@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.9.38">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta name="description" content="G-computation, IPTW et IPCW — application pas-à-pas.">
-<title>IPTW – TP — Inférence causale en épidémiologie</title>
+<meta name="description" content="G-computation, IPTW et IPCW : application pas-à-pas.">
+<title>IPTW – TP Inférence causale en épidémiologie</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -1700,7 +1700,7 @@ window.Quarto = {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">TP — Inférence causale en épidémiologie</a> 
+      <a href="./">TP Inférence causale en épidémiologie</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -1754,11 +1754,11 @@ window.Quarto = {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
    
   <ul>
-<li><a href="#objectif-question-1-suite" id="toc-objectif-question-1-suite" class="nav-link active" data-scroll-target="#objectif-question-1-suite">Objectif — Question 1 (suite)</a></li>
-  <li><a href="#%C3%A9tape-1-estimer-le-score-de-propension" id="toc-étape-1-estimer-le-score-de-propension" class="nav-link" data-scroll-target="#%C3%A9tape-1-estimer-le-score-de-propension">Étape 1 — Estimer le score de propension</a></li>
-  <li><a href="#%C3%A9tape-2-calculer-les-poids-iptw" id="toc-étape-2-calculer-les-poids-iptw" class="nav-link" data-scroll-target="#%C3%A9tape-2-calculer-les-poids-iptw">Étape 2 — Calculer les poids IPTW</a></li>
-  <li><a href="#%C3%A9tape-3-v%C3%A9rifier-l%C3%A9quilibre" id="toc-étape-3-vérifier-léquilibre" class="nav-link" data-scroll-target="#%C3%A9tape-3-v%C3%A9rifier-l%C3%A9quilibre">Étape 3 — Vérifier l’équilibre</a></li>
-  <li><a href="#%C3%A9tape-4-analyse-de-survie-pond%C3%A9r%C3%A9e-kaplan-meier" id="toc-étape-4-analyse-de-survie-pondérée-kaplan-meier" class="nav-link" data-scroll-target="#%C3%A9tape-4-analyse-de-survie-pond%C3%A9r%C3%A9e-kaplan-meier">Étape 4 — Analyse de survie pondérée (Kaplan-Meier)</a></li>
+<li><a href="#objectif---question-1-suite" id="toc-objectif---question-1-suite" class="nav-link active" data-scroll-target="#objectif---question-1-suite">Objectif - Question 1 (suite)</a></li>
+  <li><a href="#%C3%A9tape-1---estimer-le-score-de-propension" id="toc-étape-1---estimer-le-score-de-propension" class="nav-link" data-scroll-target="#%C3%A9tape-1---estimer-le-score-de-propension">Étape 1 - Estimer le score de propension</a></li>
+  <li><a href="#%C3%A9tape-2---calculer-les-poids-iptw" id="toc-étape-2---calculer-les-poids-iptw" class="nav-link" data-scroll-target="#%C3%A9tape-2---calculer-les-poids-iptw">Étape 2 - Calculer les poids IPTW</a></li>
+  <li><a href="#%C3%A9tape-3---v%C3%A9rifier-l%C3%A9quilibre" id="toc-étape-3---vérifier-léquilibre" class="nav-link" data-scroll-target="#%C3%A9tape-3---v%C3%A9rifier-l%C3%A9quilibre">Étape 3 - Vérifier l’équilibre</a></li>
+  <li><a href="#%C3%A9tape-4---analyse-de-survie-pond%C3%A9r%C3%A9e-kaplan-meier" id="toc-étape-4---analyse-de-survie-pondérée-kaplan-meier" class="nav-link" data-scroll-target="#%C3%A9tape-4---analyse-de-survie-pond%C3%A9r%C3%A9e-kaplan-meier">Étape 4 - Analyse de survie pondérée (Kaplan-Meier)</a></li>
   <li><a href="#comparaison-g-computation-vs-iptw" id="toc-comparaison-g-computation-vs-iptw" class="nav-link" data-scroll-target="#comparaison-g-computation-vs-iptw">Comparaison G-computation vs IPTW</a></li>
   </ul></nav>
     </div>
@@ -2060,9 +2060,9 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 
 </header><div id="qwebr-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<section id="objectif-question-1-suite" class="level2"><h2 class="anchored" data-anchor-id="objectif-question-1-suite">Objectif — Question 1 (suite)</h2>
+<section id="objectif---question-1-suite" class="level2"><h2 class="anchored" data-anchor-id="objectif---question-1-suite">Objectif - Question 1 (suite)</h2>
 <p>Cette partie répond à la <strong>même Question 1</strong> que la G-computation : estimer les courbes de survie contrefactuelles <span class="math inline">\(S^{a_0=1}(t)\)</span> et <span class="math inline">\(S^{a_0=0}(t)\)</span> ajustées sur les facteurs de confusion <span class="math inline">\(X\)</span> et <span class="math inline">\(L_0\)</span>.</p>
-<p>L’<strong>IPTW</strong> adopte une stratégie opposée à la G-computation : au lieu de modéliser le résultat <span class="math inline">\(Y\)</span>, il modélise l’<strong>exposition</strong> <span class="math inline">\(A_0\)</span> conditionnellement aux covariables, puis pondère les individus pour créer une pseudo-population équilibrée. Une fois les poids calculés, l’analyse de survie est directement réalisée par <strong>Kaplan-Meier pondéré</strong>, ce qui traite correctement la censure — de même que la G-computation de la courbe de survie présentée dans le bonus de la Partie 1. La simplification binaire de la Partie 1 avait été faite uniquement pour des raisons pédagogiques.</p>
+<p>L’<strong>IPTW</strong> adopte une stratégie opposée à la G-computation : au lieu de modéliser le résultat <span class="math inline">\(Y\)</span>, il modélise l’<strong>exposition</strong> <span class="math inline">\(A_0\)</span> conditionnellement aux covariables, puis pondère les individus pour créer une pseudo-population équilibrée. Une fois les poids calculés, l’analyse de survie est directement réalisée par <strong>Kaplan-Meier pondéré</strong>, ce qui traite correctement la censure, de même que la G-computation de la courbe de survie présentée dans le bonus de la Partie 1. La simplification binaire de la Partie 1 avait été faite uniquement pour des raisons pédagogiques.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2077,7 +2077,7 @@ Note
 </div>
 </div>
 <p>La variable <code>df</code> est disponible dans les chunks interactifs, avec <code>A0</code> et <code>L0</code> déjà propagées.</p>
-</section><section id="étape-1-estimer-le-score-de-propension" class="level2"><h2 class="anchored" data-anchor-id="étape-1-estimer-le-score-de-propension">Étape 1 — Estimer le score de propension</h2>
+</section><section id="étape-1---estimer-le-score-de-propension" class="level2"><h2 class="anchored" data-anchor-id="étape-1---estimer-le-score-de-propension">Étape 1 - Estimer le score de propension</h2>
 <p>Comme pour la G-computation, on travaille d’abord sur une base <strong>une ligne par individu</strong> (<code>df_base</code>) pour estimer le score de propension et les poids IPTW, puis on fusionne les poids dans <code>df</code> pour l’analyse de survie pondérée.</p>
 <p>Le score de propension est <span class="math inline">\(e_i = P(A_0 = 1 \mid X = x_i,\ L_0 = l_i)\)</span>, estimé par régression logistique sur les données de la première visite.</p>
 <p><em>Créez <code>df_base</code> (une ligne par individu), estimez le modèle de propension <code>mod.ps</code> et stockez les probabilités prédites dans <code>df_base$ps</code>.</em></p>
@@ -2114,7 +2114,7 @@ Note
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-</section><section id="étape-2-calculer-les-poids-iptw" class="level2"><h2 class="anchored" data-anchor-id="étape-2-calculer-les-poids-iptw">Étape 2 — Calculer les poids IPTW</h2>
+</section><section id="étape-2---calculer-les-poids-iptw" class="level2"><h2 class="anchored" data-anchor-id="étape-2---calculer-les-poids-iptw">Étape 2 - Calculer les poids IPTW</h2>
 <p>On calcule les poids <strong>non stabilisés</strong> <span class="math inline">\(w_i = A_0/e_i + (1-A_0)/(1-e_i)\)</span> et les poids <strong>stabilisés</strong> <span class="math inline">\(w^s_i = P(A_0)/e_i\)</span> si <span class="math inline">\(A_0=1\)</span>, <span class="math inline">\(P(A_0=0)/(1-e_i)\)</span> si <span class="math inline">\(A_0=0\)</span>, sur <code>df_base</code>. On fusionne ensuite les poids dans <code>df</code> pour l’analyse de survie pondérée.</p>
 <p><em>Calculez <code>df_base$iptw</code> (non stabilisé) et <code>df_base$iptw.s</code> (stabilisé), puis fusionnez dans <code>df</code>.</em></p>
 <div id="qwebr-insertion-location-4"></div>
@@ -2156,7 +2156,7 @@ Note
 <p><strong>Règle pratique :</strong> les poids stabilisés ont une moyenne proche de 1 et une variance plus faible. Ils sont généralement préférés en pratique. Si certains poids sont très élevés (&gt; 10–20), c’est un signe de violation de la positivité ou d’un modèle de propension mal spécifié.</p>
 </div>
 </div>
-</section><section id="étape-3-vérifier-léquilibre" class="level2"><h2 class="anchored" data-anchor-id="étape-3-vérifier-léquilibre">Étape 3 — Vérifier l’équilibre</h2>
+</section><section id="étape-3---vérifier-léquilibre" class="level2"><h2 class="anchored" data-anchor-id="étape-3---vérifier-léquilibre">Étape 3 - Vérifier l’équilibre</h2>
 <p>Avant toute analyse, il faut s’assurer que la pondération a <strong>rétabli l’équilibre</strong> entre les groupes <span class="math inline">\(A_0=1\)</span> et <span class="math inline">\(A_0=0\)</span> sur les covariables <span class="math inline">\(X\)</span> et <span class="math inline">\(L_0\)</span>.</p>
 <p><em>Utilisez <code><a href="https://ngreifer.github.io/cobalt/reference/bal.tab.html">cobalt::bal.tab()</a></code> et <code><a href="https://ngreifer.github.io/cobalt/reference/love.plot.html">cobalt::love.plot()</a></code> pour comparer les différences standardisées avant et après pondération.</em></p>
 <div id="qwebr-insertion-location-5"></div>
@@ -2203,11 +2203,11 @@ Note
 </div>
 </div>
 <p>Si les SMD après pondération sont &lt; 0,1 pour toutes les covariables, l’équilibre est satisfaisant. Un SMD résiduel &gt; 0,1 suggère une mauvaise spécification du modèle de propension (variables manquantes, transformations nécessaires, interactions, etc.).</p>
-<p>Rappel : n’utilisez <strong>pas</strong> de p-values pour évaluer l’équilibre — elles dépendent de la taille d’échantillon et ne mesurent pas la comparabilité des groupes.</p>
+<p>Rappel : n’utilisez <strong>pas</strong> de p-values pour évaluer l’équilibre : elles dépendent de la taille d’échantillon et ne mesurent pas la comparabilité des groupes.</p>
 </div>
 </div>
 </div>
-</section><section id="étape-4-analyse-de-survie-pondérée-kaplan-meier" class="level2"><h2 class="anchored" data-anchor-id="étape-4-analyse-de-survie-pondérée-kaplan-meier">Étape 4 — Analyse de survie pondérée (Kaplan-Meier)</h2>
+</section><section id="étape-4---analyse-de-survie-pondérée-kaplan-meier" class="level2"><h2 class="anchored" data-anchor-id="étape-4---analyse-de-survie-pondérée-kaplan-meier">Étape 4 - Analyse de survie pondérée (Kaplan-Meier)</h2>
 <p><em>Estimez les courbes de Kaplan-Meier pondérées par <code>iptw.s</code>, tracez-les et obtenez la différence de survie à 3 ans.</em></p>
 <div id="qwebr-insertion-location-6"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -2329,7 +2329,7 @@ Avertissement
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Les estimations de référence calculées automatiquement :</p>
+<p>Les estimations obtenues sont :</p>
 <ul>
 <li>
 <strong>G-computation</strong> (binaire, Partie 1) : ATE <span class="math inline">\(\approx\)</span> -0.135</li>
@@ -2338,8 +2338,6 @@ Avertissement
 <li>
 <strong>IPTW</strong> (KM pondéré, survie) : diff. de survie <span class="math inline">\(\approx\)</span> 0.167</li>
 </ul>
-<p><strong>Convergence :</strong> si G-computation et IPTW binaire donnent des ATE proches, les deux modèles (outcome et exposition) sont probablement bien spécifiés — c’est un argument de robustesse.</p>
-<p><strong>Signe opposé :</strong> la différence de survie IPTW doit être approximativement <span class="math inline">\(-\text{ATE}\)</span>. Ici : -0.15 + 0.167 = 0.016 (proche de 0).</p>
 <p><strong>Critère censuré vs binaire :</strong> la différence de survie par KM pondéré est l’estimateur de référence de cette partie, car il exploite toute l’information temporelle et traite correctement la censure. La version binaire est proposée uniquement pour le parallèle avec la Partie 1.</p>
 </div>
 </div>

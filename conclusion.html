@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.9.38">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta name="description" content="G-computation, IPTW et IPCW — application pas-à-pas.">
-<title>Conclusion – TP — Inférence causale en épidémiologie</title>
+<meta name="description" content="G-computation, IPTW et IPCW : application pas-à-pas.">
+<title>Conclusion – TP Inférence causale en épidémiologie</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -111,7 +111,7 @@ window.Quarto = {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">TP — Inférence causale en épidémiologie</a> 
+      <a href="./">TP Inférence causale en épidémiologie</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -216,37 +216,37 @@ window.Quarto = {
 <th style="text-align: left;">Analyse</th>
 <th style="text-align: left;">Estimand</th>
 <th style="text-align: left;">Ajustement</th>
-<th style="text-align: left;">S(3) — A₀=0</th>
-<th style="text-align: right;">S(3) — A₀=1</th>
+<th style="text-align: left;">S(3) - A₀=0</th>
+<th style="text-align: right;">S(3) - A₀=1</th>
 <th style="text-align: right;">Δ survie</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">KM brut (non ajusté)</td>
-<td style="text-align: left;">—</td>
+<td style="text-align: left;">-</td>
 <td style="text-align: left;">Aucun</td>
 <td style="text-align: left;">0.674</td>
 <td style="text-align: right;">0.784</td>
 <td style="text-align: right;">0.111</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Q1 — G-computation Cox [Bonus P.1]</td>
+<td style="text-align: left;">Q1 - G-computation Cox [Bonus P.1]</td>
 <td style="text-align: left;">Analogue-ITT : effet d’initier l’exposition</td>
-<td style="text-align: left;">Confusion initiale (X, L₀) — modèle du résultat</td>
+<td style="text-align: left;">Confusion initiale (X, L₀) - modèle du résultat</td>
 <td style="text-align: left;">0.641</td>
 <td style="text-align: right;">0.828</td>
 <td style="text-align: right;">0.187</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Q1 — IPTW</td>
+<td style="text-align: left;">Q1 - IPTW</td>
 <td style="text-align: left;">Analogue-ITT : effet d’initier l’exposition</td>
-<td style="text-align: left;">Confusion initiale (X, L₀) — modèle de l’exposition</td>
+<td style="text-align: left;">Confusion initiale (X, L₀) - modèle de l’exposition</td>
 <td style="text-align: left;">0.636</td>
 <td style="text-align: right;">0.803</td>
 <td style="text-align: right;">0.167</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Q2 — IPTW × IPCW (per-protocol)</td>
+<td style="text-align: left;">Q2 - IPTW × IPCW (per-protocol)</td>
 <td style="text-align: left;">Analogue per-protocol : effet de maintenir l’exposition</td>
 <td style="text-align: left;">Confusion initiale + déviation de stratégie</td>
 <td style="text-align: left;">0.568</td>
