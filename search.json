@@ -52,361 +52,361 @@
   {
     "objectID": "presentation.html",
     "href": "presentation.html",
-    "title": "Présentation des données",
+    "title": "\n1  Présentation des données\n",
     "section": "",
     "text": "Présentation\nDans ce TP, nous utiliserons un jeu de données simulées (df.csv) contenant des informations sur 2000 individus suivis dans le cadre d’une étude de cohorte observationnelle. L’objectif est d’évaluer l’effet d’un traitement \\(A\\) (exposé/non exposé, pouvant changer au cours du temps) sur la mortalité à 3 ans.\nLes données sont au format long (counting process) : chaque individu contribue une ligne par période d’observation (ici, une ligne par visite annuelle).\n⬇ Télécharger les données df.csv\nOn suppose que les relations entre les variables suivent le DAG (directed acyclic graph) en temps discret ci-dessous, où \\(Y_t\\) désigne l’indicateur de décès à la période \\(t\\) (\\(t = 1, 2, 3\\)) :\nLecture du DAG :",
     "crumbs": [
-      "Présentation des données"
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Présentation des données</span>"
     ]
   },
   {
     "objectID": "presentation.html#présentation",
     "href": "presentation.html#présentation",
-    "title": "Présentation des données",
+    "title": "\n1  Présentation des données\n",
     "section": "",
     "text": "Variable\nDescription\n\n\n\nid\nIdentifiant patient\n\n\nT.start\nDébut de la période d’observation (en années)\n\n\nT.stop\nFin de la période d’observation (en années)\n\n\nA\nTraitement (0/1), dépendant du temps\n\n\n\nD\nDécès survenu avant T.stop (0/1)\n\n\nL\nFacteur de confusion dépendant du temps (continu)\n\n\nX\nFacteur de confusion initial (binaire 0/1, non dépendant du temps)\n\n\n\n\n\n\n\n\n\n\\(X\\) (bleu foncé) - facteur de confusion initial : influence \\(A_0\\), \\(L_0\\) et \\(Y_1\\).\n\n\\(L_t\\) (bleu clair) - facteur de confusion dépendant du temps : influencé par le traitement passé \\(A_{t-1}\\) et l’état de santé \\(Y_t\\), il prédit à son tour \\(A_t\\) et \\(Y_{t+1}\\).\n\n\\(A_t\\) (rouge) - exposition à chaque période, influencée par \\(X\\), \\(L_t\\) et les valeurs passées.\n\n\\(Y_t\\) (gris) - indicateur de décès, influencé par \\(A_{t-1}\\) et \\(L_{t-1}\\).",
     "crumbs": [
-      "Présentation des données"
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Présentation des données</span>"
     ]
   },
   {
     "objectID": "presentation.html#chargement-et-exploration",
     "href": "presentation.html#chargement-et-exploration",
-    "title": "Présentation des données",
+    "title": "\n1  Présentation des données\n",
     "section": "Chargement et exploration",
     "text": "Chargement et exploration\nChargez les données et affichez les premières lignes. Vérifiez les dimensions de la base et le nombre d’individus distincts.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !library(survival)\nlibrary(dplyr)\ndf &lt;- read.csv(\"df.csv\")\n\nhead(df)\ndim(df)                    # dimensions de la base\nlength(unique(df$id))      # nombre d'individus\nsum(df$D)                  # nombre total de décès\ndf[df$id %in% 1:3, ]       # 3 premiers individus (plusieurs lignes chacun)\n\n\nLa base comporte 4376 lignes, 8 colonnes, 2000 individus distincts et 409 décès observés.\n\n\n\n\n\n\nNote\n\n\n\nFormat long : chaque individu a autant de lignes qu’il a eu de périodes de suivi (en général 1 à 3, selon s’il est décédé ou perdu de vue précocement). La colonne T.start/T.stop délimite chaque période. Le dernier enregistrement par individu indique son statut final (\\(D\\)) et son temps total de suivi.",
     "crumbs": [
-      "Présentation des données"
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Présentation des données</span>"
     ]
   },
   {
     "objectID": "presentation.html#analyse-brute-non-ajustée",
     "href": "presentation.html#analyse-brute-non-ajustée",
-    "title": "Présentation des données",
+    "title": "\n1  Présentation des données\n",
     "section": "Analyse brute (non ajustée)",
     "text": "Analyse brute (non ajustée)\nAvant tout ajustement, comparons les courbes de survie selon le traitement initial \\(A_0\\) (valeur de \\(A\\) à la première visite).\nCréez la variable A0 (valeur initiale de \\(A\\) pour chaque individu), puis tracez les courbes de Kaplan-Meier selon A0.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## A0 : valeur de A à la première visite, propagée à toutes les lignes de l'individu\ndf &lt;- df |&gt;\n  group_by(id) |&gt;\n  mutate(A0 = first(A)) |&gt;\n  ungroup()\n\n## Surv(T.start, T.stop, D) : format comptage pour données en format long\n## (plusieurs lignes par individu, une par période de suivi)\nkm_brut &lt;- survfit(Surv(T.start, T.stop, D) ~ A0, data = df)\n\nplot(km_brut,\n     col  = c(\"#1D2769\", \"#AC182E\"), lwd = 2,\n     xlab = \"Temps (années)\", ylab = \"Probabilité de survie\",\n     main = \"Kaplan-Meier brut selon A0 (non ajusté)\")\nlegend(\"bottomleft\",\n       legend = c(\"A0 = 0 (non-exposés)\", \"A0 = 1 (exposés)\"),\n       col = c(\"#1D2769\", \"#AC182E\"), lwd = 2)\n\n## Survie à 3 ans\nsummary(km_brut, times = 3)\n\n\nQue constatez-vous ? Cette différence brute a-t-elle une interprétation causale ?\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\nOn observe une différence de survie entre les groupes \\(A_0 = 0\\) et \\(A_0 = 1\\). Cependant, cette différence n’a pas d’interprétation causale car les deux groupes ne sont pas comparables : les individus traités (\\(A_0 = 1\\)) et non traités (\\(A_0 = 0\\)) diffèrent sur \\(X\\) et \\(L_0\\), qui sont à la fois des prédicteurs de l’exposition et du décès (facteurs de confusion).\nLes parties suivantes montrent comment corriger ce biais par G-computation et IPTW.",
     "crumbs": [
-      "Présentation des données"
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Présentation des données</span>"
     ]
   },
   {
     "objectID": "presentation.html#ce-que-nous-observons-ce-que-nous-voulons-estimer",
     "href": "presentation.html#ce-que-nous-observons-ce-que-nous-voulons-estimer",
-    "title": "Présentation des données",
+    "title": "\n1  Présentation des données\n",
     "section": "Ce que nous observons, ce que nous voulons estimer",
     "text": "Ce que nous observons, ce que nous voulons estimer\nL’analyse brute met en évidence une différence de survie entre les groupes \\(A_0 = 0\\) et \\(A_0 = 1\\). Mais cette différence n’a pas d’interprétation causale directe : les deux groupes ne sont pas comparables à l’inclusion (les individus exposés et non exposés diffèrent sur \\(X\\) et \\(L_0\\), qui prédisent à la fois l’exposition et le décès).\nLes parties suivantes vont estimer deux effets causaux distincts à partir de ces données :\n\n\nParties 1 et 2 : effet de l’initiation de l’exposition au temps 0, ajusté sur les facteurs de confusion initiaux (d’abord par G-computation, puis par IPTW).\n\nPartie 3 : effet du maintien de l’exposition tout au long du suivi, en traitant les déviations de stratégie comme une censure artificielle (IPTW + IPCW).\n\nPour continuer, cliquez sur G-computation dans le menu à gauche.",
     "crumbs": [
-      "Présentation des données"
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Présentation des données</span>"
     ]
   },
   {
     "objectID": "partie1.html",
     "href": "partie1.html",
-    "title": "G-computation",
+    "title": "\n2  G-computation\n",
     "section": "",
     "text": "Objectif - Question 1\nCette partie répond à la Question 1 : quel serait l’effet d’une exposition initiale universelle (\\(a_0 = 1\\) pour tous) par rapport à une absence totale d’exposition (\\(a_0 = 0\\) pour tous) ?\nOn souhaite estimer les courbes de survie contrefactuelles :\n\\[S^{a_0=1}(t) = P(T^{a_0=1} &gt; t) \\quad \\text{et} \\quad S^{a_0=0}(t) = P(T^{a_0=0} &gt; t)\\]\nLa méthode utilisée ici est la G-computation (standardisation par régression) : on modélise le résultat \\(Y\\) en fonction de l’exposition et des covariables, puis on prédit les devenirs contrefactuels pour l’ensemble de la population.",
     "crumbs": [
-      "G-computation"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>G-computation</span>"
     ]
   },
   {
     "objectID": "partie1.html#objectif---question-1",
     "href": "partie1.html#objectif---question-1",
-    "title": "G-computation",
+    "title": "\n2  G-computation\n",
     "section": "",
     "text": "Note\n\n\n\nSimplification pédagogique : pour cette partie, le critère de jugement est traité comme binaire (décès en fin de suivi, oui/non) : on estime \\(\\widehat{P}(D=1 \\mid a_0=1)\\) et \\(\\widehat{P}(D=1 \\mid a_0=0)\\), c’est-à-dire deux proportions de décès contrefactuelles. On peut effectuer une G-computation pour estimer directement la courbe de survie complète, mais c’est techniquement plus complexe (une section bonus en bas de cette page en montre la mise en œuvre, à consulter et à faire chez vous). La Partie 2 traitera le critère censuré directement via l’IPTW.",
     "crumbs": [
-      "G-computation"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>G-computation</span>"
     ]
   },
   {
     "objectID": "partie1.html#note-sur-la-session-r",
     "href": "partie1.html#note-sur-la-session-r",
-    "title": "G-computation",
+    "title": "\n2  G-computation\n",
     "section": "Note sur la session R",
     "text": "Note sur la session R\nLes variables suivantes sont disponibles dans vos chunks interactifs (construites dans le contexte de setup) :\n\n\ndf : base de données au format long, avec A0 (exposition initiale, valeur de A à \\(t=0\\)) et L0 (facteur de confusion initial, valeur de L à \\(t=0\\))\n\nLes premières lignes de df illustrent ce format long et montrent les colonnes A0 et L0 :\n\n\n# A tibble: 6 × 9\n     id T.start T.stop     A     D      L     X    A0    L0\n  &lt;int&gt;   &lt;int&gt;  &lt;dbl&gt; &lt;int&gt; &lt;int&gt;  &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;\n1     1       0   1        0     0 -1.43      0     0 -1.43\n2     1       1   2        1     0 -0.603     0     0 -1.43\n3     1       2   2.21     1     0  1.10      0     0 -1.43\n4     2       0   1        1     0  2.10      0     1  2.10\n5     2       1   2        0     0 -1.39      0     1  2.10\n6     2       2   2.5      0     0 -1.96      0     1  2.10",
     "crumbs": [
-      "G-computation"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>G-computation</span>"
     ]
   },
   {
     "objectID": "partie1.html#étape-0---créer-la-base-baseline",
     "href": "partie1.html#étape-0---créer-la-base-baseline",
-    "title": "G-computation",
+    "title": "\n2  G-computation\n",
     "section": "Étape 0 - Créer la base baseline\n",
     "text": "Étape 0 - Créer la base baseline\n\nLa G-computation s’applique sur une base une ligne par individu, avec les valeurs initiales des covariables et le statut final.\nCréez df_base contenant : id, A0, L0, X, time (temps total de suivi = dernière valeur de T.stop), et D (statut final = dernière valeur de D).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## On résume df (format long) en une ligne par individu :\n## - first() pour les covariables mesurées à t=0\n## - last() pour le temps de suivi total et le statut final\ndf_base &lt;- df |&gt;\n  group_by(id) |&gt;\n  summarise(\n    A0   = first(A),     # exposition initiale\n    L0   = first(L),     # facteur de confusion initial\n    X    = first(X),     # covariable initiale\n    time = last(T.stop), # temps total de suivi\n    D    = last(D)       # décès (0/1) : statut en fin de suivi\n  )\n\nhead(df_base)\nnrow(df_base)  # doit valoir le nombre d'individus distincts\n\n\nLa base comporte 2000 lignes (une par individu). La variable D indique si l’individu est décédé avant la fin du suivi (3 ans).",
     "crumbs": [
-      "G-computation"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>G-computation</span>"
     ]
   },
   {
     "objectID": "partie1.html#étape-1---estimer-les-modèles-de-résultat",
     "href": "partie1.html#étape-1---estimer-les-modèles-de-résultat",
-    "title": "G-computation",
+    "title": "\n2  G-computation\n",
     "section": "Étape 1 - Estimer les modèles de résultat",
     "text": "Étape 1 - Estimer les modèles de résultat\nLa G-computation ajuste le modèle d’outcome (\\(D\\)) séparément selon le groupe d’exposition \\(A_0\\), en contrôlant pour les facteurs de confusion \\(X\\) et \\(L_0\\).\nEstimez deux modèles de régression logistique sur D : mod1 sur les individus avec A0 = 1, mod0 sur les individus avec A0 = 0.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## Régression logistique sur D dans chaque groupe d'exposition séparément :\n## on ajuste sur X et L0 pour contrôler la confusion\n## (deux modèles séparés = équivalent à une interaction complète avec A0)\nmod1 &lt;- glm(D ~ X + L0,\n            data   = df_base[df_base$A0 == 1, ],\n            family = binomial)  # critère binaire -&gt; famille binomiale (logit)\n\nmod0 &lt;- glm(D ~ X + L0,\n            data   = df_base[df_base$A0 == 0, ],\n            family = binomial)\n\nsummary(mod1)\nsummary(mod0)",
     "crumbs": [
-      "G-computation"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>G-computation</span>"
     ]
   },
   {
     "objectID": "partie1.html#étape-2---prédire-les-devenirs-contrefactuels",
     "href": "partie1.html#étape-2---prédire-les-devenirs-contrefactuels",
-    "title": "G-computation",
+    "title": "\n2  G-computation\n",
     "section": "Étape 2 - Prédire les devenirs contrefactuels",
     "text": "Étape 2 - Prédire les devenirs contrefactuels\nPour chaque individu (quelle que soit son exposition réelle), on prédit le risque de décès comme s’il avait été exposé (via mod1) et comme s’il n’avait pas été exposé (via mod0).\nCalculez les vecteurs y1 et y0 : probabilités de décès prédites sous \\(a_0=1\\) et \\(a_0=0\\).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## Probabilité de décès si tout le monde avait A0 = 1\ny1 &lt;- predict(mod1, newdata = df_base, type = \"response\")\n\n## Probabilité de décès si tout le monde avait A0 = 0\ny0 &lt;- predict(mod0, newdata = df_base, type = \"response\")\n\nhead(data.frame(id = df_base$id, A0_obs = df_base$A0,\n                pred_A0_1 = round(y1, 3),\n                pred_A0_0 = round(y0, 3)))",
     "crumbs": [
-      "G-computation"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>G-computation</span>"
     ]
   },
   {
     "objectID": "partie1.html#étape-3---calculer-leffet-causal-moyen-ate",
     "href": "partie1.html#étape-3---calculer-leffet-causal-moyen-ate",
-    "title": "G-computation",
+    "title": "\n2  G-computation\n",
     "section": "Étape 3 - Calculer l’effet causal moyen (ATE)",
     "text": "Étape 3 - Calculer l’effet causal moyen (ATE)\nCalculez \\(\\widehat{E}(Y^1) = \\overline{y_1}\\), \\(\\widehat{E}(Y^0) = \\overline{y_0}\\), puis l’ATE et le RR.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !E_Y1 &lt;- mean(y1)\nE_Y0 &lt;- mean(y0)\n\ncat(\"E(D^1)                       =\", round(E_Y1, 3), \"\\n\")\ncat(\"E(D^0)                       =\", round(E_Y0, 3), \"\\n\")\ncat(\"ATE = E(D^1) - E(D^0)        =\", round(E_Y1 - E_Y0, 3), \"\\n\")\ncat(\"RR  = E(D^1) / E(D^0)        =\", round(E_Y1 / E_Y0, 3), \"\\n\")\n\n\nOn obtient : \\(\\widehat{E}(Y^1) \\approx\\) 0.125, \\(\\widehat{E}(Y^0) \\approx\\) 0.26, \\(\\widehat{ATE} \\approx\\) -0.135.",
     "crumbs": [
-      "G-computation"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>G-computation</span>"
     ]
   },
   {
     "objectID": "partie1.html#interprétation",
     "href": "partie1.html#interprétation",
-    "title": "G-computation",
+    "title": "\n2  G-computation\n",
     "section": "Interprétation",
     "text": "Interprétation\nQue signifie cet ATE ? Comment le comparez-vous à l’analyse brute de la page précédente ?\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\nL’ATE estimé par G-computation est la différence de risque de décès entre les scénarios contrefactuels “tout le monde exposé” et “personne exposé”, après ajustement sur \\(X\\) et \\(L_0\\).\nContrairement à l’analyse brute, cette estimation tient compte du fait que les individus exposés et non exposés ne sont pas comparables à l’inclusion.\nPoints à retenir :\n\nOn traite le décès comme binaire, en ignorant l’information temporelle (voir le bonus en bas de page pour la version survie complète).\nOn n’ajuste que sur les confondeurs initiaux, ce qui est suffisant ici : la question porte sur l’exposition initiale \\(A_0\\). La Partie 3 traitera les confondeurs dépendants du temps dans le cadre de l’analyse per-protocol.\nL’estimation repose entièrement sur la bonne spécification du modèle d’outcome \\(D\\).\n\n\n\n\nLa Partie 2 répondra à la même Question 1 en utilisant une approche différente (IPTW), ce qui permettra un contrôle croisé des deux estimations.\nPour continuer, cliquez sur IPTW dans le menu à gauche.",
     "crumbs": [
-      "G-computation"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>G-computation</span>"
     ]
   },
   {
     "objectID": "partie1.html#bonus---intervalle-de-confiance-par-bootstrap",
     "href": "partie1.html#bonus---intervalle-de-confiance-par-bootstrap",
-    "title": "G-computation",
+    "title": "\n2  G-computation\n",
     "section": "BONUS - Intervalle de confiance par bootstrap",
     "text": "BONUS - Intervalle de confiance par bootstrap\n\n\n\n\n\n\nNote\n\n\n\nCette section est à faire chez vous, à votre rythme. Elle n’est pas traitée en TP.\n\n\nLe bootstrap sert ici uniquement à estimer un intervalle de confiance autour de l’ATE calculé à l’Étape 3 : il ne modifie pas l’estimation elle-même.\nEstimez un intervalle de confiance à 95% par bootstrap (\\(B = 200\\) ré-échantillons).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !set.seed(123)\nB &lt;- 200\nate_boot &lt;- numeric(B)\n\nfor (b in 1:B) {\n  ## Ré-échantillonnage avec remise (même taille que df_base)\n  idx  &lt;- sample(nrow(df_base), replace = TRUE)\n  df_b &lt;- df_base[idx, ]\n\n  ## Réajuster les deux modèles sur l'échantillon bootstrap\n  m1 &lt;- glm(D ~ X + L0, data = df_b[df_b$A0 == 1, ], family = binomial)\n  m0 &lt;- glm(D ~ X + L0, data = df_b[df_b$A0 == 0, ], family = binomial)\n\n  ## Prédire pour tous les individus du bootstrap sous chaque scénario\n  y1_b &lt;- predict(m1, newdata = df_b, type = \"response\")\n  y0_b &lt;- predict(m0, newdata = df_b, type = \"response\")\n\n  ## Stocker l'ATE de cet échantillon bootstrap\n  ate_boot[b] &lt;- mean(y1_b) - mean(y0_b)\n}\n\n## L'ATE est celui estimé à l'Étape 3 (E_Y1 - E_Y0), pas la moyenne des bootstrap\ncat(\"ATE    :\", round(E_Y1 - E_Y0, 3), \"\\n\")\ncat(\"IC 95% :\", round(quantile(ate_boot, c(0.025, 0.975)), 3), \"\\n\")",
     "crumbs": [
-      "G-computation"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>G-computation</span>"
     ]
   },
   {
     "objectID": "partie1.html#bonus-2---g-computation-sur-critère-censuré",
     "href": "partie1.html#bonus-2---g-computation-sur-critère-censuré",
-    "title": "G-computation",
+    "title": "\n2  G-computation\n",
     "section": "BONUS 2 - G-computation sur critère censuré",
     "text": "BONUS 2 - G-computation sur critère censuré\n\n\n\n\n\n\nNote\n\n\n\nCette section est à faire chez vous, à votre rythme. Elle n’est pas traitée en TP. Elle montre comment étendre la G-computation vue précédemment pour traiter correctement le critère de jugement censuré.\n\n\nPourquoi changer d’approche ?\nLa G-computation de la partie principale modélise \\(D\\) comme un indicateur binaire (décédé avant \\(t = 3\\) ans, oui/non). Deux limites importantes :\n\n\nInformation temporelle perdue : on sait si l’individu est décédé, mais on ignore quand.\n\nCensure traitée comme un non-événement : un individu perdu de vue à \\(t = 1\\) an est traité de la même façon qu’un individu suivi 3 ans sans événement.\n\nOn peut effectuer une G-computation pour estimer directement des courbes de survie contrefactuelles :\n\\[\\hat{S}^{a_0 = 1}(t) = P(T^{a_0=1} &gt; t) \\qquad \\text{et} \\qquad \\hat{S}^{a_0 = 0}(t) = P(T^{a_0=0} &gt; t)\\]\nPrincipe\nDeux approches sont possibles : estimer deux modèles de Cox séparément (un chez les exposés, un chez les non-exposés), ou estimer un seul modèle incluant une interaction entre \\(A_0\\) et les covariables \\((X, L_0)\\). Nous retenons la seconde, plus synthétique.\nLe modèle estimé sur l’ensemble de la population est :\n\\[h(t; A_0, X, L_0) = h_0(t) \\cdot \\exp\\!\\left(\\beta_1 A_0 + \\beta_2 X + \\beta_3 L_0 + \\beta_{12} A_0 X + \\beta_{13} A_0 L_0\\right)\\]\nPour obtenir les courbes contrefactuelles, on prédit le prédicteur linéaire \\(\\hat{\\text{lp}}_i\\) pour chaque individu dans deux bases contrefactuelles (tous exposés : \\(A_0=1\\), tous non-exposés : \\(A_0=0\\)), puis on calcule la survie individuelle :\n\\[\\hat{S}_i^{a_0}(t) = \\exp\\!\\left(- \\hat{H}_0(t) \\times e^{\\,\\hat{\\text{lp}}_i^{a_0}}\\right)\\]\n\n\n\\(\\hat{H}_0(t)\\) : hazard cumulatif de base (estimateur de Breslow), commun à toute la population\n\n\\(e^{\\,\\hat{\\text{lp}}_i^{a_0}}\\) : multiplicateur individuel de risque sous le scénario \\(a_0\\)\n\n\nLa courbe de survie marginale (contrefactuelle) s’obtient en moyennant sur l’ensemble de la population :\n\\[\\hat{S}^{a_0}(t) = \\frac{1}{n} \\sum_{i=1}^n \\hat{S}_i^{a_0}(t)\\]\nÉtape 1 - Un modèle de Cox avec interaction\n\n\n\n\n\n\nNote\n\n\n\ndf_base doit avoir été créée lors de l’Étape 0 ci-dessus. Si nécessaire, relancez ce chunk d’abord.\n\n\nEstimez un modèle de Cox sur l’ensemble de la population, avec une interaction entre \\(A_0\\) et les covariables \\((X, L_0)\\). Utilisez coxph(Surv(time, D) ~ A0 * (X + L0), data = df_base).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## Un seul modèle de Cox avec interaction A0 × covariables.\n## Hypothèse : les deux groupes partagent le même risque de base h0(t).\n## Deux modèles séparés lèveraient cette contrainte.\n## Surv(time, D) : time = temps de suivi total, D = indicateur de décès\nmod_cox &lt;- coxph(Surv(time, D) ~ A0 * (X + L0), data = df_base)\n\nsummary(mod_cox)\n\n\nÉtape 2 - Hazard cumulatif de base et prédicteurs linéaires individuels\nL’estimation des courbes contrefactuelles nécessite deux ingrédients :\n\nLe hazard cumulatif de base \\(\\hat{H}_0(t)\\) : c’est une fonction en escalier qui augmente à chaque temps d’événement. On l’obtient avec basehaz(mod_cox, centered = FALSE), qui renvoie un data frame avec les colonnes time et hazard.\nLe prédicteur linéaire individuel \\(\\hat{\\text{lp}}_i^{a_0}\\) : calculé dans deux bases contrefactuelles : l’une où tous les individus ont \\(A_0=1\\), l’autre où tous ont \\(A_0=0\\). On l’obtient avec predict(mod_cox, newdata = ..., type = \"lp\").\n\nCréez les bases contrefactuelles df1 (A0=1 pour tous) et df0 (A0=0 pour tous), extrayez le hazard cumulatif de base, et calculez les prédicteurs linéaires sous chaque scénario.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## Bases contrefactuelles\ndf1 &lt;- df_base; df1$A0 &lt;- 1\ndf0 &lt;- df_base; df0$A0 &lt;- 0\n\n## Hazard cumulatif de base unique (estimateur de Breslow)\n## centered = FALSE : hazard de base au niveau de référence (X=0, L0=0, A0=0)\n## suppressWarnings : Cox avec interaction génère un avertissement sans danger\nbh &lt;- suppressWarnings(basehaz(mod_cox, centered = FALSE))\nhead(bh)  # time = temps d'événement, hazard = H0(t) cumulé\n\n## Prédicteurs linéaires individuels sous chaque scénario contrefactuel\nlp1 &lt;- predict(mod_cox, newdata = df1, type = \"lp\")\nlp0 &lt;- predict(mod_cox, newdata = df0, type = \"lp\")\n\nhead(data.frame(\n  id         = df_base$id,\n  A0_obs     = df_base$A0,\n  lp_si_A1   = round(lp1, 3),\n  lp_si_A0   = round(lp0, 3)\n))\n\n\nÉtape 3 - Courbes de survie individuelles et marginalisation\nOn dispose maintenant de tout ce qu’il faut pour calculer \\(\\hat{S}_i^{a_0}(t)\\) pour chaque individu \\(i\\) et chaque temps \\(t\\), puis d’en faire la moyenne.\n\n\n\n\n\n\nAstuce\n\n\n\nstepfun(knots, values) crée une fonction en escalier à partir des nœuds et valeurs associées. Ici, stepfun(bh1$time, c(0, bh1$hazard)) crée la fonction \\(\\hat{H}_0^{(a_0=1)}(t)\\) : elle vaut 0 avant le premier événement, puis prend la valeur de Breslow correspondante à chaque nœud. On peut ensuite l’évaluer sur n’importe quelle grille de temps.\nouter(u, v) calcule le produit extérieur de deux vecteurs : outer(u, v)[i, j] = u[i] * v[j]. Cela permet de calculer \\(-e^{\\hat{\\text{lp}}_i} \\times \\hat{H}_0(t_j)\\) pour tous les couples \\((i, j)\\) d’un coup, sans boucle, et d’obtenir directement la matrice des \\(n \\times T\\) valeurs \\(\\log \\hat{S}_i(t_j)\\).\n\n\nCalculez les courbes de survie marginales \\(\\hat{S}^{a_0=1}(t)\\) et \\(\\hat{S}^{a_0=0}(t)\\) sur une grille de temps.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## 1. Grille de temps : tous les temps d'événement de df_base\nt_grid &lt;- sort(unique(df_base$time))\n\n## 2. H0(t) unique évalué sur t_grid via une fonction en escalier\n## stepfun crée une fonction en escalier : c(0, bh$hazard) indique que\n## le hazard cumulatif vaut 0 avant le premier temps d'événement\nH_fun  &lt;- stepfun(bh$time, c(0, bh$hazard))\nH_grid &lt;- H_fun(t_grid)   # vecteur longueur T\n\n## 3. Survie individuelle : S_i(t_j) = exp(-H0(t_j) * exp(lp_i))\n##    outer(-exp(lp), H_grid)[i, j] = -exp(lp[i]) * H_grid[j]\nS1_mat &lt;- exp(outer(-exp(lp1), H_grid))  # matrice n × T, scénario a0=1\nS0_mat &lt;- exp(outer(-exp(lp0), H_grid))  # matrice n × T, scénario a0=0\n\n## 4. Courbes marginales : moyenne sur les individus (ligne = individu)\nS1_marg &lt;- colMeans(S1_mat)\nS0_marg &lt;- colMeans(S0_mat)\n\nhead(data.frame(t     = round(t_grid, 2),\n                S_a1  = round(S1_marg, 3),\n                S_a0  = round(S0_marg, 3)))\n\n\nÉtape 4 - Visualisation des courbes de survie contrefactuelles\nTracez les deux courbes de survie marginales contrefactuelles sur le même graphique.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## type = \"s\" : courbe en escalier, adaptée aux estimateurs de survie discrets\nplot(t_grid, S1_marg, type = \"s\", col = \"blue\", lwd = 2,\n     ylim = c(0, 1),\n     xlab = \"Temps (années)\",\n     ylab = \"Probabilité de survie\",\n     main = \"G-computation (Cox) - Courbes contrefactuelles\")\nlines(t_grid, S0_marg, type = \"s\", col = \"red\", lwd = 2)\nlegend(\"bottomleft\",\n       c(\"Scénario a₀=1 (tous exposés)\",\n         \"Scénario a₀=0 (aucun exposé)\"),\n       col = c(\"blue\", \"red\"), lty = 1, lwd = 2, bty = \"n\")\n\n\nÉtape 5 - Différence de survie à \\(t = 3\\) ans\nCalculez \\(\\hat{S}^{a_0=1}(3)\\), \\(\\hat{S}^{a_0=0}(3)\\), et la différence de survie à 3 ans. Comparez avec l’ATE obtenu par G-computation logistique.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## t_grid ne contient pas nécessairement exactement t=3 : on prend\n## le dernier temps d'événement inférieur ou égal à 3\nidx3 &lt;- max(which(t_grid &lt;= 3))\n\nS1_3 &lt;- S1_marg[idx3]\nS0_3 &lt;- S0_marg[idx3]\n\ncat(\"S^(a0=1)(3) =\", round(S1_3, 3), \"\\n\")\ncat(\"S^(a0=0)(3) =\", round(S0_3, 3), \"\\n\")\ncat(\"Différence de survie à 3 ans :\", round(S1_3 - S0_3, 3), \"\\n\")\ncat(\"Rapport de survie à 3 ans    :\", round(S1_3 / S0_3, 3), \"\\n\")\n\n\n\n\n\n\n\n\nAstuceDiscussion - comparaison avec l’approche binaire\n\n\n\n\n\nÀ titre indicatif, avec ce jeu de données : \\(\\hat{S}^{a_0=1}(3) \\approx\\) 0.828, \\(\\hat{S}^{a_0=0}(3) \\approx\\) 0.641, différence de survie \\(\\approx\\) 0.187.\nLes deux G-computations (logistique et Cox) ciblent en principe le même estimand : \\(P(T^{a_0} \\leq 3)\\), ce qui correspond à \\(1 - S^{a_0}(3)\\). En pratique, la différence de survie à \\(t = 3\\) obtenue par les deux méthodes est souvent proche, mais peut légèrement différer car :\n\nla version Cox utilise toute l’information temporelle (pas seulement le statut binaire à 3 ans) ;\nla version Cox traite correctement la censure : un individu censuré à \\(t = 1\\) an ne contribue qu’à l’estimation jusqu’à son temps de censure, sans être compté comme “survivant” ou “décédé” à 3 ans ;\nles deux modèles imposent des hypothèses fonctionnelles différentes (effets proportionnels des hazards pour Cox, effets log-linéaires sur la cote pour la logistique).\n\nLa version Cox est donc plus rigoureuse et constitue l’approche standard pour la G-computation avec un critère de survie.\n\n\n\nIntervalle de confiance par bootstrap (modèle de Cox)\nEstimez un intervalle de confiance à 95% par bootstrap (\\(B = 200\\) ré-échantillons) pour la différence de survie à \\(t = 3\\) ans.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !set.seed(42)\nB &lt;- 200\nS1_boot &lt;- numeric(B)\nS0_boot &lt;- numeric(B)\n\nfor (b in 1:B) {\n  ## 1. Ré-échantillonnage avec remise\n  idx &lt;- sample(nrow(df_base), replace = TRUE)\n  db  &lt;- df_base[idx, ]\n\n  ## 2. Modèle de Cox avec interaction sur l'échantillon bootstrap\n  m &lt;- suppressWarnings(coxph(Surv(time, D) ~ A0 * (X + L0), data = db))\n\n  ## 3. Bases contrefactuelles, hazard de base et prédicteurs linéaires\n  db1 &lt;- db; db1$A0 &lt;- 1\n  db0 &lt;- db; db0$A0 &lt;- 0\n  bhb  &lt;- suppressWarnings(basehaz(m, centered = FALSE))\n  lp1b &lt;- predict(m, newdata = db1, type = \"lp\")\n  lp0b &lt;- predict(m, newdata = db0, type = \"lp\")\n\n  ## 4. H0(3) : dernier hazard cumulatif &lt;= 3 (0 si aucun événement avant 3 ans)\n  H_3b &lt;- if (any(bhb$time &lt;= 3)) tail(bhb$hazard[bhb$time &lt;= 3], 1) else 0\n\n  ## S_i(3) = exp(-H0(3) * exp(lp_i)), puis moyenne sur les individus\n  S1_boot[b] &lt;- mean(exp(-H_3b * exp(lp1b)))\n  S0_boot[b] &lt;- mean(exp(-H_3b * exp(lp0b)))\n}\n\ndiff_boot &lt;- S1_boot - S0_boot\n## L'estimée est celle calculée avant le bootstrap (S1_3 - S0_3)\n## Le bootstrap ne sert qu'à l'intervalle de confiance\ncat(\"Différence de survie à 3 ans (G-computation Cox) :\\n\")\ncat(\"  Estimée :\", round(S1_3 - S0_3, 3), \"\\n\")\ncat(\"  IC 95%  :\", round(quantile(diff_boot, c(0.025, 0.975)), 3), \"\\n\")",
     "crumbs": [
-      "G-computation"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>G-computation</span>"
     ]
   },
   {
     "objectID": "partie2.html",
     "href": "partie2.html",
-    "title": "IPTW",
+    "title": "\n3  IPTW\n",
     "section": "",
     "text": "Objectif - Question 1 (suite)\nCette partie répond à la même Question 1 que la G-computation : estimer les courbes de survie contrefactuelles \\(S^{a_0=1}(t)\\) et \\(S^{a_0=0}(t)\\) ajustées sur les facteurs de confusion \\(X\\) et \\(L_0\\).\nL’IPTW adopte une stratégie opposée à la G-computation : au lieu de modéliser le résultat \\(Y\\), il modélise l’exposition \\(A_0\\) conditionnellement aux covariables, puis pondère les individus pour créer une pseudo-population équilibrée. Une fois les poids calculés, l’analyse de survie est directement réalisée par Kaplan-Meier pondéré, ce qui traite correctement la censure, de même que la G-computation de la courbe de survie présentée dans le bonus de la Partie 1. La simplification binaire de la Partie 1 avait été faite uniquement pour des raisons pédagogiques.\nLa variable df est disponible dans les chunks interactifs, avec A0 et L0 déjà propagées.",
     "crumbs": [
-      "IPTW"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>IPTW</span>"
     ]
   },
   {
     "objectID": "partie2.html#objectif---question-1-suite",
     "href": "partie2.html#objectif---question-1-suite",
-    "title": "IPTW",
+    "title": "\n3  IPTW\n",
     "section": "",
     "text": "Note\n\n\n\nLien avec la Partie 1 : la G-computation avait traité \\(D\\) comme une variable binaire (décédé avant 3 ans, oui/non) pour simplifier. Avec l’IPTW, l’implémentation est tout aussi simple avec le critère censuré. Des notes repliables proposent le code et les résultats équivalents en version binaire, pour comparer directement les deux méthodes à la fin.",
     "crumbs": [
-      "IPTW"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>IPTW</span>"
     ]
   },
   {
     "objectID": "partie2.html#étape-1---estimer-le-score-de-propension",
     "href": "partie2.html#étape-1---estimer-le-score-de-propension",
-    "title": "IPTW",
+    "title": "\n3  IPTW\n",
     "section": "Étape 1 - Estimer le score de propension",
     "text": "Étape 1 - Estimer le score de propension\nComme pour la G-computation, on travaille d’abord sur une base une ligne par individu (df_base) pour estimer le score de propension et les poids IPTW, puis on fusionne les poids dans df pour l’analyse de survie pondérée.\nLe score de propension est \\(e_i = P(A_0 = 1 \\mid X = x_i,\\ L_0 = l_i)\\), estimé par régression logistique sur les données de la première visite.\nCréez df_base (une ligne par individu), estimez le modèle de propension mod.ps et stockez les probabilités prédites dans df_base$ps.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## Base une ligne par individu\ndf_base &lt;- df |&gt;\n  group_by(id) |&gt;\n  summarise(A0 = first(A), L0 = first(L), X = first(X)) |&gt;\n  ungroup()\n\n## Modèle de propension : on modélise l'exposition A0 en fonction des covariables\n## (à la différence de la G-computation qui modélisait l'outcome D)\nmod.ps &lt;- glm(A0 ~ X + L0, data = df_base, family = \"binomial\")\n\n## type = \"response\" : probabilités prédites P(A0=1 | X, L0), pas le log-odds\ndf_base$ps &lt;- predict(mod.ps, type = \"response\")\n\n## Distribution du PS par groupe\nsummary(df_base$ps[df_base$A0 == 1])\nsummary(df_base$ps[df_base$A0 == 0])\n\n\nVisualisez la distribution du score de propension selon \\(A_0\\) pour vérifier le chevauchement (positivité) :\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## Vérifier le chevauchement : si les deux distributions sont bien distinctes,\n## la positivité est menacée et les poids seront instables\nhist(df_base$ps[df_base$A0 == 1], breaks = 20, col = \"#AC182E80\",\n     main = \"Distribution du score de propension\",\n     xlab = \"Score de propension\", xlim = c(0, 1))\nhist(df_base$ps[df_base$A0 == 0], breaks = 20, col = \"#1D276980\", add = TRUE)\nlegend(\"topright\", legend = c(\"A0 = 1\", \"A0 = 0\"),\n       fill = c(\"#AC182E80\", \"#1D276980\"), bty = \"n\")",
     "crumbs": [
-      "IPTW"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>IPTW</span>"
     ]
   },
   {
     "objectID": "partie2.html#étape-2---calculer-les-poids-iptw",
     "href": "partie2.html#étape-2---calculer-les-poids-iptw",
-    "title": "IPTW",
+    "title": "\n3  IPTW\n",
     "section": "Étape 2 - Calculer les poids IPTW",
     "text": "Étape 2 - Calculer les poids IPTW\nOn calcule les poids non stabilisés \\(w_i = A_0/e_i + (1-A_0)/(1-e_i)\\) et les poids stabilisés \\(w^s_i = P(A_0)/e_i\\) si \\(A_0=1\\), \\(P(A_0=0)/(1-e_i)\\) si \\(A_0=0\\), sur df_base. On fusionne ensuite les poids dans df pour l’analyse de survie pondérée.\nCalculez df_base$iptw (non stabilisé) et df_base$iptw.s (stabilisé), puis fusionnez dans df.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## Poids non stabilisés : w = 1/ps si exposé, 1/(1-ps) si non exposé\ndf_base$iptw &lt;- (df_base$A0 == 1) / df_base$ps +\n                (df_base$A0 == 0) / (1 - df_base$ps)\n\n## Numérateur des poids stabilisés : probabilité marginale d'exposition\n## (sans covariables) — réduit la variance des poids par rapport aux non stabilisés\np.A1 &lt;- mean(df_base$A0)\np.A0 &lt;- 1 - p.A1\n\n## Poids stabilisés : w^s = P(A0) / ps si exposé, P(1-A0) / (1-ps) si non exposé\ndf_base$iptw.s &lt;- ifelse(df_base$A0 == 1,\n                         p.A1 / df_base$ps,\n                         p.A0 / (1 - df_base$ps))\n\n## Les poids stabilisés ont une moyenne proche de 1 : vérifier des valeurs\n## extrêmes (&gt; 10-20) qui signaleraient un problème de positivité\ncat(\"Poids non stabilisés - moyenne:\", round(mean(df_base$iptw), 3),\n    \" / max:\", round(max(df_base$iptw), 2), \"\\n\")\ncat(\"Poids stabilisés     - moyenne:\", round(mean(df_base$iptw.s), 3),\n    \" / max:\", round(max(df_base$iptw.s), 2), \"\\n\")\n\n## Fusionner dans df (format long) pour l'analyse de survie pondérée\ndf &lt;- df |&gt; left_join(df_base |&gt; select(id, ps, iptw, iptw.s), by = \"id\")\n\n\n\n\n\n\n\n\nNote\n\n\n\nRègle pratique : les poids stabilisés ont une moyenne proche de 1 et une variance plus faible. Ils sont généralement préférés en pratique. Si certains poids sont très élevés (&gt; 10–20), c’est un signe de violation de la positivité ou d’un modèle de propension mal spécifié.",
     "crumbs": [
-      "IPTW"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>IPTW</span>"
     ]
   },
   {
     "objectID": "partie2.html#étape-3---vérifier-léquilibre",
     "href": "partie2.html#étape-3---vérifier-léquilibre",
-    "title": "IPTW",
+    "title": "\n3  IPTW\n",
     "section": "Étape 3 - Vérifier l’équilibre",
     "text": "Étape 3 - Vérifier l’équilibre\nAvant toute analyse, il faut s’assurer que la pondération a rétabli l’équilibre entre les groupes \\(A_0=1\\) et \\(A_0=0\\) sur les covariables \\(X\\) et \\(L_0\\).\nUtilisez cobalt::bal.tab() et cobalt::love.plot() pour comparer les différences standardisées avant et après pondération.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !library(cobalt)\n\n## bal.tab() : différences standardisées (SMD) pour chaque covariable\n## binary = \"std\" : SMD pour les variables binaires, un = TRUE : affiche aussi avant pondération\nbal &lt;- bal.tab(A0 ~ X + L0,\n               data    = df_base,\n               weights = df_base$iptw.s,\n               method  = \"weighting\",\n               binary  = \"std\",\n               un      = TRUE)\nbal\n\n## Love plot : SMD &lt; 0,1 après pondération indique un équilibre satisfaisant\nlove.plot(bal,\n          thresholds = c(m = 0.1),\n          colors     = c(\"#AC182E\", \"#1D2769\"),\n          shapes     = c(\"circle\", \"triangle\"),\n          title      = \"Équilibre avant/après IPTW\")\n\n\nLes différences standardisées après pondération sont-elles inférieures à 0,1 (seuil conventionnel) ?\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\n\n\n\n\n\n\n\n\nSi les SMD après pondération sont &lt; 0,1 pour toutes les covariables, l’équilibre est satisfaisant. Un SMD résiduel &gt; 0,1 suggère une mauvaise spécification du modèle de propension (variables manquantes, transformations nécessaires, interactions, etc.).\nRappel : n’utilisez pas de p-values pour évaluer l’équilibre : elles dépendent de la taille d’échantillon et ne mesurent pas la comparabilité des groupes.",
     "crumbs": [
-      "IPTW"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>IPTW</span>"
     ]
   },
   {
     "objectID": "partie2.html#étape-4---analyse-de-survie-pondérée-kaplan-meier",
     "href": "partie2.html#étape-4---analyse-de-survie-pondérée-kaplan-meier",
-    "title": "IPTW",
+    "title": "\n3  IPTW\n",
     "section": "Étape 4 - Analyse de survie pondérée (Kaplan-Meier)",
     "text": "Étape 4 - Analyse de survie pondérée (Kaplan-Meier)\nEstimez les courbes de Kaplan-Meier pondérées par iptw.s, tracez-les et obtenez la différence de survie à 3 ans.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## Surv(T.start, T.stop, D) : format comptage (plusieurs lignes par individu)\n## weights = iptw.s : chaque observation est pondérée par son poids IPTW stabilisé\nkm.iptw &lt;- survfit(Surv(T.start, T.stop, D) ~ A0,\n                   data    = df,\n                   weights = iptw.s)\n\nplot(km.iptw,\n     col  = c(\"#1D2769\", \"#AC182E\"), lwd = 2, conf.int = FALSE,\n     xlab = \"Temps (années)\", ylab = \"Probabilité de survie\",\n     main = \"Kaplan-Meier pondéré (IPTW stabilisé)\")\nlegend(\"bottomleft\",\n       legend = c(\"A0 = 0 (non-exposés)\", \"A0 = 1 (exposés)\"),\n       col = c(\"#1D2769\", \"#AC182E\"), lwd = 2, bty = \"n\")\n\n## Différence de survie à 3 ans (S^(a0=1)(3) - S^(a0=0)(3))\ns3 &lt;- summary(km.iptw, times = 3)$surv\ncat(\"S(3 | a0=0)                        =\", round(s3[1], 3), \"\\n\")\ncat(\"S(3 | a0=1)                        =\", round(s3[2], 3), \"\\n\")\ncat(\"Diff. survie = S(a0=1) - S(a0=0)   =\", round(s3[2] - s3[1], 3), \"\\n\")\n\n\nLa différence de survie à 3 ans \\(S^{a_0=1}(3) - S^{a_0=0}(3)\\) après IPTW est 0.167.",
     "crumbs": [
-      "IPTW"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>IPTW</span>"
     ]
   },
   {
     "objectID": "partie2.html#comparaison-g-computation-vs-iptw",
     "href": "partie2.html#comparaison-g-computation-vs-iptw",
-    "title": "IPTW",
+    "title": "\n3  IPTW\n",
     "section": "Comparaison G-computation vs IPTW",
     "text": "Comparaison G-computation vs IPTW\nLes deux méthodes spécifient des modèles distincts pour répondre à la même question causale :\n\n\n\n\n\n\n\n\nG-computation (Partie 1)\nIPTW (cette partie)\n\n\n\nModèle estimé\nOutcome : \\(E(D \\mid A_0, X, L_0)\\)\n\nExposition : \\(P(A_0=1 \\mid X, L_0)\\)\n\n\n\nCritère utilisé\nBinaire (simplification)\n\nSurvie censurée (complet)\n\n\n\nMesure d’effet\n\n\\(E(D^1) - E(D^0)\\) (diff. de risque de décès)\n\n\\(S^{a_0=1}(3) - S^{a_0=0}(3)\\) (diff. de survie)\n\n\nEstimée\n-0.135\n0.167\n\n\n\nPuisque \\(P(D=1) = 1 - S(3)\\), la différence de risque de décès et la différence de survie sont de signes opposés et de valeur absolue proche. L’exercice ci-dessous permet de le vérifier en calculant l’IPTW sur critère binaire (comparable à la G-computation de la Partie 1).\nÀ partir de df_base (une ligne par individu, avec D final et iptw.s), calculez l’ATE par IPTW avec critère binaire, et vérifiez sa cohérence avec la différence de survie du KM pondéré.\n\n\n\n\n\n\nAvertissement\n\n\n\nkm.iptw doit avoir été calculé à l’Étape 4 pour que ce chunk fonctionne.\n\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## D final : statut décès à la fin du suivi (dernière ligne par individu)\ndf_base$D &lt;- df |&gt; group_by(id) |&gt; summarise(D = last(D)) |&gt; pull(D)\n\n## Moyenne pondérée de D dans chaque groupe : équivalent IPTW du critère binaire\nm1_bin &lt;- weighted.mean(df_base$D[df_base$A0 == 1],\n                        df_base$iptw.s[df_base$A0 == 1])\nm0_bin &lt;- weighted.mean(df_base$D[df_base$A0 == 0],\n                        df_base$iptw.s[df_base$A0 == 0])\nate_iptw_bin &lt;- m1_bin - m0_bin\n\ncat(\"=== IPTW (critère binaire) ===\\n\")\ncat(\"E(D^1)                       =\", round(m1_bin, 3), \"\\n\")\ncat(\"E(D^0)                       =\", round(m0_bin, 3), \"\\n\")\ncat(\"ATE = E(D^1) - E(D^0)        =\", round(ate_iptw_bin, 3), \"\\n\\n\")\n\ns3 &lt;- summary(km.iptw, times = 3)$surv\ncat(\"=== IPTW (KM pondéré, critère censuré) ===\\n\")\ncat(\"S(3 | a0=1)                  =\", round(s3[2], 3), \"\\n\")\ncat(\"S(3 | a0=0)                  =\", round(s3[1], 3), \"\\n\")\ncat(\"Diff. survie = S(1) - S(0)   =\", round(s3[2] - s3[1], 3), \"\\n\\n\")\n\ncat(\"=== Vérification du lien ATE ≈ -diff(survie) ===\\n\")\ncat(\"ATE + diff(survie) =\", round(ate_iptw_bin + (s3[2] - s3[1]), 3),\n    \"  (doit être proche de 0)\\n\")\n\n\n\n\n\n\n\n\nAstuceÀ retenir\n\n\n\n\n\nLes estimations obtenues sont :\n\n\nG-computation (binaire, Partie 1) : ATE \\(\\approx\\) -0.135\n\nIPTW (binaire) : ATE \\(\\approx\\) -0.15\n\nIPTW (KM pondéré, survie) : diff. de survie \\(\\approx\\) 0.167\n\nCritère censuré vs binaire : la différence de survie par KM pondéré est l’estimateur de référence de cette partie, car il exploite toute l’information temporelle et traite correctement la censure. La version binaire est proposée uniquement pour le parallèle avec la Partie 1.\n\n\n\nLa Partie 3 passe à la Question 2 : l’effet de l’exposition maintenue tout au long du suivi.\nPour continuer, cliquez sur IPCW dans le menu à gauche.",
     "crumbs": [
-      "IPTW"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>IPTW</span>"
     ]
   },
   {
     "objectID": "partie2.html#bonus---intervalle-de-confiance-par-bootstrap",
     "href": "partie2.html#bonus---intervalle-de-confiance-par-bootstrap",
-    "title": "IPTW",
+    "title": "\n3  IPTW\n",
     "section": "BONUS - Intervalle de confiance par bootstrap",
     "text": "BONUS - Intervalle de confiance par bootstrap\n\n\n\n\n\n\nNote\n\n\n\nCette section est à faire chez vous, à votre rythme. Elle n’est pas traitée en TP.\n\n\nLe bootstrap sert ici uniquement à estimer un intervalle de confiance autour de la différence de survie calculée à l’Étape 4 : il ne modifie pas l’estimation elle-même.\nPour les données en format long, le bootstrap ré-échantillonne des individus (pas des lignes) afin de préserver la structure temporelle. Chaque individu sélectionné reçoit un nouvel identifiant unique pour éviter les doublons.\nEstimez un intervalle de confiance à 95% par bootstrap (\\(B = 200\\) ré-échantillons) pour la différence de survie à 3 ans estimée par IPTW.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !set.seed(123)\nB    &lt;- 200\ndiff_boot &lt;- numeric(B)\nids  &lt;- unique(df$id)\n\nfor (b in 1:B) {\n  ## 1. Ré-échantillonnage par individu avec nouveaux IDs uniques\n  ids_b &lt;- sample(ids, replace = TRUE)\n  df_b  &lt;- do.call(rbind, lapply(seq_along(ids_b), function(j) {\n    rows    &lt;- df[df$id == ids_b[j], ]\n    rows$id &lt;- j   # nouvel ID unique pour éviter les doublons\n    rows\n  }))\n\n  ## 2. Base une ligne par individu et score de propension\n  df_base_b    &lt;- df_b |&gt;\n    group_by(id) |&gt;\n    summarise(A0 = first(A), L0 = first(L), X = first(X)) |&gt;\n    ungroup()\n  mod_b        &lt;- glm(A0 ~ X + L0, data = df_base_b, family = \"binomial\")\n  df_base_b$ps &lt;- predict(mod_b, type = \"response\")\n\n  ## 3. Poids IPTW stabilisés et fusion dans df_b\n  p.A1_b           &lt;- mean(df_base_b$A0)\n  df_base_b$iptw.s &lt;- ifelse(df_base_b$A0 == 1,\n                              p.A1_b / df_base_b$ps,\n                              (1 - p.A1_b) / (1 - df_base_b$ps))\n  df_b &lt;- df_b |&gt; left_join(df_base_b |&gt; select(id, iptw.s), by = \"id\")\n\n  ## 4. KM pondéré et différence de survie à 3 ans\n  km_b         &lt;- survfit(Surv(T.start, T.stop, D) ~ A0, data = df_b, weights = iptw.s)\n  s3_b         &lt;- summary(km_b, times = 3)$surv\n  diff_boot[b] &lt;- s3_b[2] - s3_b[1]\n}\n\n## L'estimée est celle de l'Étape 4, pas la moyenne des bootstrap\ncat(\"Différence de survie à 3 ans (IPTW) :\\n\")\ncat(\"  Estimée :\", round(s3[2] - s3[1], 3), \"\\n\")\ncat(\"  IC 95%  :\", round(quantile(diff_boot, c(0.025, 0.975)), 3), \"\\n\")",
     "crumbs": [
-      "IPTW"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>IPTW</span>"
     ]
   },
   {
     "objectID": "partie3.html",
     "href": "partie3.html",
-    "title": "IPCW",
+    "title": "\n4  IPCW\n",
     "section": "",
     "text": "Objectif - Question 2\nLes Parties 1 et 2 ont estimé l’effet de l’initiation de l’exposition \\(A_0\\), sans se préoccuper de ce qui se passe ensuite (les patients peuvent arrêter ou débuter le traitement par la suite). C’est l’analogue-ITT.\nCette partie répond à une nouvelle question : quel serait l’effet si les patients avaient maintenu leur stratégie d’exposition tout au long du suivi ?\n\\[S^{\\bar{a}=1}(t) = P(T^{\\bar{a}=1} &gt; t) \\quad \\text{et} \\quad S^{\\bar{a}=0}(t) = P(T^{\\bar{a}=0} &gt; t)\\]\nStratégie : grouper les individus selon \\(A_0\\), puis censurer artificiellement tout individu qui dévie de sa stratégie initiale. Cette censure est très probablement informative (les patients qui changent de traitement diffèrent des autres) → on corrige par IPCW. Les poids IPTW de la Partie 2 sont conservés pour l’équilibre initial.",
     "crumbs": [
-      "IPCW"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>IPCW</span>"
     ]
   },
   {
     "objectID": "partie3.html#note-sur-la-session-r",
     "href": "partie3.html#note-sur-la-session-r",
-    "title": "IPCW",
+    "title": "\n4  IPCW\n",
     "section": "Note sur la session R",
     "text": "Note sur la session R\nLes variables suivantes sont disponibles dans vos chunks interactifs (reconstruites dans le contexte de setup) :\n\n\ndf : base avec A0, L0 propagés\n\ndf$ps : score de propension \\(P(A_0=1 \\mid X, L_0)\\)\n\n\ndf$iptw.s : poids IPTW stabilisés (de la Partie 2)",
     "crumbs": [
-      "IPCW"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>IPCW</span>"
     ]
   },
   {
     "objectID": "partie3.html#étape-1---définir-les-deux-groupes-de-stratégie",
     "href": "partie3.html#étape-1---définir-les-deux-groupes-de-stratégie",
-    "title": "IPCW",
+    "title": "\n4  IPCW\n",
     "section": "Étape 1 - Définir les deux groupes de stratégie",
     "text": "Étape 1 - Définir les deux groupes de stratégie\nCréez df.1 (individus avec A0 == 1) et df.0 (individus avec A0 == 0).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## On sépare les individus selon leur stratégie initiale A0 :\n## les poids IPCW et la censure artificielle seront calculés séparément\n## dans chaque groupe (déviation = arrêt pour df.1, initiation pour df.0)\ndf.1 &lt;- df[df$A0 == 1, ]\ndf.0 &lt;- df[df$A0 == 0, ]\n\ncat(\"Individus avec A0=1 :\", length(unique(df.1$id)), \"\\n\")\ncat(\"Individus avec A0=0 :\", length(unique(df.0$id)), \"\\n\")",
     "crumbs": [
-      "IPCW"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>IPCW</span>"
     ]
   },
   {
     "objectID": "partie3.html#étape-2---censure-artificielle-dans-le-groupe-a0-1",
     "href": "partie3.html#étape-2---censure-artificielle-dans-le-groupe-a0-1",
-    "title": "IPCW",
+    "title": "\n4  IPCW\n",
     "section": "Étape 2 - Censure artificielle dans le groupe A0 = 1",
     "text": "Étape 2 - Censure artificielle dans le groupe A0 = 1\nPour la stratégie \\(\\bar{a} = 1\\), un individu dévie dès qu’il arrête le traitement (\\(A = 0\\) à une visite ultérieure).\nDans df.1, créez switchA : 0 tant que l’individu suit la stratégie, 1 à la première déviation. Conservez toutes les lignes jusqu’à switchA ≤ 1 (on garde la ligne de déviation pour estimer le modèle de poids).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !df.1 &lt;- df.1 |&gt;\n  group_by(id) |&gt;\n  mutate(\n    ## cumsumA compte le nombre de visites où A=1 depuis le début\n    cumsumA = cumsum(A == 1),\n    ## Si l'individu n'a jamais dévié, cumsumA = nombre de visites écoulées = T.start + 1\n    ## Si cumsumA &lt; T.start + 1, il y a eu au moins une visite avec A=0 -&gt; déviation\n    switchA = if_else(cumsumA == T.start + 1, 0L, 1L),\n    ## cumsum(switchA) : une fois la déviation détectée, switchA reste &gt;= 1\n    switchA = cumsum(switchA)\n  ) |&gt;\n  filter(switchA &lt;= 1) |&gt;  # garder jusqu'à la première déviation incluse\n  ungroup()\n\ntable(df.1$switchA)",
     "crumbs": [
-      "IPCW"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>IPCW</span>"
     ]
   },
   {
     "objectID": "partie3.html#étape-3---modèle-de-déviation-et-poids-ipcw-groupe-a0-1",
     "href": "partie3.html#étape-3---modèle-de-déviation-et-poids-ipcw-groupe-a0-1",
-    "title": "IPCW",
+    "title": "\n4  IPCW\n",
     "section": "Étape 3 - Modèle de déviation et poids IPCW (groupe A0 = 1)",
     "text": "Étape 3 - Modèle de déviation et poids IPCW (groupe A0 = 1)\nOn estime la probabilité de ne pas dévier à chaque visite par régression logistique poolée (pooled logistic regression), puis on calcule les poids IPCW :\n\\[W_i(t) = \\prod_{k=0}^{t} \\frac{1}{P(C_{ik}=0 \\mid X_i, L_{ik})} \\qquad t = 0, 1, 2\\]\nLe signe \\(\\prod\\) indique un produit : le poids s’accumule à chaque visite. Par exemple, à \\(t=2\\) :\n\\[W_i(2) = \\frac{1}{P(C_{i0}=0 \\mid X_i, L_{i0})} \\times \\frac{1}{P(C_{i1}=0 \\mid X_i, L_{i1})} \\times \\frac{1}{P(C_{i2}=0 \\mid X_i, L_{i2})}\\]\nPour les poids stabilisés, le numérateur est la probabilité marginale de ne pas dévier (estimée sans covariables) :\n\\[W_i^s(t) = \\prod_{k=0}^{t} \\frac{P(C_{ik}=0)}{P(C_{ik}=0 \\mid X_i, L_{ik})}\\]\nAjustez wt.mod.1 &lt;- glm(switchA ~ as.factor(T.start) + X + L, ...) sur df.1, stockez wt.denom = \\(P(\\text{switch}=0)\\) prédit. Pour les poids stabilisés, estimez un second modèle sans covariables (wt.mod.1.num). Supprimez les lignes switchA == 1. Calculez wt (non stabilisé) et wt.s (stabilisé).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## Régression logistique poolée : modélise P(switch=1) à chaque visite\n## as.factor(T.start) : effet du temps, X et L : covariables de confusion\nwt.mod.1 &lt;- glm(switchA ~ as.factor(T.start) + X + L,\n                family = \"binomial\", data = df.1)\n## 1 - predict(...) : probabilité de NE PAS dévier à cette visite\ndf.1$wt.denom &lt;- 1 - predict(wt.mod.1, type = \"response\", newdata = df.1)\n\n## Numérateur : même modèle sans covariables (probabilité marginale de ne pas dévier)\nwt.mod.1.num  &lt;- glm(switchA ~ as.factor(T.start),\n                     family = \"binomial\", data = df.1)\ndf.1$wt.num   &lt;- 1 - predict(wt.mod.1.num, type = \"response\", newdata = df.1)\n\n## Supprimer la ligne de déviation : on ne garde que les périodes sans déviation\ndf.1 &lt;- df.1[df.1$switchA == 0, ]\n\n## cumprod : produit cumulé des termes période par période -&gt; poids croissant dans le temps\ndf.1 &lt;- df.1 |&gt;\n  group_by(id) |&gt;\n  mutate(wt   = cumprod(1 / wt.denom),          # non stabilisé\n         wt.s = cumprod(wt.num / wt.denom)) |&gt;  # stabilisé\n  ungroup()\n\ncat(\"Poids non stabilisés - moy:\", round(mean(df.1$wt), 3),\n    \" / max:\", round(max(df.1$wt), 2), \"\\n\")\ncat(\"Poids stabilisés     - moy:\", round(mean(df.1$wt.s), 3),\n    \" / max:\", round(max(df.1$wt.s), 2), \"\\n\")",
     "crumbs": [
-      "IPCW"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>IPCW</span>"
     ]
   },
   {
     "objectID": "partie3.html#étape-4---répéter-pour-le-groupe-a0-0",
     "href": "partie3.html#étape-4---répéter-pour-le-groupe-a0-0",
-    "title": "IPCW",
+    "title": "\n4  IPCW\n",
     "section": "Étape 4 - Répéter pour le groupe A0 = 0",
     "text": "Étape 4 - Répéter pour le groupe A0 = 0\nReproduire les étapes 2 et 3 pour df.0 (déviation = passer de \\(A=0\\) à \\(A=1\\)). Empiler ensuite df.1 et df.0 dans dfpp.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## Même logique que pour df.1, mais la déviation est ici A=1 (passage de 0 à 1)\n## cumsumA compte donc le nombre de visites où A=0\ndf.0 &lt;- df.0 |&gt;\n  group_by(id) |&gt;\n  mutate(\n    cumsumA = cumsum(A == 0),\n    switchA = if_else(cumsumA == T.start + 1, 0L, 1L),\n    switchA = cumsum(switchA)\n  ) |&gt;\n  filter(switchA &lt;= 1) |&gt;\n  ungroup()\n\n## Modèle poolé de déviation dans df.0 (avec covariables)\nwt.mod.0      &lt;- glm(switchA ~ as.factor(T.start) + X + L,\n                     family = \"binomial\", data = df.0)\ndf.0$wt.denom &lt;- 1 - predict(wt.mod.0, type = \"response\", newdata = df.0)\n\n## Numérateur (sans covariables)\nwt.mod.0.num  &lt;- glm(switchA ~ as.factor(T.start),\n                     family = \"binomial\", data = df.0)\ndf.0$wt.num   &lt;- 1 - predict(wt.mod.0.num, type = \"response\", newdata = df.0)\n\ndf.0          &lt;- df.0[df.0$switchA == 0, ]\ndf.0          &lt;- df.0 |&gt;\n  group_by(id) |&gt;\n  mutate(wt   = cumprod(1 / wt.denom),\n         wt.s = cumprod(wt.num / wt.denom)) |&gt;\n  ungroup()\n\n## Empilement\ndfpp &lt;- rbind(df.1, df.0)\ncat(\"Lignes dans dfpp :\", nrow(dfpp), \"\\n\")",
     "crumbs": [
-      "IPCW"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>IPCW</span>"
     ]
   },
   {
     "objectID": "partie3.html#étape-5---poids-combinés-iptw-ipcw",
     "href": "partie3.html#étape-5---poids-combinés-iptw-ipcw",
-    "title": "IPCW",
+    "title": "\n4  IPCW\n",
     "section": "Étape 5 - Poids combinés IPTW × IPCW",
     "text": "Étape 5 - Poids combinés IPTW × IPCW\nLes poids IPCW (wt) corrigent la censure artificielle informative. Mais ils ne rééquilibrent pas encore les caractéristiques initiales entre \\(A_0=1\\) et \\(A_0=0\\). Il faut combiner avec les poids IPTW estimés en Partie 2.\nCalculez dfpp$comb.wt = dfpp$iptw.s * dfpp$wt.s (poids combinés stabilisés), puis vérifiez la distribution.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## IPTW corrige la confusion initiale, IPCW corrige la censure informative\n## Les deux biais étant indépendants, leurs corrections se multiplient\ndfpp$comb.wt &lt;- dfpp$iptw.s * dfpp$wt.s\n\ncat(\"Poids IPCW stabilisés - moy:\", round(mean(dfpp$wt.s), 3),\n    \" / max:\", round(max(dfpp$wt.s), 2), \"\\n\")\ncat(\"Poids combinés        - moy:\", round(mean(dfpp$comb.wt), 3),\n    \" / max:\", round(max(dfpp$comb.wt), 2), \"\\n\")\n\n\n\n\n\n\n\n\nNote\n\n\n\nPourquoi multiplier ? Les poids IPTW rééquilibrent les groupes sur les caractéristiques initiales (\\(X\\), \\(L_0\\)). Les poids IPCW compensent la censure artificielle informative au cours du suivi (\\(L_t\\), \\(A_t\\)). Les deux sources de biais sont indépendantes, donc leurs corrections se multiplient.",
     "crumbs": [
-      "IPCW"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>IPCW</span>"
     ]
   },
   {
     "objectID": "partie3.html#étape-6---analyse-de-survie-per-protocol",
     "href": "partie3.html#étape-6---analyse-de-survie-per-protocol",
-    "title": "IPCW",
+    "title": "\n4  IPCW\n",
     "section": "Étape 6 - Analyse de survie per-protocol",
     "text": "Étape 6 - Analyse de survie per-protocol\nTracez le Kaplan-Meier pondéré par comb.wt dans dfpp. Comparez avec l’analogue-ITT de la Partie 2.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## dfpp contient les deux groupes après censure artificielle\n## comb.wt = IPTW × IPCW : corrige à la fois la confusion et la censure informative\nkm.pp &lt;- survfit(Surv(T.start, T.stop, D) ~ A0,\n                 data    = dfpp,\n                 weights = comb.wt)\n\nplot(km.pp,\n     col  = c(\"#1D2769\", \"#AC182E\"), lwd = 2, conf.int = FALSE,\n     xlab = \"Temps (années)\", ylab = \"Probabilité de survie\",\n     main = \"Kaplan-Meier per-protocol (IPTW × IPCW)\")\nlegend(\"bottomleft\",\n       legend = c(\"Stratégie ā=0 (jamais exposé)\",\n                  \"Stratégie ā=1 (toujours exposé)\"),\n       col = c(\"#1D2769\", \"#AC182E\"), lwd = 2, bty = \"n\")\n\n## Différence de survie à 3 ans (ā=1 moins ā=0)\ns3.pp &lt;- summary(km.pp, times = 3)$surv\ncat(\"Survie à 3 ans - ā=0 :\", round(s3.pp[1], 3), \"\\n\")\ncat(\"Survie à 3 ans - ā=1 :\", round(s3.pp[2], 3), \"\\n\")\ncat(\"Différence S(ā=1) - S(ā=0) :\", round(s3.pp[2] - s3.pp[1], 3), \"\\n\")\n\n\nLa différence de survie à 3 ans \\(S^{\\bar{a}=1}(3) - S^{\\bar{a}=0}(3)\\) (per-protocol) est 0.316.",
     "crumbs": [
-      "IPCW"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>IPCW</span>"
     ]
   },
   {
     "objectID": "partie3.html#interprétation",
     "href": "partie3.html#interprétation",
-    "title": "IPCW",
+    "title": "\n4  IPCW\n",
     "section": "Interprétation",
     "text": "Interprétation\nComparez l’effet per-protocol à l’effet analogue-ITT. Pourquoi peut-il différer ?\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nL’analogue-ITT estime l’effet d’initier l’exposition \\(A_0\\), quelle que soit la compliance ultérieure. Il dilue l’effet si certains exposés arrêtent leur traitement.\nL’analogue per-protocol estime l’effet de maintenir l’exposition tout au long du suivi. Il peut être plus fort (si l’exposition continue est nécessaire) ou différent pour d’autres raisons.\n\nSi les deux estimations convergent, l’arrêt du traitement n’a pas d’impact majeur sur la survie. Si elles divergent, la compliance joue un rôle.\nHypothèses supplémentaires nécessaires pour l’analogue-PP :\n\nÉchangeabilité conditionnelle au cours du temps : \\(L_t\\) capture tous les facteurs qui prédisent à la fois la déviation et le décès.\nPositivité au cours du temps : à chaque visite, chaque individu doit avoir une probabilité positive de continuer ou d’arrêter.\n\n\n\n\nPour continuer, cliquez sur Conclusion dans le menu à gauche.",
     "crumbs": [
-      "IPCW"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>IPCW</span>"
     ]
   },
   {
     "objectID": "partie3.html#bonus---intervalle-de-confiance-par-bootstrap",
     "href": "partie3.html#bonus---intervalle-de-confiance-par-bootstrap",
-    "title": "IPCW",
+    "title": "\n4  IPCW\n",
     "section": "BONUS - Intervalle de confiance par bootstrap",
     "text": "BONUS - Intervalle de confiance par bootstrap\n\n\n\n\n\n\nNote\n\n\n\nCette section est à faire chez vous, à votre rythme. Elle n’est pas traitée en TP. La boucle bootstrap est plus longue qu’en Parties 1 et 2 car elle refait toute la chaîne d’analyse (IPTW + censure artificielle + IPCW) à chaque itération.\n\n\nLe bootstrap sert ici uniquement à estimer un intervalle de confiance autour de la différence de survie per-protocol calculée à l’Étape 6 : il ne modifie pas l’estimation elle-même.\nComme en Partie 2, le bootstrap ré-échantillonne des individus (pas des lignes) avec attribution de nouveaux identifiants uniques.\nEstimez un intervalle de confiance à 95% par bootstrap (\\(B = 200\\) ré-échantillons) pour la différence de survie à 3 ans per-protocol.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !set.seed(42)\nB    &lt;- 200\ndiff_boot &lt;- numeric(B)\nids  &lt;- unique(df$id)\n\nfor (b in 1:B) {\n  ## 1. Ré-échantillonnage par individu avec nouveaux IDs uniques\n  ids_b &lt;- sample(ids, replace = TRUE)\n  df_b  &lt;- do.call(rbind, lapply(seq_along(ids_b), function(j) {\n    rows    &lt;- df[df$id == ids_b[j], ]\n    rows$id &lt;- j\n    rows\n  }))\n\n  ## 2. IPTW : score de propension et poids stabilisés\n  df_base_b        &lt;- df_b |&gt;\n    group_by(id) |&gt;\n    summarise(A0 = first(A), L0 = first(L), X = first(X)) |&gt;\n    ungroup()\n  mod_b            &lt;- glm(A0 ~ X + L0, data = df_base_b, family = \"binomial\")\n  df_base_b$ps     &lt;- predict(mod_b, type = \"response\")\n  p.A1_b           &lt;- mean(df_base_b$A0)\n  df_base_b$iptw.s &lt;- ifelse(df_base_b$A0 == 1,\n                              p.A1_b / df_base_b$ps,\n                              (1 - p.A1_b) / (1 - df_base_b$ps))\n  df_b &lt;- df_b |&gt; left_join(df_base_b |&gt; select(id, iptw.s), by = \"id\")\n\n  ## 3. Censure artificielle et poids IPCW stabilisés pour la stratégie ā=1\n  df1_b &lt;- df_b[df_b$A0 == 1, ] |&gt;\n    group_by(id) |&gt;\n    mutate(cumsumA = cumsum(A == 1),\n           switchA = if_else(cumsumA == T.start + 1, 0L, 1L),\n           switchA = cumsum(switchA)) |&gt;\n    filter(switchA &lt;= 1) |&gt; ungroup()\n  wt1_b          &lt;- glm(switchA ~ as.factor(T.start) + X + L,\n                        family = \"binomial\", data = df1_b)\n  wt1_num_b      &lt;- glm(switchA ~ as.factor(T.start),\n                        family = \"binomial\", data = df1_b)\n  df1_b$wt.denom &lt;- 1 - predict(wt1_b, type = \"response\", newdata = df1_b)\n  df1_b$wt.num   &lt;- 1 - predict(wt1_num_b, type = \"response\", newdata = df1_b)\n  df1_b &lt;- df1_b[df1_b$switchA == 0, ] |&gt;\n    group_by(id) |&gt;\n    mutate(wt.s = cumprod(wt.num / wt.denom)) |&gt; ungroup()\n\n  ## 4. Censure artificielle et poids IPCW stabilisés pour la stratégie ā=0\n  df0_b &lt;- df_b[df_b$A0 == 0, ] |&gt;\n    group_by(id) |&gt;\n    mutate(cumsumA = cumsum(A == 0),\n           switchA = if_else(cumsumA == T.start + 1, 0L, 1L),\n           switchA = cumsum(switchA)) |&gt;\n    filter(switchA &lt;= 1) |&gt; ungroup()\n  wt0_b          &lt;- glm(switchA ~ as.factor(T.start) + X + L,\n                        family = \"binomial\", data = df0_b)\n  wt0_num_b      &lt;- glm(switchA ~ as.factor(T.start),\n                        family = \"binomial\", data = df0_b)\n  df0_b$wt.denom &lt;- 1 - predict(wt0_b, type = \"response\", newdata = df0_b)\n  df0_b$wt.num   &lt;- 1 - predict(wt0_num_b, type = \"response\", newdata = df0_b)\n  df0_b &lt;- df0_b[df0_b$switchA == 0, ] |&gt;\n    group_by(id) |&gt;\n    mutate(wt.s = cumprod(wt.num / wt.denom)) |&gt; ungroup()\n\n  ## 5. Poids combinés et KM per-protocol\n  dfpp_b         &lt;- rbind(df1_b, df0_b)\n  dfpp_b$comb.wt &lt;- dfpp_b$iptw.s * dfpp_b$wt.s\n  km_b           &lt;- survfit(Surv(T.start, T.stop, D) ~ A0,\n                            data = dfpp_b, weights = comb.wt)\n  s3_b           &lt;- summary(km_b, times = 3)$surv\n  diff_boot[b]   &lt;- s3_b[2] - s3_b[1]\n}\n\n## L'estimée est celle de l'Étape 6, pas la moyenne des bootstrap\ncat(\"Différence de survie à 3 ans (per-protocol) :\\n\")\ncat(\"  Estimée :\", round(s3.pp[2] - s3.pp[1], 3), \"\\n\")\ncat(\"  IC 95%  :\", round(quantile(diff_boot, c(0.025, 0.975)), 3), \"\\n\")",
     "crumbs": [
-      "IPCW"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>IPCW</span>"
     ]
   },
   {
     "objectID": "conclusion.html",
     "href": "conclusion.html",
-    "title": "Conclusion",
+    "title": "\n5  Conclusion\n",
     "section": "",
     "text": "Comparaison graphique",
     "crumbs": [
-      "Conclusion"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Conclusion</span>"
     ]
   },
   {
     "objectID": "conclusion.html#récapitulatif-des-estimations",
     "href": "conclusion.html#récapitulatif-des-estimations",
-    "title": "Conclusion",
+    "title": "\n5  Conclusion\n",
     "section": "Récapitulatif des estimations",
     "text": "Récapitulatif des estimations\n\n\n\n\n\n\n\n\n\n\n\n\nAnalyse\nEstimand\nAjustement\nS(3) - A₀=0\nS(3) - A₀=1\nΔ survie\n\n\n\nKM brut (non ajusté)\n-\nAucun\n0.674\n0.784\n0.111\n\n\nQ1 - G-computation Cox [Bonus P.1]\nAnalogue-ITT : effet d’initier l’exposition\nConfusion initiale (X, L₀) - modèle du résultat\n0.641\n0.828\n0.187\n\n\nQ1 - IPTW\nAnalogue-ITT : effet d’initier l’exposition\nConfusion initiale (X, L₀) - modèle de l’exposition\n0.636\n0.803\n0.167\n\n\nQ2 - IPTW × IPCW (per-protocol)\nAnalogue per-protocol : effet de maintenir l’exposition\nConfusion initiale + déviation de stratégie\n0.568\n0.884\n0.316",
     "crumbs": [
-      "Conclusion"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Conclusion</span>"
     ]
   },
   {
     "objectID": "conclusion.html#discussion",
     "href": "conclusion.html#discussion",
-    "title": "Conclusion",
+    "title": "\n5  Conclusion\n",
     "section": "Discussion",
     "text": "Discussion\nCe que nous apprenons de chaque analyse\n\nAnalyse brute : la différence de survie observée entre \\(A_0=1\\) et \\(A_0=0\\) n’est pas interprétable causalement. Les groupes ne sont pas comparables à l’inclusion (\\(X\\), \\(L_0\\) diffèrent).\nAnalogue-ITT (G-computation Cox et IPTW - Q1) : après ajustement sur les caractéristiques initiales, ces deux méthodes estiment le même estimand : l’effet d’initier l’exposition au temps 0, quelle que soit la compliance ultérieure. C’est l’estimand le plus proche d’un essai clinique en intention de traiter. La G-computation ajuste via un modèle du résultat, l’IPTW via un modèle de l’exposition. Si les deux convergent, la confiance dans le résultat est renforcée.\nAnalogue per-protocol (IPTW × IPCW - Q2) : en censurant artificiellement les individus qui dévient de leur stratégie et en corrigeant ce biais par IPCW, on estime l’effet d’initier et de maintenir l’exposition. Cet estimand est plus proche d’un essai per-protocol.",
     "crumbs": [
-      "Conclusion"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Conclusion</span>"
     ]
   }
 ]
