@@ -32,11 +32,14 @@ df[df$id %in% 1:3, ]       # 3 premiers individus (plusieurs lignes chacun)
 
 # --- Analyse brute (non ajustée)
 
+## A0 : valeur de A à la première visite, propagée à toutes les lignes de l'individu
 df <- df |>
   group_by(id) |>
   mutate(A0 = first(A)) |>
   ungroup()
 
+## Surv(T.start, T.stop, D) : format comptage pour données en format long
+## (plusieurs lignes par individu, une par période de suivi)
 km_brut <- survfit(Surv(T.start, T.stop, D) ~ A0, data = df)
 
 plot(km_brut,
@@ -490,7 +493,8 @@ cat("Lignes dans dfpp :", nrow(dfpp), "\n")
 
 # --- Étape 5 - Poids combinés IPTW × IPCW
 
-## Poids combinés : IPTW stabilisé × IPCW stabilisé
+## IPTW corrige la confusion initiale, IPCW corrige la censure informative
+## Les deux biais étant indépendants, leurs corrections se multiplient
 dfpp$comb.wt <- dfpp$iptw.s * dfpp$wt.s
 
 cat("Poids IPCW stabilisés - moy:", round(mean(dfpp$wt.s), 3),
@@ -500,6 +504,8 @@ cat("Poids combinés        - moy:", round(mean(dfpp$comb.wt), 3),
 
 # --- Étape 6 - Analyse de survie per-protocol
 
+## dfpp contient les deux groupes après censure artificielle
+## comb.wt = IPTW × IPCW : corrige à la fois la confusion et la censure informative
 km.pp <- survfit(Surv(T.start, T.stop, D) ~ A0,
                  data    = dfpp,
                  weights = comb.wt)
@@ -513,11 +519,11 @@ legend("bottomleft",
                   "Stratégie ā=1 (toujours exposé)"),
        col = c("#1D2769", "#AC182E"), lwd = 2, bty = "n")
 
-## Différence de survie à 3 ans
+## Différence de survie à 3 ans (ā=1 moins ā=0)
 s3.pp <- summary(km.pp, times = 3)$surv
 cat("Survie à 3 ans - ā=0 :", round(s3.pp[1], 3), "\n")
 cat("Survie à 3 ans - ā=1 :", round(s3.pp[2], 3), "\n")
-cat("Différence     :", round(diff(s3.pp), 3), "\n")
+cat("Différence S(ā=1) - S(ā=0) :", round(s3.pp[2] - s3.pp[1], 3), "\n")
 
 
 # ========================================================================
