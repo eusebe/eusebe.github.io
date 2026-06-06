@@ -393,6 +393,49 @@ cat("=== Vérification du lien ATE ≈ -diff(survie) ===\n")
 cat("ATE + diff(survie) =", round(ate_iptw_bin + (s3[2] - s3[1]), 3),
     "  (doit être proche de 0)\n")
 
+# ~~~ BONUS - Intervalle de confiance par bootstrap
+# (section bonus : a faire chez vous)
+
+set.seed(123)
+B    <- 200
+diff_boot <- numeric(B)
+ids  <- unique(df$id)
+
+for (b in 1:B) {
+  ## 1. Ré-échantillonnage par individu avec nouveaux IDs uniques
+  ids_b <- sample(ids, replace = TRUE)
+  df_b  <- do.call(rbind, lapply(seq_along(ids_b), function(j) {
+    rows    <- df[df$id == ids_b[j], ]
+    rows$id <- j   # nouvel ID unique pour éviter les doublons
+    rows
+  }))
+
+  ## 2. Base une ligne par individu et score de propension
+  df_base_b    <- df_b |>
+    group_by(id) |>
+    summarise(A0 = first(A), L0 = first(L), X = first(X)) |>
+    ungroup()
+  mod_b        <- glm(A0 ~ X + L0, data = df_base_b, family = "binomial")
+  df_base_b$ps <- predict(mod_b, type = "response")
+
+  ## 3. Poids IPTW stabilisés et fusion dans df_b
+  p.A1_b           <- mean(df_base_b$A0)
+  df_base_b$iptw.s <- ifelse(df_base_b$A0 == 1,
+                              p.A1_b / df_base_b$ps,
+                              (1 - p.A1_b) / (1 - df_base_b$ps))
+  df_b <- df_b |> left_join(df_base_b |> select(id, iptw.s), by = "id")
+
+  ## 4. KM pondéré et différence de survie à 3 ans
+  km_b         <- survfit(Surv(T.start, T.stop, D) ~ A0, data = df_b, weights = iptw.s)
+  s3_b         <- summary(km_b, times = 3)$surv
+  diff_boot[b] <- s3_b[2] - s3_b[1]
+}
+
+## L'estimée est celle de l'Étape 4, pas la moyenne des bootstrap
+cat("Différence de survie à 3 ans (IPTW) :\n")
+cat("  Estimée :", round(s3[2] - s3[1], 3), "\n")
+cat("  IC 95%  :", round(quantile(diff_boot, c(0.025, 0.975)), 3), "\n")
+
 
 # ========================================================================
 # Partie 3 : IPCW

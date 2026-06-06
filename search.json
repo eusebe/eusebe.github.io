@@ -270,6 +270,16 @@
     ]
   },
   {
+    "objectID": "partie2.html#bonus---intervalle-de-confiance-par-bootstrap",
+    "href": "partie2.html#bonus---intervalle-de-confiance-par-bootstrap",
+    "title": "IPTW",
+    "section": "BONUS - Intervalle de confiance par bootstrap",
+    "text": "BONUS - Intervalle de confiance par bootstrap\n\n\n\n\n\n\nNote\n\n\n\nCette section est à faire chez vous, à votre rythme. Elle n’est pas traitée en TP.\n\n\nLe bootstrap sert ici uniquement à estimer un intervalle de confiance autour de la différence de survie calculée à l’Étape 4 : il ne modifie pas l’estimation elle-même.\nPour les données en format long, le bootstrap ré-échantillonne des individus (pas des lignes) afin de préserver la structure temporelle. Chaque individu sélectionné reçoit un nouvel identifiant unique pour éviter les doublons.\nEstimez un intervalle de confiance à 95% par bootstrap (\\(B = 200\\) ré-échantillons) pour la différence de survie à 3 ans estimée par IPTW.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !set.seed(123)\nB    &lt;- 200\ndiff_boot &lt;- numeric(B)\nids  &lt;- unique(df$id)\n\nfor (b in 1:B) {\n  ## 1. Ré-échantillonnage par individu avec nouveaux IDs uniques\n  ids_b &lt;- sample(ids, replace = TRUE)\n  df_b  &lt;- do.call(rbind, lapply(seq_along(ids_b), function(j) {\n    rows    &lt;- df[df$id == ids_b[j], ]\n    rows$id &lt;- j   # nouvel ID unique pour éviter les doublons\n    rows\n  }))\n\n  ## 2. Base une ligne par individu et score de propension\n  df_base_b    &lt;- df_b |&gt;\n    group_by(id) |&gt;\n    summarise(A0 = first(A), L0 = first(L), X = first(X)) |&gt;\n    ungroup()\n  mod_b        &lt;- glm(A0 ~ X + L0, data = df_base_b, family = \"binomial\")\n  df_base_b$ps &lt;- predict(mod_b, type = \"response\")\n\n  ## 3. Poids IPTW stabilisés et fusion dans df_b\n  p.A1_b           &lt;- mean(df_base_b$A0)\n  df_base_b$iptw.s &lt;- ifelse(df_base_b$A0 == 1,\n                              p.A1_b / df_base_b$ps,\n                              (1 - p.A1_b) / (1 - df_base_b$ps))\n  df_b &lt;- df_b |&gt; left_join(df_base_b |&gt; select(id, iptw.s), by = \"id\")\n\n  ## 4. KM pondéré et différence de survie à 3 ans\n  km_b         &lt;- survfit(Surv(T.start, T.stop, D) ~ A0, data = df_b, weights = iptw.s)\n  s3_b         &lt;- summary(km_b, times = 3)$surv\n  diff_boot[b] &lt;- s3_b[2] - s3_b[1]\n}\n\n## L'estimée est celle de l'Étape 4, pas la moyenne des bootstrap\ncat(\"Différence de survie à 3 ans (IPTW) :\\n\")\ncat(\"  Estimée :\", round(s3[2] - s3[1], 3), \"\\n\")\ncat(\"  IC 95%  :\", round(quantile(diff_boot, c(0.025, 0.975)), 3), \"\\n\")",
+    "crumbs": [
+      "IPTW"
+    ]
+  },
+  {
     "objectID": "partie3.html",
     "href": "partie3.html",
     "title": "IPCW",
