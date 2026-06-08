@@ -2624,6 +2624,31 @@ window.onload = function() {
   }
 
   update_total_correct();
+
+  /* Fix: Quarto's toggleCodeHandler uses ".cell > details > .sourceCode"
+   * (direct child), but WebR wraps .sourceCode inside .code-copy-outer-scaffold.
+   * Add listeners that directly open/close all details.code-fold elements. */
+  function toggleWebrCodeFold(show) {
+    return function() {
+      var details = document.querySelectorAll(".cell > details.code-fold");
+      for (var i = 0; i < details.length; i++) {
+        if (show) {
+          details[i].open = true;
+        } else {
+          details[i].removeAttribute("open");
+        }
+      }
+    };
+  }
+
+  var showAllBtn = document.getElementById("quarto-show-all-code");
+  if (showAllBtn) {
+    showAllBtn.addEventListener("click", toggleWebrCodeFold(true));
+  }
+  var hideAllBtn = document.getElementById("quarto-hide-all-code");
+  if (hideAllBtn) {
+    hideAllBtn.addEventListener("click", toggleWebrCodeFold(false));
+  }
 }
 
 </script><script id="quarto-html-after-body" type="application/javascript">
