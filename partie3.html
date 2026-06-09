@@ -2623,6 +2623,61 @@ window.onload = function() {
   }
 }
 
+</script><style>
+#gt-wrapper {
+  position: fixed;
+  top: 8px;
+  right: 16px;
+  z-index: 9999;
+  background: transparent;
+}
+
+/* Style the Google Translate dropdown to match cosmo */
+#google_translate_element .goog-te-gadget-simple {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* Hide the Google branding bar at top */
+.goog-te-banner-frame {
+  display: none !important;
+}
+body {
+  top: 0 !important;
+}
+</style>
+<div id="gt-wrapper">
+  <div id="google_translate_element"></div>
+</div>
+
+<script type="text/javascript">
+// Protect code blocks and WebR elements from translation
+document.addEventListener('DOMContentLoaded', function () {
+  const noTranslate = [
+    'code', 'pre', '.sourceCode', '.cell-code',
+    '[class*="webr"]', '.quarto-code-cell-result'
+  ];
+  noTranslate.forEach(function (sel) {
+    document.querySelectorAll(sel).forEach(function (el) {
+      el.setAttribute('translate', 'no');
+      el.classList.add('notranslate');
+    });
+  });
+});
+
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'fr',
+    includedLanguages: 'fr,en',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false
+  }, 'google_translate_element');
+}
+</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
 </script><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
