@@ -575,8 +575,7 @@ cat("Survie à 3 ans - ā=0 :", round(s3.pp[1], 3), "\n")
 cat("Survie à 3 ans - ā=1 :", round(s3.pp[2], 3), "\n")
 cat("Différence S(ā=1) - S(ā=0) :", round(s3.pp[2] - s3.pp[1], 3), "\n")
 
-# ~~~ BONUS - Intervalle de confiance par bootstrap
-# (section bonus : a faire chez vous)
+# --- Comparaison des courbes de survie
 
 set.seed(42)
 B    <- 200
