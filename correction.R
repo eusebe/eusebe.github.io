@@ -656,6 +656,54 @@ cat("Différence de survie à 3 ans (per-protocol) :\n")
 cat("  Estimée :", round(s3.pp[2] - s3.pp[1], 3), "\n")
 cat("  IC 95%  :", round(quantile(diff_boot, c(0.025, 0.975)), 3), "\n")
 
+# ~~~ BONUS 2 - Clonage, censure, pondération : IPCW seul
+# (section bonus : a faire chez vous)
+
+## ── Étape 1 : Cloner ────────────────────────────────────────────────────────
+## Chaque individu reçoit deux clones : un assigné à la stratégie ā=1, l'autre ā=0
+df.c1 <- df; df.c1$strategy <- 1
+df.c0 <- df; df.c0$strategy <- 0
+df.clone <- rbind(df.c1, df.c0)
+
+## ── Étape 2 : Censure artificielle selon la stratégie assignée ───────────────
+df.clone <- df.clone |>
+  group_by(id, strategy) |>
+  mutate(
+    cumsumA = if_else(strategy == 1, cumsum(A == 1), cumsum(A == 0)),
+    switchA  = if_else(cumsumA == T.start + 1, 0L, 1L),
+    switchA  = cumsum(switchA)
+  ) |>
+  filter(switchA <= 1) |>
+  ungroup()
+
+## ── Étape 3 : IPCW seul, modèles séparés par groupe de clones ───────────────
+## À T.start = 0, strategy = 1 : déviation = I(A = 0) → P(pas de déviation | X, L) = P(A=1|X,L)
+## À T.start = 0, strategy = 0 : déviation = I(A = 1) → P(pas de déviation | X, L) = P(A=0|X,L)
+## Le terme T.start = 0 du modèle par groupe absorbe exactement le poids IPTW.
+## Les modèles DOIVENT être séparés car les effets de X et L sont opposés.
+dc1 <- df.clone[df.clone$strategy == 1, ]
+dc0 <- df.clone[df.clone$strategy == 0, ]
+
+wd1 <- glm(switchA ~ as.factor(T.start) + X + L, family = "binomial", data = dc1)
+wn1 <- glm(switchA ~ as.factor(T.start),          family = "binomial", data = dc1)
+dc1$wt.denom <- 1 - predict(wd1, type = "response", newdata = dc1)
+dc1$wt.num   <- 1 - predict(wn1, type = "response", newdata = dc1)
+
+wd0 <- glm(switchA ~ as.factor(T.start) + X + L, family = "binomial", data = dc0)
+wn0 <- glm(switchA ~ as.factor(T.start),          family = "binomial", data = dc0)
+dc0$wt.denom <- 1 - predict(wd0, type = "response", newdata = dc0)
+dc0$wt.num   <- 1 - predict(wn0, type = "response", newdata = dc0)
+
+df.clone <- rbind(dc1, dc0)
+df.clone <- df.clone[df.clone$switchA == 0, ] |>
+  group_by(id, strategy) |>
+  mutate(ipcw.s = cumprod(wt.num / wt.denom)) |>
+  ungroup()
+
+## KM pondéré IPCW seul (approche clonage)
+km.clone <- survfit(Surv(T.start, T.stop, D) ~ strategy,
+                    data = df.clone, weights = ipcw.s)
+
 
 # ========================================================================
 # Conclusion : comparaison des methodes
