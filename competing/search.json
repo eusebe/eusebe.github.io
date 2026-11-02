@@ -1,0 +1,382 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "TP Analyse causale de la survie : censure dépendante, confusion et risques compétitifs",
+    "section": "",
+    "text": "Introduction\nCe TP porte sur l’analyse causale des données de survie en présence de censure dépendante, de confusion et de risques compétitifs.",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#scénario",
+    "href": "index.html#scénario",
+    "title": "TP Analyse causale de la survie : censure dépendante, confusion et risques compétitifs",
+    "section": "Scénario",
+    "text": "Scénario\nCe TP utilise les données de l’essai DES (Byar & Green), le même jeu de données que celui présenté dans la Partie 4 du cours. Il s’agit d’un essai randomisé historique chez des hommes atteints d’un cancer de la prostate avancé, comparant un traitement hormonal (DES, œstrogène de synthèse, 5 mg/jour, \\(A=1\\)) à un placebo (\\(A=0\\)). Des covariables baseline (\\(L_1, \\ldots, L_4\\) : activité, âge, hémoglobine, antécédent cardiovasculaire) sont mesurées à l’inclusion.\nDeux évènements peuvent survenir au cours du suivi (analysé ici jusqu’à 36 mois) :\n\n\\(Y\\) : décès par cancer de la prostate (évènement d’intérêt) ;\n\\(D\\) : décès de toute autre cause, qui est un risque compétitif pour \\(Y\\) (une fois décédé, on ne peut plus mourir du cancer de la prostate).\n\nLes patients encore vivants à la date de fin d’étude sont censurés (\\(C\\)) : il s’agit d’une censure administrative, que l’on traitera comme potentiellement dépendante des covariables.\n\n\n\n\n\n\nNote\n\n\n\nCet essai étant randomisé, il n’y a en principe pas de confusion à corriger pour l’effet de \\(A\\). Le TP pratique néanmoins l’IPTW à titre d’exercice (et comme vérification de cohérence : les poids devraient rester proches de 2, l’inverse de la probabilité d’être randomisé dans chaque bras), comme le signale le cours à la fin de la Partie 4. Tout ce qui est appris ici s’applique à l’identique dans une étude observationnelle.",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#déroulement",
+    "href": "index.html#déroulement",
+    "title": "TP Analyse causale de la survie : censure dépendante, confusion et risques compétitifs",
+    "section": "Déroulement",
+    "text": "Déroulement\n\n\n\n\n\n\nNotePartie 1 - Confusion et censure dépendante\n\n\n\nPour commencer simplement, nous allons temporairement ignorer l’existence du risque compétitif \\(D\\) et le traiter comme une simple censure (simplification volontaire, comme dans les Parties 1 et 2 du cours). Cela permet de pratiquer l’IPTW, la g-formula paramétrique et l’IPCW sur un critère de survie classique, à un seul risque.\nCette partie prépare la Partie 2.\n\n\n\n\n\n\n\n\nNotePartie 2 - Risques compétitifs : quel estimand ?\n\n\n\nNous verrons pourquoi la simplification de la Partie 1 ne décrit pas ce qui arrive réellement, puis nous estimerons par g-formula les trois estimands possibles en présence d’un risque compétitif : l’effet total, le risque net et l’effet séparable (ce dernier sans essai à 4 bras).\n\n\n\n\n\n\n\n\nNotePartie 3 - Pondération (IPW) et décomposition\n\n\n\nLes trois mêmes estimands, estimés cette fois par pondération (IPW), puis la décomposition de l’effet total en effets direct et indirect séparables, comme dans la Partie 4 du cours.",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#structure-du-tp",
+    "href": "index.html#structure-du-tp",
+    "title": "TP Analyse causale de la survie : censure dépendante, confusion et risques compétitifs",
+    "section": "Structure du TP",
+    "text": "Structure du TP\n\n\n\n\n\n\n\n\n\nPartie\nMéthode\nQuestion\nDurée estimée\n\n\n\n\nPrésentation\nAnalyse brute (Kaplan-Meier)\nDescription\n~10 min\n\n\nPartie 1\nIPTW, g-formula, IPCW\nCensure dépendante (risque compétitif ignoré, pour l’instant)\n~25 min\n\n\nPartie 2\nCIF, g-formula à deux hazards\nRisques compétitifs : effet total, risque net, effet séparable\n~25 min\n\n\nPartie 3\nIPW, décomposition\nMêmes estimands par pondération, décomposition direct/indirect\n~20 min\n\n\nConclusion\nSynthèse\nComparaison des résultats\n~5 min\n\n\n\nLes durées annoncées sont approximatives, vous pourrez terminer chez vous ce que vous n’auriez pas eu le temps de faire aujourd’hui. Vous pouvez télécharger le pdf de ce TP et le fichier de données df.csv via les liens tout en bas de cette page.",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#comment-utiliser-ce-tp",
+    "href": "index.html#comment-utiliser-ce-tp",
+    "title": "TP Analyse causale de la survie : censure dépendante, confusion et risques compétitifs",
+    "section": "Comment utiliser ce TP",
+    "text": "Comment utiliser ce TP\nLes exercices utilisent WebR : le code R s’exécute directement dans votre navigateur, sans installation. Si vous préférez, vous pouvez télécharger le fichier df.csv et exécuter les commandes dans une session locale de RStudio.\n\nChaque bloc de code peut être modifié et exécuté avec le bouton Run Code (raccourci : Ctrl+R sur Windows, Cmd+R sur Mac).\nLes solutions peuvent être consultées librement. L’objectif est de suivre et de comprendre chaque étape, pas de réécrire le code à partir de rien : lisez-les, exécutez-les, modifiez-les.\nLes variables créées sur une page ne sont pas disponibles sur les pages suivantes ; elles sont reconstruites automatiquement dans chaque section (voir Note sur la session R au début de chaque partie).\n\nPour commencer, cliquez sur Présentation des données dans le menu à gauche.\n\n⬇ Télécharger la version PDF du TP (avec les corrections) ⬇ Télécharger les données df.csv ⬇ Télécharger le script R de correction",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "presentation.html",
+    "href": "presentation.html",
+    "title": "Présentation des données",
+    "section": "",
+    "text": "Présentation\nDans ce TP, nous utilisons les données de l’essai DES (Byar & Green), portant sur 252 patients atteints d’un cancer de la prostate avancé, randomisés entre un traitement hormonal \\(A\\) (DES, œstrogène de synthèse, 5 mg/jour) et un placebo. L’objectif est d’évaluer l’effet de \\(A\\) sur le décès par cancer de la prostate \\(Y\\) (évènement d’intérêt), en présence d’un risque compétitif \\(D\\) (décès de toute autre cause) et d’une censure \\(C\\) (patient vivant à la fin de l’étude).\nLes données sont au format person-period (une ligne par individu et par mois de suivi \\(k\\)), qui correspond aux notations en hazards discrets vues en cours.\n⬇ Télécharger les données df.csv\nLe DAG ci-dessous résume les relations entre variables :\nLecture du DAG : \\(A\\) est randomisé (aucune flèche entrante) : il influence \\(Y\\) et \\(D\\) (en rouge). \\(L\\) (covariables baseline) influence \\(Y\\), \\(D\\) et potentiellement \\(C\\), mais pas \\(A\\) : ce n’est donc pas un facteur de confusion ici (contrairement à une étude observationnelle), même s’il reste utile de l’inclure dans les modèles pour la précision et pour la censure dépendante.",
+    "crumbs": [
+      "Présentation des données"
+    ]
+  },
+  {
+    "objectID": "presentation.html#présentation",
+    "href": "presentation.html#présentation",
+    "title": "Présentation des données",
+    "section": "",
+    "text": "Variable\nDescription\n\n\n\nid\nIdentifiant patient\n\n\nk\nPériode de suivi (mois)\n\n\nA\nTraitement à l’inclusion (0 = placebo, 1 = DES), randomisé et fixé pour tout le suivi\n\n\n\nL1\nActivité quotidienne réduite à l’inclusion (0/1)\n\n\nL2\nTranche d’âge à l’inclusion (facteur à 3 niveaux : [0,60), [60,75), [75,100))\n\n\nL3\nHémoglobine basse à l’inclusion, &lt;12 (0/1)\n\n\nL4\nAntécédent cardiovasculaire à l’inclusion (0/1)\n\n\nY\nDécès par cancer de la prostate pendant la période \\(k\\) (0/1) : évènement d’intérêt\n\n\n\nD\nDécès par une autre cause pendant la période \\(k\\) (0/1) : risque compétitif de \\(Y\\)\n\n\n\nC\nCensure (vivant à la fin de l’étude) survenue pendant la période \\(k\\) (0/1)",
+    "crumbs": [
+      "Présentation des données"
+    ]
+  },
+  {
+    "objectID": "presentation.html#chargement-et-exploration",
+    "href": "presentation.html#chargement-et-exploration",
+    "title": "Présentation des données",
+    "section": "Chargement et exploration",
+    "text": "Chargement et exploration\nChargez les données et affichez les premières lignes. Vérifiez les dimensions de la base, le nombre d’individus, et le nombre total d’évènements \\(Y\\) et \\(D\\).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !library(survival)\nlibrary(dplyr)\ndf &lt;- read.csv(\"df.csv\")\n\nhead(df)\ndim(df)                  # dimensions de la base\nlength(unique(df$id))    # nombre d'individus\nsum(df$Y)                # nombre d'evenements d'interet (deces par cancer)\nsum(df$D)                # nombre de deces par une autre cause (risque competitif)\ndf |&gt; filter(id %in% unique(df$id)[1:2]) |&gt; group_by(id) |&gt;\n  slice_head(n = 3) |&gt; ungroup()  # 3 premiers mois des 2 premiers individus\n\n\nVoir le résultat\n\n  id k A L1      L2 L3 L4 Y D C\n1  3 1 1  0 [60,75)  0  1 0 0 0\n2  3 2 1  0 [60,75)  0  1 0 0 0\n3  3 3 1  0 [60,75)  0  1 0 0 0\n4  3 4 1  0 [60,75)  0  1 0 0 0\n5  3 5 1  0 [60,75)  0  1 0 0 0\n6  3 6 1  0 [60,75)  0  1 0 0 0\n\n\n[1] 8865   10\n\n\n[1] 252\n\n\n[1] 64\n\n\n[1] 124\n\n\n# A tibble: 6 × 10\n     id     k     A    L1 L2         L3    L4     Y     D     C\n  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;\n1     3     1     1     0 [60,75)     0     1     0     0     0\n2     3     2     1     0 [60,75)     0     1     0     0     0\n3     3     3     1     0 [60,75)     0     1     0     0     0\n4     5     1     0     0 [60,75)     0     0     0     0     0\n5     5     2     0     0 [60,75)     0     0     0     0     0\n6     5     3     0     0 [60,75)     0     0     0     0     0\n\n\nLa base comporte 8865 lignes, 252 individus distincts, 64 décès par cancer de la prostate et 124 décès par une autre cause.\n\n\n\n\n\n\nNote\n\n\n\nFormat person-period : chaque individu a autant de lignes que de mois suivis avant l’évènement, le décès, la censure, ou la fin d’étude. La dernière ligne d’un individu indique son statut final (\\(Y\\), \\(D\\), ou \\(C\\) à 1 si l’évènement correspondant est survenu pendant cette période).",
+    "crumbs": [
+      "Présentation des données"
+    ]
+  },
+  {
+    "objectID": "presentation.html#construire-la-base-baseline",
+    "href": "presentation.html#construire-la-base-baseline",
+    "title": "Présentation des données",
+    "section": "Construire la base baseline\n",
+    "text": "Construire la base baseline\n\nPour les analyses de cette première partie du TP, il est pratique de résumer les données en une ligne par individu, avec le statut final et le temps de suivi total.\nCréez df_base contenant : id, A, L1-L4 (valeurs baseline, constantes pour chaque individu), time (dernière valeur de k, c’est-à-dire le nombre de mois suivis), Y, D, C (statuts à la dernière période observée).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## On resume df (format person-period) en une ligne par individu :\n## - first() pour les covariables baseline (constantes pour un individu donne)\n## - last() pour le temps de suivi total et les statuts finaux\ndf_base &lt;- df |&gt;\n  group_by(id) |&gt;\n  summarise(\n    A    = first(A),\n    L1   = first(L1), L2 = first(L2), L3 = first(L3), L4 = first(L4),\n    time = last(k),   # nombre de mois suivis\n    Y    = last(Y),\n    D    = last(D),\n    C    = last(C)\n  ) |&gt;\n  ungroup()\n\nhead(df_base)\nnrow(df_base)  # doit valoir le nombre d'individus distincts\n\n\nVoir le résultat\n\n# A tibble: 6 × 10\n     id     A    L1 L2          L3    L4  time     Y     D     C\n  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;\n1     3     1     0 [60,75)      0     1    40     0     1     0\n2     5     0     0 [60,75)      0     0    65     0     0     1\n3     7     0     0 [75,100)     0     0    46     0     1     0\n4     8     0     0 [60,75)      0     1    62     0     0     1\n5    12     1     0 [60,75)      0     1    59     0     0     1\n6    14     0     0 [0,60)       0     1    49     1     0     0\n\n\n[1] 252",
+    "crumbs": [
+      "Présentation des données"
+    ]
+  },
+  {
+    "objectID": "presentation.html#analyse-brute-non-ajustée",
+    "href": "presentation.html#analyse-brute-non-ajustée",
+    "title": "Présentation des données",
+    "section": "Analyse brute (non ajustée)",
+    "text": "Analyse brute (non ajustée)\nAvant tout ajustement, et en ignorant pour l’instant le risque compétitif \\(D\\) (traité comme une censure, comme si \\(Y\\) était le seul évènement possible), comparons les courbes de survie selon \\(A\\).\nTracez les courbes de Kaplan-Meier de l’évènement \\(Y\\) selon \\(A\\) (traitez \\(D\\) et \\(C\\) comme des censures pour l’instant), puis extrayez la survie estimée à 36 mois dans chaque groupe.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !km_brut &lt;- survfit(Surv(time, Y) ~ A, data = df_base)\n\nplot(km_brut,\n     col  = c(\"#1D2769\", \"#AC182E\"), lwd = 2,\n     xlab = \"Temps (mois)\", ylab = \"Probabilité de survie (sans Y)\",\n     main = \"Kaplan-Meier brut selon A (D et C traités comme censure)\")\nlegend(\"bottomleft\",\n       legend = c(\"A = 0 (placebo)\", \"A = 1 (DES)\"),\n       col = c(\"#1D2769\", \"#AC182E\"), lwd = 2)\n\n## Survie a 36 mois\nsummary(km_brut, times = 36)\n\n\nVoir le résultat\n\n\n\n\n\n\n\nCall: survfit(formula = Surv(time, Y) ~ A, data = df_base)\n\n                A=0 \n        time       n.risk      n.event     survival      std.err lower 95% CI \n      36.000       61.000       27.000        0.733        0.045        0.650 \nupper 95% CI \n       0.827 \n\n                A=1 \n        time       n.risk      n.event     survival      std.err lower 95% CI \n     36.0000      60.0000      18.0000       0.8093       0.0411       0.7326 \nupper 95% CI \n      0.8940 \n\n\nQue constatez-vous ? Cette différence brute a-t-elle une interprétation causale ?\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\nOn observe une différence de survie entre les groupes \\(A=0\\) et \\(A=1\\). Comme \\(A\\) est randomisé, cette différence brute a bien une interprétation causale sur “\\(Y\\) traité comme seul évènement possible”. Ce n’est cependant pas la bonne quantité à regarder : \\(D\\) (décès par une autre cause) est un risque compétitif, pas une censure ordinaire. Le traiter comme une censure suppose implicitement que les personnes décédées d’une autre cause auraient pu, plus tard, mourir du cancer de la prostate.\nLa Partie 1 pratique IPTW, g-formula et IPCW sur cette même simplification (utile même en essai randomisé, pour la censure dépendante et par souci d’exercice). La Partie 2 montrera comment estimer correctement le risque de \\(Y\\) en tenant compte de \\(D\\) comme risque compétitif.\n\n\n\nPour continuer, cliquez sur Partie 1 dans le menu à gauche.",
+    "crumbs": [
+      "Présentation des données"
+    ]
+  },
+  {
+    "objectID": "partie1.html",
+    "href": "partie1.html",
+    "title": "\n1  Partie 1 : confusion et censure dépendante\n",
+    "section": "",
+    "text": "Objectif\nCette partie pratique l’IPTW, la g-formula et l’IPCW sur les données de l’essai DES. On estime les courbes de survie contrefactuelles :\n\\[S^{a=1}(t) = \\Pr(T^{a=1} &gt; t) \\quad \\text{et} \\quad S^{a=0}(t) = \\Pr(T^{a=0} &gt; t)\\]",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Partie 1 : confusion et censure dépendante</span>"
+    ]
+  },
+  {
+    "objectID": "partie1.html#objectif",
+    "href": "partie1.html#objectif",
+    "title": "\n1  Partie 1 : confusion et censure dépendante\n",
+    "section": "",
+    "text": "Note\n\n\n\nSimplification volontaire : dans toute cette partie, le risque compétitif \\(D\\) est traité comme une simple censure (on ignore volontairement qu’il rend \\(Y\\) impossible à observer). C’est la simplification faite dans les Parties 1 et 2 du cours, avant d’introduire les risques compétitifs en Partie 3. La Partie 2 de ce TP montrera pourquoi cette simplification n’est pas satisfaisante pour l’évènement d’intérêt, mais nous verrons aussi qu’elle correspond en réalité à un estimand valide : le risque net (Partie 2).\nRappel : \\(A\\) est ici randomisé, donc l’IPTW n’est pas strictement nécessaire pour corriger une confusion (il n’y en a pas). On le pratique quand même : c’est un bon exercice, et un bon test de cohérence (les poids devraient être proches de 2, l’inverse de la probabilité d’être randomisé dans chaque bras, et peu changer les résultats).",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Partie 1 : confusion et censure dépendante</span>"
+    ]
+  },
+  {
+    "objectID": "partie1.html#note-sur-la-session-r",
+    "href": "partie1.html#note-sur-la-session-r",
+    "title": "\n1  Partie 1 : confusion et censure dépendante\n",
+    "section": "Note sur la session R",
+    "text": "Note sur la session R\nLes variables suivantes sont disponibles dans vos chunks interactifs (construites dans le contexte de setup) :\n\n\ndf : base au format person-period (une ligne par individu et par mois)\n\ndf_base : une ligne par individu, avec A, L1-L4 (baseline), time, Y, D, C (statuts finaux)\n\n\n\n# A tibble: 6 × 10\n     id     A    L1 L2          L3    L4  time     Y     D     C\n  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;\n1     3     1     0 [60,75)      0     1    40     0     1     0\n2     5     0     0 [60,75)      0     0    65     0     0     1\n3     7     0     0 [75,100)     0     0    46     0     1     0\n4     8     0     0 [60,75)      0     1    62     0     0     1\n5    12     1     0 [60,75)      0     1    59     0     0     1\n6    14     0     0 [0,60)       0     1    49     1     0     0",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Partie 1 : confusion et censure dépendante</span>"
+    ]
+  },
+  {
+    "objectID": "partie1.html#étape-1---score-de-propension-et-poids-iptw",
+    "href": "partie1.html#étape-1---score-de-propension-et-poids-iptw",
+    "title": "\n1  Partie 1 : confusion et censure dépendante\n",
+    "section": "Étape 1 - Score de propension et poids IPTW",
+    "text": "Étape 1 - Score de propension et poids IPTW\nEstimez le score de propension \\(e(L) = \\Pr(A=1\\mid L)\\) par régression logistique (sur L1 + L2 + L3 + L4), puis calculez les poids IPTW pour l’ATE.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !ps_mod &lt;- glm(A ~ L1 + L2 + L3 + L4, data = df_base, family = binomial)\ndf_base$e_hat &lt;- predict(ps_mod, type = \"response\")\n\n## Poids IPTW pour l'ATE : inverse de la probabilite du traitement recu\ndf_base$w_iptw &lt;- ifelse(df_base$A == 1,\n                          1 / df_base$e_hat,\n                          1 / (1 - df_base$e_hat))\n\nsummary(df_base$w_iptw)\n\n\nVoir le résultat\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  1.624   1.824   1.974   2.000   2.128   2.603 \n\n\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\nComme \\(A\\) est randomisé, les poids sont resserrés autour de 2, soit l’inverse de la probabilité d’être randomisé dans chaque bras (pas de confusion réelle à corriger) : c’est le comportement attendu sur un essai randomisé, et un bon signe que le modèle de score de propension ne fait rien d’anormal.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Partie 1 : confusion et censure dépendante</span>"
+    ]
+  },
+  {
+    "objectID": "partie1.html#étape-2---kaplan-meier-pondéré-iptw",
+    "href": "partie1.html#étape-2---kaplan-meier-pondéré-iptw",
+    "title": "\n1  Partie 1 : confusion et censure dépendante\n",
+    "section": "Étape 2 - Kaplan-Meier pondéré (IPTW)",
+    "text": "Étape 2 - Kaplan-Meier pondéré (IPTW)\nCalculez le Kaplan-Meier pondéré par w_iptw (toujours en traitant \\(D\\) et \\(C\\) comme des censures), et comparez la survie à 36 mois entre les deux groupes.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !km_iptw &lt;- survfit(Surv(time, Y) ~ A, data = df_base, weights = w_iptw)\nsummary(km_iptw, times = 36)\n\n\nVoir le résultat\n\nCall: survfit(formula = Surv(time, Y) ~ A, data = df_base, weights = w_iptw)\n\n                A=0 \n        time       n.risk      n.event     survival      std.err lower 95% CI \n     36.0000     122.3848      53.2070       0.7361       0.0448       0.6534 \nupper 95% CI \n      0.8293 \n\n                A=1 \n        time       n.risk      n.event     survival      std.err lower 95% CI \n     36.0000     119.5418      36.8837       0.8051       0.0419       0.7270 \nupper 95% CI \n      0.8915 \n\n\nLe Kaplan-Meier pondéré reste un produit de (1 - hazard pondéré). Il repose sur les mêmes hypothèses d’identifiabilité qu’un Kaplan-Meier stratifié, mais sur une seule pseudo-population.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Partie 1 : confusion et censure dépendante</span>"
+    ]
+  },
+  {
+    "objectID": "partie1.html#étape-3---g-formula-paramétrique",
+    "href": "partie1.html#étape-3---g-formula-paramétrique",
+    "title": "\n1  Partie 1 : confusion et censure dépendante\n",
+    "section": "Étape 3 - G-formula paramétrique",
+    "text": "Étape 3 - G-formula paramétrique\nPlutôt que de pondérer, on peut modéliser directement le hazard discret de \\(Y\\) en fonction de \\(A\\), \\(L\\) et de la période \\(k\\), puis moyenner les prédictions sur toute la population.\nAjustez un modèle logistique poolé sur les lignes de df où l’individu est encore à risque de \\(Y\\), c’est-à-dire sans \\(D\\) ni \\(C\\) (subset(df, D == 0 & C == 0)) : Y ~ A * k + L1 + L2 + L3 + L4.\nPourquoi retirer les lignes où \\(D=1\\) ? Par convention, dans chaque mois, la censure et \\(D\\) surviennent avant \\(Y\\) : un patient décédé d’une autre cause au mois \\(k\\) n’a donc pas été à risque de \\(Y\\) pendant ce mois. Garder sa ligne avec \\(Y=0\\) compterait un mois entier sans évènement, et sous-estimerait légèrement le hazard de \\(Y\\).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## Modele de hazard discret, poole sur toutes les periodes ou l'individu est\n## encore a risque de Y (ni D ni C survenu pendant la periode)\nhaz_mod &lt;- glm(Y ~ A * k + L1 + L2 + L3 + L4,\n               data = subset(df, D == 0 & C == 0), family = binomial)\nsummary(haz_mod)\n\n\nVoir le résultat\n\n\nCall:\nglm(formula = Y ~ A * k + L1 + L2 + L3 + L4, family = binomial, \n    data = subset(df, D == 0 & C == 0))\n\nCoefficients:\n             Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept) -4.620436   0.460378 -10.036   &lt;2e-16 ***\nA           -0.500930   0.462733  -1.083   0.2790    \nk            0.002587   0.009093   0.285   0.7760    \nL1           1.151662   0.362770   3.175   0.0015 ** \nL2[60,75)   -0.442275   0.403706  -1.096   0.2733    \nL2[75,100)  -0.051695   0.432719  -0.119   0.9049    \nL3           0.391956   0.316945   1.237   0.2162    \nL4          -0.527921   0.302594  -1.745   0.0810 .  \nA:k          0.008538   0.013851   0.616   0.5376    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 755.95  on 8676  degrees of freedom\nResidual deviance: 738.85  on 8668  degrees of freedom\nAIC: 756.85\n\nNumber of Fisher Scoring iterations: 8\n\n\nPour chaque individu, prédisez son hazard à chaque période sous \\(A=1\\) puis sous \\(A=0\\), et chaînez les \\((1-\\text{hazard})\\) pour obtenir sa survie contrefactuelle individuelle à 36 mois. Moyennez ensuite sur tous les individus.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !K &lt;- 36\npredict_gform &lt;- function(a_val) {\n  surv &lt;- rep(1, nrow(df_base))  # survie cumulee, une valeur par individu\n  for (kk in 1:K) {\n    newdata &lt;- data.frame(A = a_val, k = kk,\n                           L1 = df_base$L1, L2 = df_base$L2,\n                           L3 = df_base$L3, L4 = df_base$L4)\n    haz &lt;- predict(haz_mod, newdata = newdata, type = \"response\")\n    surv &lt;- surv * (1 - haz)\n  }\n  surv  # = S^a(36) individuel, sous le scenario A = a_val\n}\n\ns1_gform &lt;- predict_gform(1)  # survie individuelle predite sous A=1\ns0_gform &lt;- predict_gform(0)  # survie individuelle predite sous A=0\n\n## Moyenne sur toute la population : estimation de S^a=1(36) et S^a=0(36)\nc(S1 = mean(s1_gform), S0 = mean(s0_gform))\n\n\nVoir le résultat\n\n       S1        S0 \n0.8030453 0.7394262 \n\n\nOn retrouve l’algorithme de G-computation vu en cours, appliqué période par période : ajuster un modèle de hazard, prédire sous chaque scénario, chaîner les (1 - hazard), moyenner sur la population.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Partie 1 : confusion et censure dépendante</span>"
+    ]
+  },
+  {
+    "objectID": "partie1.html#étape-4---censure-dépendante-ipcw",
+    "href": "partie1.html#étape-4---censure-dépendante-ipcw",
+    "title": "\n1  Partie 1 : confusion et censure dépendante\n",
+    "section": "Étape 4 - Censure dépendante : IPCW",
+    "text": "Étape 4 - Censure dépendante : IPCW\nModélisez \\(\\Pr(C=1\\mid A, L)\\) par régression logistique poolée, puis calculez le poids IPCW cumulé pour chaque période de suivi.\n\n\n\n\n\n\nNoteSur quelle période ajuster le modèle de censure ?\n\n\n\nDans ces données, personne n’est censuré avant le mois 51 (vérifiez : range(df$k[df$C == 1])). Ajuster le modèle de censure sur tout le suivi (mois 1 à 75) reviendrait à estimer un risque de censure y compris sur des mois où, empiriquement, cet évènement ne s’est jamais produit : le risque estimé serait dilué vers une valeur trop faible, et les poids IPCW seraient légèrement biaisés, y compris tôt dans le suivi, là où aucune correction n’est nécessaire.\nLa bonne pratique consiste donc à restreindre l’ajustement du modèle à la période réellement à risque (ici \\(k&gt;50\\)), et à fixer le poids à 1 avant cette période. C’est le choix fait dans le cours (Partie 4), inspiré de l’atelier de la Society for Epidemiologic Research sur les risques compétitifs (Rojas-Saunero et al.), sur ce même jeu de données.\nSi la censure survenait au contraire de façon à peu près uniforme tout au long du suivi (situation plus classique), un modèle unique ajusté sur toute la période, sans restriction, serait le bon choix (c’est le code le plus souvent rencontré dans la littérature). Le premier encart ci-dessous montre l’approche retenue ici ; le second montre cette variante “classique”, pour une situation où la censure ne serait pas concentrée en fin de suivi.\n\n\n\n\n\n\n\n\nAvertissementÀ 36 mois, les poids IPCW valent tous 1\n\n\n\nNos analyses s’arrêtent à 36 mois, et la première censure survient au mois 51 : sur la fenêtre analysée, personne n’est censuré et tous les poids IPCW valent 1. L’IPCW ne modifie donc aucun résultat de ce TP (l’Étape 5 donnera exactement les mêmes chiffres que l’IPTW seul). Ces censures tardives correspondent d’ailleurs à des patients vivants à la date de fin d’étude (censure administrative), et non à des sorties d’étude liées à leur état de santé.\nAllonger l’horizon n’apporterait rien : à 60 ou 72 mois, l’IPCW ne déplace la différence de survie que d’environ 0,001, alors qu’il ne reste que 52 puis 12 patients à risque et que les estimations deviennent instables. On construit donc ces poids ici à titre d’exercice : le code est celui que vous utiliseriez face à une vraie censure dépendante.\n\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## Modele de la censure, restreint a la periode reellement a risque\nlate &lt;- subset(df, k &gt; 50)\ncens_mod &lt;- glm(C ~ A + L1 + L2 + L3 + L4, data = late, family = binomial)\ndf$p_cens &lt;- 0\ndf$p_cens[df$k &gt; 50] &lt;- predict(cens_mod, newdata = df[df$k &gt; 50, ], type = \"response\")\n\n## Poids IPCW cumule : produit de 1/(1 - p_cens) depuis la 1ere periode jusqu'a la\n## periode courante (chaque individu contribue une ligne par periode a risque)\ndf &lt;- df |&gt;\n  group_by(id) |&gt;\n  mutate(w_ipcw = cumprod(1 / (1 - p_cens))) |&gt;\n  ungroup()\n\nsummary(df$w_ipcw)\n\n\nVoir le résultat\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  1.000   1.000   1.000   1.105   1.000   5.150 \n\n\n\n\n\n\n\n\nAstuceVariante “classique” : censure uniforme sur tout le suivi\n\n\n\n\n\nSi la censure ne se concentrait pas en fin de suivi, on ajusterait un seul modèle sur l’ensemble des périodes, sans restriction :\n## Version \"classique\", sans restriction de periode - a utiliser si la censure\n## survient de facon a peu pres uniforme tout au long du suivi (PAS le cas ici)\ncens_mod &lt;- glm(C ~ A + L1 + L2 + L3 + L4, data = df, family = binomial)\ndf$p_cens &lt;- predict(cens_mod, type = \"response\")\nAppliqué à nos données, ce code “classique” attribuerait, y compris avant le mois 51, une petite probabilité de censure purement due à l’extrapolation du modèle en dehors de la période où l’évènement a réellement été observé, ce qui biaiserait légèrement les poids même tôt dans le suivi, là où ils devraient valoir 1.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Partie 1 : confusion et censure dépendante</span>"
+    ]
+  },
+  {
+    "objectID": "partie1.html#étape-5---combiner-iptw-et-ipcw",
+    "href": "partie1.html#étape-5---combiner-iptw-et-ipcw",
+    "title": "\n1  Partie 1 : confusion et censure dépendante\n",
+    "section": "Étape 5 - Combiner IPTW et IPCW",
+    "text": "Étape 5 - Combiner IPTW et IPCW\nMultipliez le poids IPTW (baseline) et le poids IPCW (période par période), puis calculez le Kaplan-Meier pondéré sur les données au format “compteur” (Surv(k-1, k, Y)).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !df_w &lt;- df |&gt;\n  left_join(df_base[, c(\"id\", \"w_iptw\")], by = \"id\") |&gt;\n  mutate(poids_total = w_iptw * w_ipcw)\n\n## Format \"compteur\" : chaque ligne est l'intervalle [k-1, k) avec son propre poids\nkm_combine &lt;- survfit(Surv(k - 1, k, Y) ~ A, data = df_w, weights = poids_total)\nsummary(km_combine, times = 36)\n\n\nVoir le résultat\n\nCall: survfit(formula = Surv(k - 1, k, Y) ~ A, data = df_w, weights = poids_total)\n\n                A=0 \n        time       n.risk      n.event     survival      std.err lower 95% CI \n     36.0000     122.3848      53.2070       0.7361       0.0446       0.6537 \nupper 95% CI \n      0.8290 \n\n                A=1 \n        time       n.risk      n.event     survival      std.err lower 95% CI \n      36.000      119.542       36.884        0.805        0.042        0.727 \nupper 95% CI \n       0.892",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Partie 1 : confusion et censure dépendante</span>"
+    ]
+  },
+  {
+    "objectID": "partie1.html#discussion---comparaison-des-trois-approches",
+    "href": "partie1.html#discussion---comparaison-des-trois-approches",
+    "title": "\n1  Partie 1 : confusion et censure dépendante\n",
+    "section": "Discussion - comparaison des trois approches",
+    "text": "Discussion - comparaison des trois approches\nComparez la différence de survie à 36 mois (\\(S^{a=1}(36) - S^{a=0}(36)\\)) obtenue par l’analyse brute (Présentation), l’IPTW seul, la g-formula, et IPTW+IPCW combinés.\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\nSur cet essai randomisé, les quatre approches donnent des estimations proches : il n’y a pas de confusion réelle à corriger, donc l’IPTW ne change presque rien. L’IPCW ne change rien du tout ici, puisque personne n’est censuré avant 36 mois. Dans d’autres données, en revanche, une censure dépendante de \\(L\\) pourrait faire une différence, même en essai randomisé. Ceci reste vrai bien que nous ayons, dans toute cette partie, traité le risque compétitif \\(D\\) comme une simple censure : la Partie 2 va maintenant examiner les conséquences de cette simplification.\n\n\n\nPour continuer, cliquez sur Partie 2 dans le menu à gauche.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Partie 1 : confusion et censure dépendante</span>"
+    ]
+  },
+  {
+    "objectID": "partie2.html",
+    "href": "partie2.html",
+    "title": "\n2  Partie 2 : risques compétitifs et estimands\n",
+    "section": "",
+    "text": "Objectif\nDans la Partie 1, nous avons volontairement traité le risque compétitif \\(D\\) (décès par une autre cause) comme une simple censure. Cette partie montre pourquoi ce n’est pas satisfaisant en général pour décrire ce qui arrive réellement à la population, introduit la fonction d’incidence cumulée (CIF) correcte, et estime par g-formula les trois estimands possibles en présence de risques compétitifs (l’effet séparable ne nécessite pas d’essai à 4 bras).",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Partie 2 : risques compétitifs et estimands</span>"
+    ]
+  },
+  {
+    "objectID": "partie2.html#note-sur-la-session-r",
+    "href": "partie2.html#note-sur-la-session-r",
+    "title": "\n2  Partie 2 : risques compétitifs et estimands\n",
+    "section": "Note sur la session R",
+    "text": "Note sur la session R\nLes variables suivantes sont disponibles (reconstruites dans le contexte de setup) :\n\n\ndf : base person-période ; df_base : une ligne par individu\n\nhaz_mod_Y : le modèle de hazard de \\(Y\\), déjà ajusté (voir l’encart ci-dessous pour sa forme exacte, un peu plus riche que celle utilisée en Partie 1)\n\n\n\n\n\n\n\nNoteLa forme de l’effet du temps est un choix de spécification\n\n\n\nEn Partie 1, le hazard de \\(Y\\) dépendait de \\(k\\) de façon simplement linéaire (A * k), pour une première prise en main. À partir de maintenant, on reprend la spécification utilisée dans les diapos du cours (Partie 4) pour le modèle de \\(Y\\) :\nY ~ A + k + I(k^2) + I(k^3) + A:k + A:I(k^2) + L1 + L2 + L3 + L4\nUn polynôme de degré 3 en \\(k\\) (avec des interactions avec \\(A\\)) permet au hazard de suivre une forme plus flexible au cours du temps, plutôt qu’une tendance strictement linéaire (ou constante). Ce choix n’est pas imposé : il s’ajuste selon la richesse des données disponibles (nombre d’évènements, longueur du suivi). On peut aussi bien le complexifier (degré plus élevé, splines) que le simplifier (linéaire, voire un hazard constant dans le temps), tant que la forme retenue capture raisonnablement bien comment le risque évolue au cours du suivi.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Partie 2 : risques compétitifs et estimands</span>"
+    ]
+  },
+  {
+    "objectID": "partie2.html#étape-1---cif-naïve-vs-cif-correcte",
+    "href": "partie2.html#étape-1---cif-naïve-vs-cif-correcte",
+    "title": "\n2  Partie 2 : risques compétitifs et estimands\n",
+    "section": "Étape 1 - CIF naïve vs CIF correcte",
+    "text": "Étape 1 - CIF naïve vs CIF correcte\nConstruisez la variable de statut à 3 niveaux (censore, evenement, deces), puis comparez l’incidence cumulée de \\(Y\\) obtenue en traitant \\(D\\) comme une censure (naïve) à celle obtenue par l’estimateur d’Aalen-Johansen (qui prend en compte \\(D\\) comme risque compétitif).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !df_base$statut &lt;- factor(\n  ifelse(df_base$Y == 1, \"evenement\", ifelse(df_base$D == 1, \"deces\", \"censore\")),\n  levels = c(\"censore\", \"evenement\", \"deces\")\n)\n\n## CIF naive (D traite comme une censure, comme en Partie 1)\nkm_naif &lt;- survfit(Surv(time, Y) ~ 1, data = df_base)\ncif_naive_36 &lt;- 1 - summary(km_naif, times = 36)$surv\n\n## CIF correcte (Aalen-Johansen, prend en compte D comme risque competitif)\naj &lt;- survfit(Surv(time, statut) ~ 1, data = df_base)\ns_aj &lt;- summary(aj, times = 36)\ncif_correcte_36 &lt;- s_aj$pstate[, colnames(s_aj$pstate) == \"evenement\"]\n\nc(naive = cif_naive_36, correcte = cif_correcte_36)\n\n\nVoir le résultat\n\n             naive correcte.evenement \n         0.2304537          0.1785714 \n\n\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\nLa CIF naïve (qui traite \\(D\\) comme une censure) est plus élevée que la CIF correcte (Aalen-Johansen) : en supposant implicitement que les personnes décédées auraient pu faire l’évènement d’intérêt plus tard, elle surestime l’incidence de \\(Y\\).",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Partie 2 : risques compétitifs et estimands</span>"
+    ]
+  },
+  {
+    "objectID": "partie2.html#étape-2---estimand-1-effet-total",
+    "href": "partie2.html#étape-2---estimand-1-effet-total",
+    "title": "\n2  Partie 2 : risques compétitifs et estimands\n",
+    "section": "Étape 2 - Estimand 1 : effet total",
+    "text": "Étape 2 - Estimand 1 : effet total\nLe premier estimand compare directement le risque de \\(Y\\) tel qu’il se produit réellement (risque compétitif inclus) entre les deux groupes de traitement.\n\\[\\Pr(Y_k^{a=1}=1) - \\Pr(Y_k^{a=0}=1)\\]\nComme en Partie 1, on modélise le hazard de \\(Y\\) (haz_mod_Y, déjà ajusté), et on ajoute maintenant un second modèle pour le hazard de \\(D\\). On chaîne les deux hazards :\n\\[\\hat S_i(k)=\\prod_{j&lt;k}\\{1-\\hat\\lambda_{D,i}(j)\\}\\{1-\\hat\\lambda_{Y,i}(j)\\}, \\qquad\n  \\widehat{\\text{CIF}}_{Y,i}(k)=\\sum_{j\\le k}\\hat S_i(j)\\{1-\\hat\\lambda_{D,i}(j)\\}\\hat\\lambda_{Y,i}(j)\\]\nAjustez le modèle de hazard de \\(D\\) (D ~ A + k + I(k^2) + L1 + L2 + L3 + L4, sur les lignes non censurées), puis écrivez une fonction gcomp_CIF(a_Y, a_D) qui prédit et chaîne les deux hazards pour chaque individu (sous \\(A=a_Y\\) pour le modèle de \\(Y\\), sous \\(A=a_D\\) pour le modèle de \\(D\\)), et retourne la CIF moyenne à 36 mois.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !haz_mod_D &lt;- glm(D ~ A + k + I(k^2) + L1 + L2 + L3 + L4,\n                 data = subset(df, C == 0), family = binomial)\n\nK &lt;- 36\ngcomp_CIF &lt;- function(a_Y, a_D) {\n  Spred &lt;- rep(1, nrow(df_base)); CIF &lt;- rep(0, nrow(df_base))\n  for (kk in 1:K) {\n    newD &lt;- data.frame(A = a_D, k = kk, L1 = df_base$L1, L2 = df_base$L2,\n                        L3 = df_base$L3, L4 = df_base$L4)\n    newY &lt;- data.frame(A = a_Y, k = kk, L1 = df_base$L1, L2 = df_base$L2,\n                        L3 = df_base$L3, L4 = df_base$L4)\n    hazD &lt;- predict(haz_mod_D, newdata = newD, type = \"response\")\n    hazY &lt;- predict(haz_mod_Y, newdata = newY, type = \"response\")\n    CIF   &lt;- CIF + Spred * (1 - hazD) * hazY\n    Spred &lt;- Spred * (1 - hazD) * (1 - hazY)\n  }\n  mean(CIF)\n}\n\n## Effet total : les deux hazards varient ENSEMBLE avec A\neffet_total &lt;- gcomp_CIF(1, 1) - gcomp_CIF(0, 0)\neffet_total\n\n\nVoir le résultat\n\n[1] -0.06675082\n\n\nCet estimand mélange l’effet du traitement sur \\(Y\\) et son effet (éventuel) sur le risque compétitif \\(D\\) : c’est un effet total, et non un effet propre sur \\(Y\\).",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Partie 2 : risques compétitifs et estimands</span>"
+    ]
+  },
+  {
+    "objectID": "partie2.html#étape-3---estimand-2-risque-net",
+    "href": "partie2.html#étape-3---estimand-2-risque-net",
+    "title": "\n2  Partie 2 : risques compétitifs et estimands\n",
+    "section": "Étape 3 - Estimand 2 : risque net",
+    "text": "Étape 3 - Estimand 2 : risque net\nLe deuxième estimand répond à une autre question : quel serait le risque de \\(Y\\) dans un monde hypothétique où le risque compétitif \\(D\\) serait éliminé ?\n\\[\\Pr(Y_k^{a=1,d=0}=1) - \\Pr(Y_k^{a=0,d=0}=1)\\]\n\n\n\n\n\n\nNote\n\n\n\nVous avez déjà estimé cet estimand en Partie 1 (Étape 3), avec un modèle plus simple. La g-formula qui modélise le hazard de \\(Y\\) sans référence à \\(D\\) est l’estimateur du risque net, à condition d’avoir ajusté sur les causes communes de \\(D\\) et \\(Y\\) (ici, \\(L_1\\)-\\(L_4\\)). Avec la fonction gcomp_CIF de l’étape précédente, c’est équivalent à ne jamais appeler le modèle de \\(D\\) (hazard de \\(D\\) forcé à 0).\n\n\nÉcrivez cette version simplifiée, gcomp_CIF0(a_Y), qui ne modélise jamais \\(D\\).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !gcomp_CIF0 &lt;- function(a_Y) {\n  Spred &lt;- rep(1, nrow(df_base)); CIF &lt;- rep(0, nrow(df_base))\n  for (kk in 1:K) {\n    newY &lt;- data.frame(A = a_Y, k = kk, L1 = df_base$L1, L2 = df_base$L2,\n                        L3 = df_base$L3, L4 = df_base$L4)\n    hazY &lt;- predict(haz_mod_Y, newdata = newY, type = \"response\")\n    CIF   &lt;- CIF + Spred * hazY\n    Spred &lt;- Spred * (1 - hazY)\n  }\n  mean(CIF)\n}\n\n## Risque net : le modele de D n'est JAMAIS utilise\nrisque_net &lt;- gcomp_CIF0(1) - gcomp_CIF0(0)\nrisque_net\n\n\nVoir le résultat\n\n[1] -0.06798562\n\n\nComparez cette différence de risque net à la différence d’effet total obtenue à l’Étape 2 : sont-elles identiques ?\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\nLes deux différences ne sont, en général, pas identiques : le traitement \\(A\\) affecte à la fois le hazard de \\(Y\\) et le hazard de \\(D\\) (le DES augmente le risque de décès par une autre cause). L’effet total mélange ces deux mécanismes, tandis que le risque net les sépare artificiellement en simulant un monde sans risque compétitif. Aucune des deux n’est “la bonne” réponse dans l’absolu : elles répondent à des questions différentes (cf. cours, Partie 3).",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Partie 2 : risques compétitifs et estimands</span>"
+    ]
+  },
+  {
+    "objectID": "partie2.html#étape-4---estimand-3-effet-séparable",
+    "href": "partie2.html#étape-4---estimand-3-effet-séparable",
+    "title": "\n2  Partie 2 : risques compétitifs et estimands\n",
+    "section": "Étape 4 - Estimand 3 : effet séparable",
+    "text": "Étape 4 - Estimand 3 : effet séparable\nLe troisième estimand isole la composante de \\(A\\) qui agit sur \\(Y\\) seul, à hazard de \\(D\\) fixé (neutralisé) plutôt qu’éliminé :\n\\[\\Pr(Y_k^{a_Y=1,\\,a_D=0}=1) - \\Pr(Y_k^{a_Y=0,\\,a_D=0}=1)\\]\n\n\n\n\n\n\nImportant\n\n\n\nCet estimand ne nécessite pas d’essai à 4 bras : on réutilise les deux mêmes modèles de hazard (haz_mod_D, haz_mod_Y), avec la même fonction gcomp_CIF(a_Y, a_D) qu’à l’Étape 2, en lui donnant deux valeurs différentes pour \\(a_Y\\) et \\(a_D\\).\n\n\nAvec gcomp_CIF, calculez \\(\\text{gcomp\\_CIF}(1, 0) - \\text{gcomp\\_CIF}(0, 0)\\) : le hazard de \\(D\\) reste fixé à \\(A=0\\) dans les deux termes, seul celui de \\(Y\\) change de bras.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !## Effet separable : hazard de D FIXE a a_D = 0, seul celui de Y varie\neffet_separable &lt;- gcomp_CIF(1, 0) - gcomp_CIF(0, 0)\neffet_separable\n\n\nVoir le résultat\n\n[1] -0.05538297",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Partie 2 : risques compétitifs et estimands</span>"
+    ]
+  },
+  {
+    "objectID": "partie2.html#récapitulatif",
+    "href": "partie2.html#récapitulatif",
+    "title": "\n2  Partie 2 : risques compétitifs et estimands\n",
+    "section": "Récapitulatif",
+    "text": "Récapitulatif\nRassemblez les trois différences de risque à 36 mois (effet total, risque net, effet séparable) dans un seul tableau.\n\nMontrez moi comment faire !data.frame(\n  Estimand = c(\"Effet total\", \"Risque net\", \"Effet separable\"),\n  Difference_de_risque = round(c(effet_total, risque_net, effet_separable), 3)\n)\n\n\nVoir le résultat\n\n         Estimand Difference_de_risque\n1     Effet total               -0.067\n2      Risque net               -0.068\n3 Effet separable               -0.055",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Partie 2 : risques compétitifs et estimands</span>"
+    ]
+  },
+  {
+    "objectID": "partie2.html#discussion",
+    "href": "partie2.html#discussion",
+    "title": "\n2  Partie 2 : risques compétitifs et estimands\n",
+    "section": "Discussion",
+    "text": "Discussion\n\n\n\n\n\n\nImportantCe qu’il faut retenir\n\n\n\nLa CIF naïve (traiter le risque compétitif comme une censure) surestime le risque de l’évènement d’intérêt. Une fois la CIF correctement estimée, il reste à choisir entre plusieurs estimands (effet total, risque net, effet séparable), qui répondent à des questions cliniques différentes et peuvent donner des conclusions différentes. Les trois s’estiment avec les deux mêmes modèles de hazard, combinés différemment.\n\n\nPour continuer, cliquez sur Partie 3 dans le menu à gauche.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Partie 2 : risques compétitifs et estimands</span>"
+    ]
+  },
+  {
+    "objectID": "partie3.html",
+    "href": "partie3.html",
+    "title": "\n3  Partie 3 : pondération (IPW) et décomposition\n",
+    "section": "",
+    "text": "Objectif\nCette partie reproduit les trois mêmes estimands que la Partie 2 (effet total, risque net, effet séparable), mais par pondération (IPW) plutôt que par g-formula, comme dans la Partie 4 du cours. Elle termine par la décomposition de l’effet total en effet direct + effet indirect séparables.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Partie 3 : pondération (IPW) et décomposition</span>"
+    ]
+  },
+  {
+    "objectID": "partie3.html#note-sur-la-session-r",
+    "href": "partie3.html#note-sur-la-session-r",
+    "title": "\n3  Partie 3 : pondération (IPW) et décomposition\n",
+    "section": "Note sur la session R",
+    "text": "Note sur la session R\n\n\ndf : base person-period (reconstruite dans le contexte de setup)\n\nK &lt;- 36 : nombre de périodes de suivi",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Partie 3 : pondération (IPW) et décomposition</span>"
+    ]
+  },
+  {
+    "objectID": "partie3.html#étape-1---modèle-de-censure-et-poids-ipcw",
+    "href": "partie3.html#étape-1---modèle-de-censure-et-poids-ipcw",
+    "title": "\n3  Partie 3 : pondération (IPW) et décomposition\n",
+    "section": "Étape 1 - Modèle de censure et poids IPCW",
+    "text": "Étape 1 - Modèle de censure et poids IPCW\nModélisez \\(\\Pr(C=1\\mid A, L)\\) et calculez le poids IPCW cumulé (poids “effet total”).\n\n\n\n\n\n\nNoteRappel : restreindre le modèle de censure à la période à risque\n\n\n\nComme en Partie 1, personne n’est censuré avant le mois 51 dans ces données (range(df$k[df$C == 1])) : on ajuste donc le modèle de censure uniquement sur \\(k&gt;50\\), et on fixe le poids à 1 avant cette période. La variante “classique” (un seul modèle sur tout le suivi, sans restriction) est rappelée à la fin de cette étape : c’est celle qu’il faudrait utiliser si la censure survenait de façon uniforme tout au long du suivi.\nComme en Partie 1, ces poids valent 1 sur toute la fenêtre analysée (36 mois) : w_total ne modifie donc pas les résultats, et w_net se réduit au poids lié à \\(D\\).\n\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !late &lt;- subset(df, k &gt; 50)\nmodC &lt;- glm(C ~ A + L1 + L2 + L3 + L4, data = late, family = binomial)\ndf$predC &lt;- 1\ndf$predC[df$k &gt; 50] &lt;- 1 - predict(modC, newdata = df[df$k &gt; 50, ], type = \"response\")\ndf &lt;- df |&gt;\n  group_by(id) |&gt;\n  mutate(cumPredC = cumprod(predC)) |&gt;\n  ungroup()\n\nw_total &lt;- 1 / df$cumPredC          # poids \"effet total\" : censure seule\nsummary(w_total)\n\n\nVoir le résultat\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  1.000   1.000   1.000   1.105   1.000   5.150 \n\n\n\n\n\n\n\n\nAstuceVariante “classique” : censure uniforme sur tout le suivi\n\n\n\n\n\n## Version \"classique\", sans restriction de periode - a utiliser si la censure\n## survient de facon a peu pres uniforme tout au long du suivi (PAS le cas ici)\nmodC &lt;- glm(C ~ A + L1 + L2 + L3 + L4, data = df, family = binomial)\ndf$predC &lt;- 1 - predict(modC, type = \"response\")",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Partie 3 : pondération (IPW) et décomposition</span>"
+    ]
+  },
+  {
+    "objectID": "partie3.html#étape-2---poids-risque-net-censure-d",
+    "href": "partie3.html#étape-2---poids-risque-net-censure-d",
+    "title": "\n3  Partie 3 : pondération (IPW) et décomposition\n",
+    "section": "Étape 2 - Poids “risque net” (censure × D)",
+    "text": "Étape 2 - Poids “risque net” (censure × D)\nPour le risque net, \\(D\\) est traité comme une seconde censure : on multiplie le poids IPCW par un poids qui gère la sortie du risque via \\(D\\), de la même façon.\nModélisez \\(\\Pr(D=1\\mid A, L, k)\\) (sur les lignes non censurées, sans exclure \\(D=1\\) : c’est lui l’évènement modélisé), avec le même choix de dépendance temporelle qu’en Partie 2 (polynôme en \\(k\\)), et calculez w_net = w_total * 1/cumPredO où cumPredO est le produit cumulé de \\(1-\\Pr(D=1\\mid \\cdot)\\).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !modD &lt;- glm(D ~ A + k + I(k^2) + L1 + L2 + L3 + L4,\n            data = subset(df, C == 0), family = binomial)\ndf$predO &lt;- 1 - predict(modD, newdata = df, type = \"response\")\ndf &lt;- df |&gt;\n  group_by(id) |&gt;\n  mutate(cumPredO = cumprod(predO)) |&gt;\n  ungroup()\n\nw_net &lt;- w_total / df$cumPredO      # risque net : censure x D\nsummary(w_net)\n\n\nVoir le résultat\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  1.003   1.123   1.294   1.750   1.688  29.459 \n\n\n\n\n\n\n\n\nNote\n\n\n\nPourquoi “censure × D” et pas seulement D ? Le poids w_net combine deux mécanismes de sortie du risque (la censure \\(C\\) et \\(D\\)), comme on combinait IPTW × IPCW en Partie 1 : ici c’est IPCW-censure × IPCW-\\(D\\).",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Partie 3 : pondération (IPW) et décomposition</span>"
+    ]
+  },
+  {
+    "objectID": "partie3.html#étape-3---effet-total-et-risque-net-par-ipw",
+    "href": "partie3.html#étape-3---effet-total-et-risque-net-par-ipw",
+    "title": "\n3  Partie 3 : pondération (IPW) et décomposition\n",
+    "section": "Étape 3 - Effet total et risque net, par IPW",
+    "text": "Étape 3 - Effet total et risque net, par IPW\nÉcrivez une fonction nonparam_hazard(w, a, event) qui calcule le hazard non paramétrique pondéré de event (“Y” ou “D”) pour le bras a, et une fonction chain_CIF(hazY, hazD) qui chaîne ces hazards en CIF (comme dans la formule de la Partie 2). Utilisez-les pour calculer l’effet total (avec w_total, hazD inclus) et le risque net (avec w_net, sans hazD).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !nonparam_hazard &lt;- function(w, a, event = c(\"Y\", \"D\")) {\n  event &lt;- match.arg(event)\n  sapply(1:K, function(kk) {\n    if (event == \"Y\") { idx &lt;- df$k==kk & df$A==a & df$C==0 & df$D==0; ev &lt;- idx & df$Y==1 }\n    else               { idx &lt;- df$k==kk & df$A==a & df$C==0;          ev &lt;- idx & df$D==1 }\n    sum(w[ev]) / sum(w[idx])\n  })\n}\nchain_CIF &lt;- function(hazY, hazD = NULL) {\n  S &lt;- 1; cif &lt;- 0\n  for (kk in 1:K) {\n    hD  &lt;- if (!is.null(hazD)) hazD[kk] else 0\n    cif &lt;- cif + S * (1 - hD) * hazY[kk]\n    S   &lt;- S * (1 - hD) * (1 - hazY[kk])\n  }\n  cif\n}\n\nipw_tot_1 &lt;- chain_CIF(nonparam_hazard(w_total, 1, \"Y\"), nonparam_hazard(w_total, 1, \"D\"))\nipw_tot_0 &lt;- chain_CIF(nonparam_hazard(w_total, 0, \"Y\"), nonparam_hazard(w_total, 0, \"D\"))\nipw_net_1 &lt;- chain_CIF(nonparam_hazard(w_net, 1, \"Y\"))\nipw_net_0 &lt;- chain_CIF(nonparam_hazard(w_net, 0, \"Y\"))\n\nc(effet_total = ipw_tot_1 - ipw_tot_0, risque_net = ipw_net_1 - ipw_net_0)\n\n\nVoir le résultat\n\neffet_total  risque_net \n-0.06859843 -0.08823124",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Partie 3 : pondération (IPW) et décomposition</span>"
+    ]
+  },
+  {
+    "objectID": "partie3.html#étape-4---effet-séparable-par-ipw",
+    "href": "partie3.html#étape-4---effet-séparable-par-ipw",
+    "title": "\n3  Partie 3 : pondération (IPW) et décomposition\n",
+    "section": "Étape 4 - Effet séparable, par IPW",
+    "text": "Étape 4 - Effet séparable, par IPW\nL’effet séparable demande un poids “croisé” : pour les patients sous \\(A=1\\), on transporte leur hazard de \\(D\\) vers ce qu’il serait sous \\(A=a_D=0\\).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !predO_aD0 &lt;- 1 - predict(modD, newdata = transform(df, A = 0), type = \"response\")\npredO_aY1 &lt;- 1 - predict(modD, newdata = transform(df, A = 1), type = \"response\")\nw_sep &lt;- (ave(predO_aD0, df$id, FUN = cumprod) / ave(predO_aY1, df$id, FUN = cumprod)) * w_total\n\n## Somme ponderee directe (Stensrud et al., JASA 2022, eq. 11), sur les patients A=1\nn_A1 &lt;- sum(df$A[!duplicated(df$id)] == 1)\nipw_sep &lt;- sum(sapply(1:K, function(kk) {\n  idx &lt;- df$k==kk & df$A==1 & df$C==0 & df$D==0\n  sum(w_sep[idx & df$Y==1]) / n_A1\n}))\neffet_separable_ipw &lt;- ipw_sep - ipw_tot_0\neffet_separable_ipw\n\n\nVoir le résultat\n\n[1] -0.0593796\n\n\n\n\n\n\n\n\nNote\n\n\n\nOn utilise ici une somme pondérée directe (Stensrud et al., JASA 2022, éq. 11) plutôt qu’un chaînage hazard/survie : elle évite d’avoir à estimer, en plus, un facteur de survie à \\(D\\) sous \\(a_D\\), étape plus délicate qu’il n’y paraît.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Partie 3 : pondération (IPW) et décomposition</span>"
+    ]
+  },
+  {
+    "objectID": "partie3.html#étape-5---comparer-g-formula-et-ipw",
+    "href": "partie3.html#étape-5---comparer-g-formula-et-ipw",
+    "title": "\n3  Partie 3 : pondération (IPW) et décomposition\n",
+    "section": "Étape 5 - Comparer g-formula et IPW",
+    "text": "Étape 5 - Comparer g-formula et IPW\nComparez les trois différences de risque obtenues ici (IPW) à celles obtenues en Partie 2 (g-formula).\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\nLes deux estimateurs (modèle des hazards d’un côté, pondération des observations de l’autre) donnent le même ordre entre les trois estimands, en valeur absolue : l’effet est le plus marqué sur le risque net, puis sur l’effet total, puis sur l’effet séparable. Les valeurs peuvent en revanche nettement différer, notamment pour le risque net (−0,068 par g-formula contre −0,088 par IPW). Les deux approches reposent sur des modèles différents (hazards d’un côté, poids de l’autre) et n’ont aucune raison de coïncider sur un échantillon de 252 patients.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Partie 3 : pondération (IPW) et décomposition</span>"
+    ]
+  },
+  {
+    "objectID": "partie3.html#étape-6---décomposer-leffet-total-en-direct-indirect",
+    "href": "partie3.html#étape-6---décomposer-leffet-total-en-direct-indirect",
+    "title": "\n3  Partie 3 : pondération (IPW) et décomposition\n",
+    "section": "Étape 6 - Décomposer l’effet total en direct + indirect",
+    "text": "Étape 6 - Décomposer l’effet total en direct + indirect\nStensrud et al. (2022) montrent que la somme de l’effet direct séparable et de l’effet indirect séparable (composante \\(A_D\\) seule, à \\(a_Y\\) fixé) reconstruit exactement l’effet total, comme en médiation classique. Reprenez la fonction gcomp_CIF de la Partie 2.\nCalculez gcomp_CIF(0, 1), puis les deux décompositions : gcomp_CIF(1,0)-gcomp_CIF(0,0) + gcomp_CIF(1,1)-gcomp_CIF(1,0), et gcomp_CIF(0,1)-gcomp_CIF(0,0) + gcomp_CIF(1,1)-gcomp_CIF(0,1). Vérifiez qu’elles tombent toutes deux exactement sur l’effet total de la Partie 2.\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\nLes deux sommes tombent exactement sur l’effet total. Il s’agit d’une identité algébrique (\\(A-B + B-C = A-C\\) sur les 4 coins du carré \\((a_Y,a_D)\\)), vraie dès qu’on utilise les mêmes deux modèles de hazard pour les 4 combinaisons. Comme en médiation classique, il existe deux décompositions valables, selon la valeur à laquelle on fixe l’autre composante.\n\n\n\nPour continuer, cliquez sur Conclusion dans le menu à gauche.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Partie 3 : pondération (IPW) et décomposition</span>"
+    ]
+  },
+  {
+    "objectID": "conclusion.html",
+    "href": "conclusion.html",
+    "title": "\n4  Conclusion\n",
+    "section": "",
+    "text": "Récapitulatif : confusion et censure dépendante (Partie 1)\nAnalyse\nAjustement\nS(36) - A=0\nS(36) - A=1\nΔ survie\n\n\n\nKM brut (non ajusté)\nAucun\n0.733\n0.809\n0.076\n\n\nIPTW\nScore de propension (illustratif, essai randomisé)\n0.736\n0.805\n0.069\n\n\nG-formula (= risque net)\nModèle de hazard\n0.739\n0.803\n0.064\n\n\nIPTW × IPCW\nCensure dépendante\n0.736\n0.805\n0.069",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Conclusion</span>"
+    ]
+  },
+  {
+    "objectID": "conclusion.html#récapitulatif-risques-compétitifs-et-estimands-parties-2-et-3",
+    "href": "conclusion.html#récapitulatif-risques-compétitifs-et-estimands-parties-2-et-3",
+    "title": "\n4  Conclusion\n",
+    "section": "Récapitulatif : risques compétitifs et estimands (Parties 2 et 3)",
+    "text": "Récapitulatif : risques compétitifs et estimands (Parties 2 et 3)\n\n\n\n\n\n\n\n\n\nEstimand\nDifférence de risque, g-formula\nDifférence de risque, IPW\n\n\n\nEffet total\n-0.067\n-0.069\n\n\nRisque net\n-0.068\n-0.088\n\n\nEffet séparable\n-0.055\n-0.059\n\n\n\n\n\n\n\n\n\nDécomposition\nSomme\nEffet total (g-formula)\n\n\n\nDirect(aD=0) + Indirect(aY=1)\n-0.067\n-0.067\n\n\nIndirect(aY=0) + Direct(aD=1)\n-0.067\n-0.067",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Conclusion</span>"
+    ]
+  },
+  {
+    "objectID": "conclusion.html#discussion",
+    "href": "conclusion.html#discussion",
+    "title": "\n4  Conclusion\n",
+    "section": "Discussion",
+    "text": "Discussion\nCe que nous apprenons de chaque analyse\n\nAnalyse brute (Présentation) : l’essai étant randomisé, la différence de survie brute a une interprétation causale sur “\\(Y\\) traité comme seul évènement”, mais ce n’est pas la bonne quantité, car \\(D\\) est un risque compétitif, pas une censure ordinaire.\nIPTW, g-formula, IPTW × IPCW (Partie 1) : sur un essai randomisé, l’IPTW change peu de choses (pas de confusion réelle) ; l’IPCW ne change rien, car personne n’est censuré avant 36 mois (d’où des lignes IPTW et IPTW × IPCW identiques). Les trois approches restent des exercices utiles pour pratiquer les méthodes, y compris en observationnel où l’IPTW serait indispensable.\nCIF naïve vs correcte (Partie 2) : traiter \\(D\\) comme une censure surestime le risque de l’évènement d’intérêt \\(Y\\), car cela suppose implicitement que les personnes décédées auraient pu, plus tard, faire l’évènement d’intérêt.\nEffet total, risque net, effet séparable (Partie 2 et 3) : trois estimands, une seule paire de modèles de hazard (\\(D\\) et \\(Y\\)), combinés différemment. L’effet séparable ne demande pas d’essai à 4 bras : c’est la même g-computation, avec les deux hazards évalués à des bras différents.\nG-formula vs IPW (Partie 3) : deux estimateurs très différents dans leur construction donnent le même ordre entre les trois estimands (en valeur absolue), même si les valeurs peuvent nettement différer (risque net notamment).\nDécomposition directe/indirecte (Partie 3) : l’effet total se décompose exactement en effet direct + effet indirect séparables, une identité algébrique valable dès qu’on utilise les mêmes deux modèles de hazard pour les 4 combinaisons de \\((a_Y, a_D)\\).\nPour vos protocoles\n\n\n\n\n\n\nImportantÀ retenir\n\n\n\nFace à un critère de survie, précisez explicitement dans le protocole : la mesure d’effet choisie (pas seulement un hazard ratio), l’hypothèse retenue sur la censure, et, en présence de risques compétitifs, l’estimand souhaité (effet total, risque net, ou effet séparable). Cette précision s’inscrit directement dans le cadre estimand (ICH E9(R1)) déjà vu : le risque compétitif est un évènement intercurrent à part entière, dont la stratégie de gestion doit être explicitée.\n\n\nMerci d’avoir suivi ce TP.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Conclusion</span>"
+    ]
+  }
+]
