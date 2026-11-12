@@ -1,0 +1,192 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Données manquantes en pratique",
+    "section": "",
+    "text": "Introduction\nBienvenue dans ce TP consacré aux données manquantes ! Vous allez mettre en pratique, sur un vrai jeu de données, les trois approches vues en cours :\nL’objectif n’est pas de devenir expert en programmation R, mais de voir concrètement comment on réalise chacune de ces analyses, et ce que l’on doit vérifier à chaque étape.",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#en-ligne-ou-via-rstudio",
+    "href": "index.html#en-ligne-ou-via-rstudio",
+    "title": "Données manquantes en pratique",
+    "section": "En ligne ou via Rstudio ?",
+    "text": "En ligne ou via Rstudio ?\nVous pouvez suivre ce TP en ligne depuis cette page en utilisant les blocs de code interactifs mis à disposition tout au long du TP, ou bien utiliser une session locale de Rstudio. Les données utilisées (airquality) sont fournies avec R : il n’y a rien à télécharger. Si vous préférez utiliser Rstudio, il faudra seulement installer les packages nécessaires :\n\ninstall.packages(c(\"mice\", \"sandwich\", \"lmtest\"))\n\nSi vous faites ce TP en ligne, voici ci-dessous un bloc de code interactif :\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nTapez la commande 2+2 ci-dessus. Pour exécuter le code, deux solutions :\n\nCliquer sur  (cela exécutera l’ensemble du code contenu dans le bloc de code interactif)\nUtiliser le raccourci clavier “Ctrl+Enter” (comme dans Rstudio, ce raccourci exécute le code ligne après ligne quand rien n’est sélectionné en surbrillance, ou alors le code que vous avez préalablement sélectionné en surbrillance avec votre souris).",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#solutions",
+    "href": "index.html#solutions",
+    "title": "Données manquantes en pratique",
+    "section": "Solutions",
+    "text": "Solutions\nCe TP peut être réalisé de manière autonome et à votre rythme. A chaque étape, un code de solution est proposé : pour le voir, il suffit de cliquer sur “Montrez moi comment faire !”. Il est possible de démasquer l’ensemble du code de solution d’une page en cliquant sur “&lt;/&gt; Code” puis “Montrer tout le code”. \nCe bouton est disponible en haut de chaque page web, à droite du titre. Ne restez pas bloqué trop longtemps, et consultez rapidement ces solutions : le but du TP est de comprendre le fonctionnement des méthodes et d’en voir un exemple d’application. Lisez attentivement les tâches à réaliser (écrites en italique), inspectez les objets créés par le code de solution, et lisez les commentaires.\nPour passer à la suite, appuyez sur le lien en bas à droite de cette page (ou sur la partie suivante à gauche) !\n\n⬇ Télécharger la version PDF du TP (avec les corrections) ⬇ Télécharger le script R de correction",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "\n1  Les données et leurs valeurs manquantes\n",
+    "section": "",
+    "text": "1.1 Présentation des données\nLes données airquality sont des mesures quotidiennes de la qualité de l’air à New York, du 1er mai au 30 septembre 1973. Elles sont fournies avec R, et ont été copiées dans une data.frame aq (dans laquelle le mois a été transformé en variable qualitative).\nQuestion d’intérêt : comment la concentration d’ozone dépend-elle du rayonnement solaire, du vent et de la température ? Nous y répondrons tout au long du TP avec le modèle linéaire suivant :\n\\[\\text{Ozone} = \\beta_0 + \\beta_1\\,\\text{Solar.R} + \\beta_2\\,\\text{Wind} + \\beta_3\\,\\text{Temp} + \\varepsilon\\]\nLancez le code ci-dessous pour avoir un premier aperçu des données.\nsummary() indique le nombre de valeurs manquantes (NA's) de chaque variable.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Les données et leurs valeurs manquantes</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#présentation-des-données",
+    "href": "intro.html#présentation-des-données",
+    "title": "\n1  Les données et leurs valeurs manquantes\n",
+    "section": "",
+    "text": "Variable\nDescription\n\n\n\nOzone\nConcentration moyenne d’ozone (ppb), de 13h à 15h\n\n\nSolar.R\nRayonnement solaire (Langleys), de 8h à 12h\n\n\nWind\nVitesse moyenne du vent (mph), de 7h à 10h\n\n\nTemp\nTempérature maximale de la journée (°F)\n\n\nMonth\nMois (5 = mai, …, 9 = septembre)\n\n\nDay\nJour du mois\n\n\n\n\n\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Les données et leurs valeurs manquantes</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#combien-de-données-manquantes",
+    "href": "intro.html#combien-de-données-manquantes",
+    "title": "\n1  Les données et leurs valeurs manquantes\n",
+    "section": "\n1.2 Combien de données manquantes ?",
+    "text": "1.2 Combien de données manquantes ?\nComptez le nombre de valeurs manquantes de chaque variable (indice : combinez is.na() et colSums()).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !colSums(is.na(aq))\n## Seules Ozone (37 NA) et Solar.R (7 NA) ont des valeurs manquantes\n\n\nVoir le résultat\n\n  Ozone Solar.R    Wind    Temp   Month     Day \n     37       7       0       0       0       0 \n\n\nCombien de jours ont toutes leurs variables observées (cas complets) ? Quelle proportion de l’échantillon cela représente-t-il ? (indice : complete.cases())\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !sum(complete.cases(aq))   # nombre de cas complets\nmean(complete.cases(aq))  # proportion de cas complets\n## Une analyse sur cas complets n'utiliserait que 111 jours sur 153 (73 %)\n\n\nVoir le résultat\n\n[1] 111\n\n\n[1] 0.7254902\n\n\nLa fonction md.pattern() du package mice résume les profils de données manquantes : chaque ligne est un profil (1 = observé, 0 = manquant), le nombre de jours concernés est indiqué à gauche, et le nombre de variables manquantes du profil à droite.\nLancez le code ci-dessous.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nOn y lit que 111 jours sont complets, 35 n’ont que Ozone manquant, 5 n’ont que Solar.R manquant, et 2 ont les deux manquants.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Les données et leurs valeurs manquantes</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#le-mécanisme-est-il-mcar",
+    "href": "intro.html#le-mécanisme-est-il-mcar",
+    "title": "\n1  Les données et leurs valeurs manquantes\n",
+    "section": "\n1.3 Le mécanisme est-il MCAR ?",
+    "text": "1.3 Le mécanisme est-il MCAR ?\nOn ne peut jamais prouver que les données ne sont pas MNAR. En revanche, on peut examiner si le fait d’être complet est lié aux variables observées : si c’est le cas, l’hypothèse MCAR n’est pas tenable.\nCréez une variable R dans aq, valant 1 si le jour est un cas complet pour les variables du modèle (Ozone, Solar.R, Wind, Temp) et 0 sinon. Affichez sa distribution avec table().\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !aq$R &lt;- as.numeric(complete.cases(aq[, c(\"Ozone\", \"Solar.R\", \"Wind\", \"Temp\")]))\ntable(aq$R)\n\n\nVoir le résultat\n\n\n  0   1 \n 42 111 \n\n\nCalculez la proportion de cas complets selon le mois (indice : prop.table(table(...), margin = 1)). Que constatez-vous ?\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !prop.table(table(aq$Month, aq$R), margin = 1)\n## En juin, seuls 30 % des jours sont complets (contre 74 à 97 % les autres mois) :\n## la probabilité d'être complet dépend du mois, qui est observé.\n## Les données ne sont donc pas MCAR.\n\n\nVoir le résultat\n\n   \n             0          1\n  5 0.22580645 0.77419355\n  6 0.70000000 0.30000000\n  7 0.16129032 0.83870968\n  8 0.25806452 0.74193548\n  9 0.03333333 0.96666667\n\n\nComparez la température et la vitesse du vent moyennes entre les jours complets et incomplets (indice : tapply()).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !tapply(aq$Temp, aq$R, mean)\ntapply(aq$Wind, aq$R, mean)\n## Pas de différence notable sur la température et le vent\n\n\nVoir le résultat\n\n       0        1 \n78.11905 77.79279 \n\n\n       0        1 \n10.00476  9.93964 \n\n\n\n\n\n\n\n\nNoteÀ retenir\n\n\n\nLa probabilité d’être complet dépend fortement du mois (une panne de l’appareil de mesure de l’ozone en juin est vraisemblable), mais pas de la température ni du vent. Les données ne sont pas MCAR. L’hypothèse MAR (conditionnellement au mois) est plausible, mais elle n’est pas vérifiable : on ne peut pas exclure que la non-réponse dépende aussi des valeurs d’ozone elles-mêmes.\n\n\n\n\nConseils importants avant de passer à la suite\n\n\nNe restez pas bloqué longtemps. Un bouton “Montrez moi comment faire !” est toujours disponible, n’hésitez pas à l’utiliser après 5 min de galère : le but est de voir en pratique les notions abordées en cours, pas de devenir programmeur R.\n\nDe l’aide est disponible :\n\nTaper ?md.pattern vous affichera la page d’aide correspondante, comme vous le faites habituellement dans Rstudio.\nLe jour du TP, lever la main téléportera automatiquement l’enseignant auprès de vous.\n\n\n\nIl n’y a pas toujours qu’une seule manière de faire. La correction proposée à chaque question n’est qu’une proposition.\n\n\nPour passer à la suite, appuyez sur le lien en bas à droite de cette page (ou sur la partie suivante à gauche) !",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Les données et leurs valeurs manquantes</span>"
+    ]
+  },
+  {
+    "objectID": "cc.html",
+    "href": "cc.html",
+    "title": "\n2  Analyse sur cas complets\n",
+    "section": "",
+    "text": "Si vous faites le TD avec Rstudio, les données doivent avoir été préparées avec les commandes suivantes :\n\naq &lt;- airquality\naq$Month &lt;- factor(aq$Month)\naq$R &lt;- as.numeric(complete.cases(aq[, c(\"Ozone\", \"Solar.R\", \"Wind\", \"Temp\")]))\n\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nL’analyse sur cas complets est l’approche par défaut de la plupart des logiciels : les observations ayant au moins une valeur manquante sur les variables du modèle sont silencieusement exclues. C’est le comportement de la fonction lm() (option na.action = na.omit par défaut).\nAjustez le modèle linéaire expliquant Ozone par Solar.R, Wind et Temp, stockez-le dans un objet fit_cc, et affichez ses résultats avec summary().\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !fit_cc &lt;- lm(Ozone ~ Solar.R + Wind + Temp, data = aq)\nsummary(fit_cc)\n## Remarquez la mention \"(42 observations deleted due to missingness)\"\n\n\nVoir le résultat\n\n\nCall:\nlm(formula = Ozone ~ Solar.R + Wind + Temp, data = aq)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-40.485 -14.219  -3.551  10.097  95.619 \n\nCoefficients:\n             Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) -64.34208   23.05472  -2.791  0.00623 ** \nSolar.R       0.05982    0.02319   2.580  0.01124 *  \nWind         -3.33359    0.65441  -5.094 1.52e-06 ***\nTemp          1.65209    0.25353   6.516 2.42e-09 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 21.18 on 107 degrees of freedom\n  (42 observations effacées parce que manquantes)\nMultiple R-squared:  0.6059,    Adjusted R-squared:  0.5948 \nF-statistic: 54.83 on 3 and 107 DF,  p-value: &lt; 2.2e-16\n\n\nCombien d’observations ont réellement été utilisées pour ajuster le modèle ? (indice : nobs())\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !nobs(fit_cc)\n## 111 jours sur 153 : on a perdu 27 % de l'échantillon, y compris les 5 jours\n## où l'ozone était observé mais pas le rayonnement solaire\n\n\nVoir le résultat\n\n[1] 111\n\n\nAffichez les intervalles de confiance à 95 % des coefficients (indice : confint()).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !confint(fit_cc)\n\n\nVoir le résultat\n\n                    2.5 %      97.5 %\n(Intercept) -110.04538108 -18.6387768\nSolar.R        0.01385613   0.1057851\nWind          -4.63087706  -2.0363055\nTemp           1.14949967   2.1546862\n\n\n\n\n\n\n\n\nNoteÀ retenir\n\n\n\n\nL’analyse sur cas complets est simple, mais elle perd de l’information : ici, 42 jours sont exclus, dont certains ne sont incomplets que sur une seule variable.\nElle est sans biais si les données sont MCAR, ou plus généralement si la probabilité d’être complet ne dépend pas de la variable à expliquer (Ozone) conditionnellement aux variables explicatives du modèle.\nIci, la probabilité d’être complet dépend du mois, qui n’est pas dans le modèle. Si le mois est lié à l’ozone au-delà de ce qu’expliquent le rayonnement, le vent et la température, l’analyse sur cas complets peut être biaisée.\n\n\n\nPour passer à la suite, appuyez sur le lien en bas à droite de cette page (ou sur la partie suivante à gauche) !",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Analyse sur cas complets</span>"
+    ]
+  },
+  {
+    "objectID": "ipcw.html",
+    "href": "ipcw.html",
+    "title": "\n3  Pondération IPCW\n",
+    "section": "",
+    "text": "3.1 Étape 1 : modéliser la probabilité d’être complet\nL’IPCW consiste à pondérer chaque cas complet par l’inverse de sa probabilité d’être complet, \\(w_i = 1/\\hat{\\pi}_i\\), où \\(\\hat{\\pi}_i = \\widehat{\\Pr}(R_i = 1 \\mid H_i)\\). Les jours complets qui « ressemblent » à des jours incomplets reçoivent un poids élevé et les représentent dans l’analyse.\nLes variables \\(H\\) du modèle de pondération doivent être complètement observées. Ici, Ozone et Solar.R ne peuvent donc pas en faire partie : on utilise Wind, Temp et Month.\nAjustez un modèle de régression logistique expliquant R par Wind, Temp et Month sur l’ensemble des 153 jours. Stockez-le dans un objet mod_R et affichez ses résultats.\nMontrez moi comment faire !mod_R &lt;- glm(R ~ Wind + Temp + Month, data = aq, family = binomial)\nsummary(mod_R)\n## Le modèle est ajusté sur tous les jours (R, Wind, Temp et Month sont\n## observés pour tous). Seul le mois de juin est fortement associé à R.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Pondération IPCW</span>"
+    ]
+  },
+  {
+    "objectID": "ipcw.html#étape-1-modéliser-la-probabilité-dêtre-complet",
+    "href": "ipcw.html#étape-1-modéliser-la-probabilité-dêtre-complet",
+    "title": "\n3  Pondération IPCW\n",
+    "section": "",
+    "text": "Please enable JavaScript to experience the dynamic code cell content on this page.\n\nVoir le résultat\n\n\nCall:\nglm(formula = R ~ Wind + Temp + Month, family = binomial, data = aq)\n\nCoefficients:\n            Estimate Std. Error z value Pr(&gt;|z|)   \n(Intercept)  0.38676    2.70700   0.143  0.88639   \nWind         0.01412    0.06604   0.214  0.83071   \nTemp         0.01041    0.03548   0.294  0.76911   \nMonth6      -2.20402    0.75268  -2.928  0.00341 **\nMonth7       0.26279    0.89772   0.293  0.76973   \nMonth8      -0.32843    0.85791  -0.383  0.70185   \nMonth9       2.03829    1.16563   1.749  0.08035 . \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 179.83  on 152  degrees of freedom\nResidual deviance: 141.23  on 146  degrees of freedom\nAIC: 155.23\n\nNumber of Fisher Scoring iterations: 6",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Pondération IPCW</span>"
+    ]
+  },
+  {
+    "objectID": "ipcw.html#étape-2-calculer-les-poids",
+    "href": "ipcw.html#étape-2-calculer-les-poids",
+    "title": "\n3  Pondération IPCW\n",
+    "section": "\n3.2 Étape 2 : calculer les poids",
+    "text": "3.2 Étape 2 : calculer les poids\nCalculez pour chaque jour la probabilité estimée d’être complet (indice : predict(..., type = \"response\")), stockez-la dans aq$p, puis calculez les poids aq$w = 1/aq$p.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !aq$p &lt;- predict(mod_R, type = \"response\")\naq$w &lt;- 1 / aq$p\nhead(aq[, c(\"Month\", \"R\", \"p\", \"w\")])\n\n\nVoir le résultat\n\n  Month R         p        w\n1     5 1 0.7665538 1.304540\n2     5 1 0.7772120 1.286650\n3     5 1 0.7917098 1.263089\n4     5 1 0.7675928 1.302774\n5     5 0 0.7634732 1.309804\n6     5 0 0.7832019 1.276810",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Pondération IPCW</span>"
+    ]
+  },
+  {
+    "objectID": "ipcw.html#étape-3-vérifier-les-poids",
+    "href": "ipcw.html#étape-3-vérifier-les-poids",
+    "title": "\n3  Pondération IPCW\n",
+    "section": "\n3.3 Étape 3 : vérifier les poids",
+    "text": "3.3 Étape 3 : vérifier les poids\nAvant d’utiliser les poids, il faut s’assurer qu’ils ne sont pas extrêmes : quelques jours avec des poids très élevés domineraient l’analyse.\nDécrivez la distribution des poids chez les cas complets (summary() et hist()), puis calculez la taille d’échantillon effective \\(n_{\\text{eff}} = (\\sum w_i)^2 / \\sum w_i^2\\).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !w_cc &lt;- aq$w[aq$R == 1]   # poids des cas complets\nsummary(w_cc)\nhist(w_cc, breaks = 20, main = \"Poids IPCW des cas complets\", xlab = \"Poids\")\nsum(w_cc)^2 / sum(w_cc^2) # taille d'échantillon effective\n## Le poids maximal est inférieur à 4 (ce sont les jours complets de juin) :\n## pas de poids extrême. La taille effective (~94) est assez proche du\n## nombre de cas complets (111).\n\n\nVoir le résultat\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  1.030   1.038   1.237   1.376   1.326   3.747 \n\n\n\n\n\n\n\n\n[1] 93.88585\n\n\nOn vérifie aussi que la pondération remplit son rôle : une fois pondérés, les cas complets doivent avoir la même répartition sur \\(H\\) que l’échantillon entier.\nComparez la répartition des mois dans l’échantillon entier, chez les cas complets non pondérés, et chez les cas complets pondérés. Le code ci-dessous n’a pas besoin d’être modifié (il utilise les poids aq$w calculés à l’étape 2).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nVoir le résultat\n\n  echantillon cas_complets cas_complets_ponderes\n5       0.203        0.216                 0.203\n6       0.196        0.081                 0.195\n7       0.203        0.234                 0.203\n8       0.203        0.207                 0.203\n9       0.196        0.261                 0.196\n\n\nLe mois de juin, sous-représenté chez les cas complets (8 % au lieu de 20 %), retrouve sa place une fois les poids appliqués.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Pondération IPCW</span>"
+    ]
+  },
+  {
+    "objectID": "ipcw.html#étape-4-ajuster-le-modèle-danalyse-pondéré",
+    "href": "ipcw.html#étape-4-ajuster-le-modèle-danalyse-pondéré",
+    "title": "\n3  Pondération IPCW\n",
+    "section": "\n3.4 Étape 4 : ajuster le modèle d’analyse pondéré",
+    "text": "3.4 Étape 4 : ajuster le modèle d’analyse pondéré\nLe modèle d’analyse est ajusté sur les cas complets en utilisant les poids. Avec la pondération, certains jours comptent plus que d’autres : un jour complet de juin « représente » à lui seul près de 4 jours. Mais l’échantillon n’a pas réellement grossi : ce jour reste une seule mesure. Les erreurs standard usuelles de lm() ne sont donc pas adaptées. On utilise une variance robuste (« sandwich »), qui estime la variabilité à partir des données réellement observées, avec les packages sandwich et lmtest.\nAjustez le modèle linéaire pondéré (option weights = w de lm()) et stockez-le dans fit_ipcw. Affichez ensuite les coefficients avec des erreurs standard robustes : coeftest(fit_ipcw, vcov = vcovHC(fit_ipcw, type = \"HC0\")).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !fit_ipcw &lt;- lm(Ozone ~ Solar.R + Wind + Temp, data = aq, weights = w)\n## lm() exclut toujours les jours incomplets : seuls les cas complets,\n## pondérés, contribuent à l'estimation\ncoeftest(fit_ipcw, vcov = vcovHC(fit_ipcw, type = \"HC0\"))\n\n\nVoir le résultat\n\n\nt test of coefficients:\n\n              Estimate Std. Error t value  Pr(&gt;|t|)    \n(Intercept) -65.530361  22.047557 -2.9722  0.003652 ** \nSolar.R       0.070876   0.021413  3.3100  0.001272 ** \nWind         -3.073827   0.950693 -3.2332  0.001628 ** \nTemp          1.602989   0.208871  7.6745 8.214e-12 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\nComparez les coefficients obtenus avec ceux de l’analyse sur cas complets (coef(fit_cc)).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !round(cbind(cas_complets = coef(fit_cc), ipcw = coef(fit_ipcw)), 3)\n## Les estimations sont proches : le mois, qui explique la non-réponse,\n## semble peu lié à l'ozone une fois pris en compte le rayonnement,\n## le vent et la température.\n\n\nVoir le résultat\n\n            cas_complets    ipcw\n(Intercept)      -64.342 -65.530\nSolar.R            0.060   0.071\nWind              -3.334  -3.074\nTemp               1.652   1.603\n\n\n\n\n\n\n\n\nNoteÀ retenir\n\n\n\n\nL’IPCW n’utilise, comme l’analyse sur cas complets, que les jours complets : les 5 jours où seul Solar.R manque sont toujours perdus.\nLes variables du modèle de pondération doivent être complètement observées : la variable à expliquer Ozone, incomplète, ne peut pas y figurer.\nIl faut toujours vérifier les poids (valeurs extrêmes, taille effective, équilibre sur \\(H\\)) et utiliser une variance robuste (ici coeftest() avec vcovHC(), étape 4).\n\n\n\nPour passer à la suite, appuyez sur le lien en bas à droite de cette page (ou sur la partie suivante à gauche) !",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Pondération IPCW</span>"
+    ]
+  },
+  {
+    "objectID": "mice.html",
+    "href": "mice.html",
+    "title": "\n4  Imputation multiple avec mice\n",
+    "section": "",
+    "text": "4.1 Étape 1 : imputer\nL’imputation multiple se déroule en trois étapes : (1) imputer \\(m\\) fois les valeurs manquantes, (2) analyser chacun des \\(m\\) jeux de données complétés, (3) combiner les \\(m\\) résultats avec les règles de Rubin.\nOn choisit d’abord les variables du modèle d’imputation. La règle est d’être inclusif : toutes les variables du modèle d’analyse (y compris la variable à expliquer Ozone, même si elle est incomplète), ainsi que les variables auxiliaires liées à la non-réponse ou aux variables incomplètes, comme le mois.\nPar défaut, mice() utilise toutes les colonnes de la data.frame qu’on lui donne comme prédicteurs dans le modèle d’imputation. Il faut donc lui fournir uniquement les variables retenues : ici, on exclut Day (le jour du mois, de 1 à 31), qui n’apporte pas d’information utile pour prédire les valeurs manquantes.\nCréez une data.frame dat contenant les variables Ozone, Solar.R, Wind, Temp et Month.\nMontrez moi comment faire !dat &lt;- aq[, c(\"Ozone\", \"Solar.R\", \"Wind\", \"Temp\", \"Month\")]\n## Day est exclu : sinon mice l'utiliserait comme prédicteur\nLancez l’imputation avec mice() : 20 imputations (m = 20), une graine pour la reproductibilité (seed = 123), et printFlag = FALSE pour ne pas afficher le détail des itérations. Stockez le résultat dans un objet imp, puis affichez imp$method.\nMontrez moi comment faire !imp &lt;- mice(dat, m = 20, seed = 123, printFlag = FALSE)\nimp$method\n## Par défaut, les variables continues sont imputées par Predictive Mean\n## Matching (\"pmm\"). C'est adapté ici : l'ozone est positif et sa distribution\n## est asymétrique, et pmm n'impute que des valeurs déjà observées.\n## Les variables complètes (\"\") ne sont pas imputées.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Imputation multiple avec mice</span>"
+    ]
+  },
+  {
+    "objectID": "mice.html#étape-1-imputer",
+    "href": "mice.html#étape-1-imputer",
+    "title": "\n4  Imputation multiple avec mice\n",
+    "section": "",
+    "text": "Please enable JavaScript to experience the dynamic code cell content on this page.\n\nVoir le résultat\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nVoir le résultat\n\n  Ozone Solar.R    Wind    Temp   Month \n  \"pmm\"   \"pmm\"      \"\"      \"\"      \"\"",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Imputation multiple avec mice</span>"
+    ]
+  },
+  {
+    "objectID": "mice.html#vérifier-les-imputations",
+    "href": "mice.html#vérifier-les-imputations",
+    "title": "\n4  Imputation multiple avec mice\n",
+    "section": "\n4.2 Vérifier les imputations",
+    "text": "4.2 Vérifier les imputations\nVérifiez la convergence de l’algorithme avec plot(imp). On attend des courbes qui se mélangent, sans tendance.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !plot(imp)\n## Moyenne et écart-type des valeurs imputées au fil des itérations,\n## pour chacune des 20 imputations : pas de tendance, convergence correcte.\n\n\nVoir le résultat\n\n\n\n\n\n\n\nComparez la distribution des valeurs observées (en bleu) et imputées (en rouge) avec densityplot(imp).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !densityplot(imp)\n## Les distributions imputées sont plausibles. Elles n'ont pas à être\n## identiques aux distributions observées : sous MAR, les jours incomplets\n## peuvent différer des jours complets.\n\n\nVoir le résultat",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Imputation multiple avec mice</span>"
+    ]
+  },
+  {
+    "objectID": "mice.html#étapes-2-et-3-analyser-et-combiner",
+    "href": "mice.html#étapes-2-et-3-analyser-et-combiner",
+    "title": "\n4  Imputation multiple avec mice\n",
+    "section": "\n4.3 Étapes 2 et 3 : analyser et combiner",
+    "text": "4.3 Étapes 2 et 3 : analyser et combiner\nAjustez le modèle linéaire sur chacun des 20 jeux imputés avec with(imp, lm(...)), stockez le résultat dans fit_mi, puis combinez les résultats avec pool() et affichez-les avec summary(..., conf.int = TRUE).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !fit_mi &lt;- with(imp, lm(Ozone ~ Solar.R + Wind + Temp))\npooled &lt;- pool(fit_mi)\nsummary(pooled, conf.int = TRUE)\n## Ces estimations utilisent les 153 jours, y compris ceux qui n'ont qu'une\n## seule variable manquante\n\n\nVoir le résultat\n\n         term    estimate  std.error statistic        df      p.value\n1 (Intercept) -67.2396776 23.8385880 -2.820623  63.15159 6.397662e-03\n2     Solar.R   0.0587741  0.0220801  2.661858 103.98668 9.005027e-03\n3        Wind  -2.8309067  0.6400799 -4.422739  85.74650 2.844500e-05\n4        Temp   1.6087174  0.2671457  6.021873  60.48493 1.102030e-07\n          2.5 %      97.5 %      conf.low   conf.high\n1 -114.87505676 -19.6042984 -114.87505676 -19.6042984\n2    0.01498837   0.1025598    0.01498837   0.1025598\n3   -4.10339712  -1.5584163   -4.10339712  -1.5584163\n4    1.07443455   2.1430002    1.07443455   2.1430002\n\n\nLes règles de Rubin décomposent la variance totale \\(T\\) de chaque coefficient en deux parties :\n\\[T = \\bar{U} + \\left(1 + \\tfrac{1}{m}\\right) B\\]\n\n\n\\(\\bar{U}\\) (colonne ubar) est la moyenne des variances obtenues dans chaque jeu imputé : c’est la variance qu’on aurait si les données étaient complètes ;\n\n\\(B\\) (colonne b) est la variance des estimations entre les jeux imputés : elle traduit l’incertitude sur les valeurs imputées, donc les données manquantes.\n\nLa fraction d’information manquante (fmi) est, à peu de chose près, la part de \\(T\\) qui vient de \\(B\\). Elle s’interprète comme la proportion d’information sur le coefficient perdue à cause des données manquantes : avec fmi = 0,30, la variance de l’estimation serait environ 30 % plus faible si les données étaient complètes.\nAffichez les colonnes term, ubar, b, t et fmi de pooled$pooled.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nMontrez moi comment faire !pooled$pooled[, c(\"term\", \"ubar\", \"b\", \"t\", \"fmi\")]\n## Selon les coefficients, environ 20 à 35 % de l'information est perdue\n## à cause des données manquantes\n\n\nVoir le résultat\n\n         term         ubar            b            t       fmi\n1 (Intercept) 3.812855e+02 1.780884e+02 5.682783e+02 0.3493366\n2     Solar.R 4.063907e-04 7.727630e-05 4.875308e-04 0.1820134\n3        Wind 3.149468e-01 9.024332e-02 4.097023e-01 0.2486029\n4        Temp 4.690237e-02 2.329946e-02 7.136681e-02 0.3635027\n\n\n\n\n\n\n\n\nAstuceUne fraction d’information manquante élevée ?\n\n\n\nPerdre 20 à 35 % de l’information peut surprendre, mais c’est cohérent avec les données : l’ozone, la variable à expliquer, manque pour 24 % des jours. Or un jour où l’ozone manque n’apporte presque rien à l’estimation des coefficients : sa valeur imputée est prédite à partir des mêmes variables que celles du modèle d’analyse. L’information perdue est donc du même ordre que la proportion de jours où l’ozone manque.\nLa fmi peut être plus faible que la proportion de données manquantes lorsque des variables auxiliaires prédisent bien les valeurs manquantes. C’est l’intérêt d’un modèle d’imputation riche.\nEnfin, la fmi est elle-même estimée de manière imprécise : relancez mice() avec une autre graine (seed), et les valeurs pourront varier. Augmenter \\(m\\) la rend plus stable.\n\n\n\n\n\n\n\n\nNoteÀ retenir\n\n\n\n\nContrairement à l’IPCW, l’imputation multiple utilise toutes les observations, y compris celles qui sont partiellement observées, et la variable à expliquer doit figurer dans le modèle d’imputation.\nIl faut vérifier la convergence et la plausibilité des valeurs imputées.\nLes règles de Rubin intègrent dans la variance l’incertitude due aux données manquantes (variance entre imputations).\n\n\n\nPour passer à la suite, appuyez sur le lien en bas à droite de cette page (ou sur la partie suivante à gauche) !",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Imputation multiple avec mice</span>"
+    ]
+  },
+  {
+    "objectID": "synthese.html",
+    "href": "synthese.html",
+    "title": "\n5  Comparaison des trois approches\n",
+    "section": "",
+    "text": "Si vous faites le TD avec Rstudio, les objets des parties précédentes doivent avoir été créés avec les commandes suivantes :\n\nlibrary(mice)\nlibrary(sandwich)\nlibrary(lmtest)\naq &lt;- airquality\naq$Month &lt;- factor(aq$Month)\naq$R &lt;- as.numeric(complete.cases(aq[, c(\"Ozone\", \"Solar.R\", \"Wind\", \"Temp\")]))\n## Cas complets\nfit_cc &lt;- lm(Ozone ~ Solar.R + Wind + Temp, data = aq)\n## IPCW\nmod_R &lt;- glm(R ~ Wind + Temp + Month, data = aq, family = binomial)\naq$w &lt;- 1 / predict(mod_R, type = \"response\")\nfit_ipcw &lt;- lm(Ozone ~ Solar.R + Wind + Temp, data = aq, weights = w)\n## Imputation multiple\nimp &lt;- mice(aq[, c(\"Ozone\", \"Solar.R\", \"Wind\", \"Temp\", \"Month\")],\n            m = 20, seed = 123, printFlag = FALSE)\npooled &lt;- pool(with(imp, lm(Ozone ~ Solar.R + Wind + Temp)))\n\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nLes trois modèles des parties précédentes sont déjà disponibles : fit_cc (cas complets), fit_ipcw (IPCW) et pooled (imputation multiple).\nLancez le code ci-dessous, qui rassemble les coefficients et leurs erreurs standard dans un même tableau.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nRépondez aux questions suivantes avant de dérouler les réponses.\n1. Les trois approches donnent-elles des conclusions différentes sur l’effet du rayonnement solaire, du vent et de la température ?\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\nNon : les coefficients sont proches et de même signe, et les trois effets restent nettement différents de 0. La non-réponse dépend surtout du mois, qui semble peu lié à l’ozone une fois pris en compte le rayonnement, le vent et la température. Dans cet exemple, l’analyse sur cas complets n’est donc probablement pas très biaisée. C’est une conclusion propre à ces données : le cours a montré par simulation des situations où les écarts sont importants.\n\n\n\n2. Pourquoi l’erreur standard du coefficient de Wind est-elle plus grande avec l’IPCW ?\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\nAprès une pondération IPCW, on utilise une variance robuste. Avec les poids, certains jours comptent plus que d’autres dans l’estimation, mais l’échantillon n’a pas réellement grossi : un jour de juin qui « représente » 4 jours reste une seule mesure. La variance robuste estime la variabilité à partir des données réellement observées, sans faire comme si les poids avaient augmenté l’effectif.\nLe résultat est souvent moins précis qu’avec l’analyse sur cas complets : c’est le prix à payer pour corriger le biais de sélection.\n\n\n\n3. L’imputation multiple utilise 153 jours au lieu de 111. Pourquoi ses erreurs standard ne sont-elles pas beaucoup plus petites que celles de l’analyse sur cas complets ?\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\nLa plupart des jours incomplets (37 sur 42) ont la variable à expliquer Ozone manquante. Les valeurs d’ozone imputées sont prédites à partir des variables explicatives du modèle : elles apportent peu d’information nouvelle sur les coefficients, et la variance entre imputations en tient compte. Seuls les 5 jours où l’ozone est observé et Solar.R manquant apportent réellement de l’information supplémentaire. Le gain de l’imputation multiple est plus net quand ce sont les variables explicatives qui sont incomplètes.\n\n\n\n4. Sur quelle hypothèse reposent ces trois analyses, et peut-on la vérifier ?\n\n\n\n\n\n\nAstuceRéponse\n\n\n\n\n\nL’analyse sur cas complets suppose que la non-réponse ne dépend pas de l’ozone conditionnellement aux variables explicatives ; l’IPCW et l’imputation multiple supposent que les données sont MAR conditionnellement aux variables utilisées (mois, vent, température…). Aucune de ces hypothèses n’est vérifiable à partir des données : si la panne de l’appareil était liée aux pics d’ozone eux-mêmes (MNAR), aucune des trois méthodes ne corrigerait le biais. Seule une analyse de sensibilité permettrait d’évaluer la robustesse des conclusions.\n\n\n\nPour passer à la suite, appuyez sur le lien en bas à droite de cette page (ou sur la partie suivante à gauche) !",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Comparaison des trois approches</span>"
+    ]
+  },
+  {
+    "objectID": "conclusion.html",
+    "href": "conclusion.html",
+    "title": "Conclusion",
+    "section": "",
+    "text": "Bravo, vous avez terminé ce TP consacré aux données manquantes !\nPour toute analyse avec des données manquantes, gardez en tête la démarche suivie :\n\nDécrire les données manquantes : combien, sur quelles variables, selon quels profils.\nExplorer le lien entre la non-réponse et les variables observées, pour juger de la plausibilité des hypothèses MCAR et MAR (sans oublier que l’hypothèse MNAR ne peut jamais être exclue).\nChoisir une méthode adaptée : analyse sur cas complets, IPCW ou imputation multiple, en vérifiant à chaque fois les points de contrôle (poids, convergence, plausibilité des imputations).\nConfronter les résultats des différentes approches, et compléter si besoin par une analyse de sensibilité.\n\nPour aller plus loin, le livre de Stef van Buuren, auteur du package mice, est disponible gratuitement en ligne : Flexible Imputation of Missing Data.",
+    "crumbs": [
+      "Conclusion"
+    ]
+  }
+]
