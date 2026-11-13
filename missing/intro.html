@@ -2071,7 +2071,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
     <div>
     <div class="quarto-title-meta-heading">Modifié</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">12 novembre 2026</p>
+      <p class="date-modified">13 novembre 2026</p>
     </div>
   </div>
     
@@ -2136,14 +2136,43 @@ div.blue { background-color:#e6f0ff; border-radius: 20px; padding: 20px;}
 <p><em>Lancez le code ci-dessous pour avoir un premier aperçu des données.</em></p>
 <div id="qwebr-insertion-location-2"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p><code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> indique le nombre de valeurs manquantes (<code>NA's</code>) de chaque variable.</p>
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>  Ozone Solar.R Wind Temp Month Day
+1    41     190  7.4   67     5   1
+2    36     118  8.0   72     5   2
+3    12     149 12.6   74     5   3
+4    18     313 11.5   62     5   4
+5    NA      NA 14.3   56     5   5
+6    28      NA 14.9   66     5   6</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Ozone           Solar.R           Wind             Temp       Month 
+ Min.   :  1.00   Min.   :  7.0   Min.   : 1.700   Min.   :56.00   5:31  
+ 1st Qu.: 18.00   1st Qu.:115.8   1st Qu.: 7.400   1st Qu.:72.00   6:30  
+ Median : 31.50   Median :205.0   Median : 9.700   Median :79.00   7:31  
+ Mean   : 42.13   Mean   :185.9   Mean   : 9.958   Mean   :77.88   8:31  
+ 3rd Qu.: 63.25   3rd Qu.:258.8   3rd Qu.:11.500   3rd Qu.:85.00   9:30  
+ Max.   :168.00   Max.   :334.0   Max.   :20.700   Max.   :97.00         
+ NAs    :37       NAs    :7                                              
+      Day      
+ Min.   : 1.0  
+ 1st Qu.: 8.0  
+ Median :16.0  
+ Mean   :15.8  
+ 3rd Qu.:23.0  
+ Max.   :31.0  
+               </code></pre>
+</div>
+</div>
+</details><p><code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> indique le nombre de valeurs manquantes (<code>NA's</code>) de chaque variable.</p>
 </section><section id="combien-de-données-manquantes" class="level2" data-number="1.2"><h2 data-number="1.2" class="anchored" data-anchor-id="combien-de-données-manquantes">
 <span class="header-section-number">1.2</span> Combien de données manquantes ?</h2>
 <p><em>Comptez le nombre de valeurs manquantes de chaque variable (indice : combinez <code><a href="https://rdrr.io/r/base/NA.html">is.na()</a></code> et <code><a href="https://rdrr.io/r/base/colSums.html">colSums()</a></code>).</em></p>
 <div id="qwebr-insertion-location-3"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="cell">
-<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">aq</span><span class="op">)</span><span class="op">)</span></span>
+<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">aq</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## Seules Ozone (37 NA) et Solar.R (7 NA) ont des valeurs manquantes</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
@@ -2157,7 +2186,7 @@ div.blue { background-color:#e6f0ff; border-radius: 20px; padding: 20px;}
 <div id="qwebr-insertion-location-4"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="cell">
-<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/complete.cases.html">complete.cases</a></span><span class="op">(</span><span class="va">aq</span><span class="op">)</span><span class="op">)</span>   <span class="co"># nombre de cas complets</span></span>
+<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/complete.cases.html">complete.cases</a></span><span class="op">(</span><span class="va">aq</span><span class="op">)</span><span class="op">)</span>   <span class="co"># nombre de cas complets</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/complete.cases.html">complete.cases</a></span><span class="op">(</span><span class="va">aq</span><span class="op">)</span><span class="op">)</span>  <span class="co"># proportion de cas complets</span></span>
 <span><span class="co">## Une analyse sur cas complets n'utiliserait que 111 jours sur 153 (73 %)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -2174,7 +2203,23 @@ div.blue { background-color:#e6f0ff; border-radius: 20px; padding: 20px;}
 <p><em>Lancez le code ci-dessous.</em></p>
 <div id="qwebr-insertion-location-5"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>On y lit que 111 jours sont complets, 35 n’ont que <code>Ozone</code> manquant, 5 n’ont que <code>Solar.R</code> manquant, et 2 ont les deux manquants.</p>
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="intro_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Wind Temp Month Day Solar.R Ozone   
+111    1    1     1   1       1     1  0
+35     1    1     1   1       1     0  1
+5      1    1     1   1       0     1  1
+2      1    1     1   1       0     0  2
+       0    0     0   0       7    37 44</code></pre>
+</div>
+</div>
+</details><p>On y lit que 111 jours sont complets, 35 n’ont que <code>Ozone</code> manquant, 5 n’ont que <code>Solar.R</code> manquant, et 2 ont les deux manquants.</p>
 </section><section id="le-mécanisme-est-il-mcar" class="level2" data-number="1.3"><h2 data-number="1.3" class="anchored" data-anchor-id="le-mécanisme-est-il-mcar">
 <span class="header-section-number">1.3</span> Le mécanisme est-il MCAR ?</h2>
 <p>On ne peut jamais prouver que les données ne sont pas MNAR. En revanche, on peut examiner si le fait d’être complet est lié aux variables <strong>observées</strong> : si c’est le cas, l’hypothèse MCAR n’est pas tenable.</p>
@@ -2182,7 +2227,7 @@ div.blue { background-color:#e6f0ff; border-radius: 20px; padding: 20px;}
 <div id="qwebr-insertion-location-6"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="cell">
-<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">aq</span><span class="op">$</span><span class="va">R</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/complete.cases.html">complete.cases</a></span><span class="op">(</span><span class="va">aq</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Ozone"</span>, <span class="st">"Solar.R"</span>, <span class="st">"Wind"</span>, <span class="st">"Temp"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">aq</span><span class="op">$</span><span class="va">R</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/complete.cases.html">complete.cases</a></span><span class="op">(</span><span class="va">aq</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Ozone"</span>, <span class="st">"Solar.R"</span>, <span class="st">"Wind"</span>, <span class="st">"Temp"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">aq</span><span class="op">$</span><span class="va">R</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
@@ -2197,7 +2242,7 @@ div.blue { background-color:#e6f0ff; border-radius: 20px; padding: 20px;}
 <div id="qwebr-insertion-location-7"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="cell">
-<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/proportions.html">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">aq</span><span class="op">$</span><span class="va">Month</span>, <span class="va">aq</span><span class="op">$</span><span class="va">R</span><span class="op">)</span>, margin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/proportions.html">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">aq</span><span class="op">$</span><span class="va">Month</span>, <span class="va">aq</span><span class="op">$</span><span class="va">R</span><span class="op">)</span>, margin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">## En juin, seuls 30 % des jours sont complets (contre 74 à 97 % les autres mois) :</span></span>
 <span><span class="co">## la probabilité d'être complet dépend du mois, qui est observé.</span></span>
 <span><span class="co">## Les données ne sont donc pas MCAR.</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2218,7 +2263,7 @@ div.blue { background-color:#e6f0ff; border-radius: 20px; padding: 20px;}
 <div id="qwebr-insertion-location-8"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="cell">
-<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/tapply.html">tapply</a></span><span class="op">(</span><span class="va">aq</span><span class="op">$</span><span class="va">Temp</span>, <span class="va">aq</span><span class="op">$</span><span class="va">R</span>, <span class="va">mean</span><span class="op">)</span></span>
+<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/tapply.html">tapply</a></span><span class="op">(</span><span class="va">aq</span><span class="op">$</span><span class="va">Temp</span>, <span class="va">aq</span><span class="op">$</span><span class="va">R</span>, <span class="va">mean</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/tapply.html">tapply</a></span><span class="op">(</span><span class="va">aq</span><span class="op">$</span><span class="va">Wind</span>, <span class="va">aq</span><span class="op">$</span><span class="va">R</span>, <span class="va">mean</span><span class="op">)</span></span>
 <span><span class="co">## Pas de différence notable sur la température et le vent</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
