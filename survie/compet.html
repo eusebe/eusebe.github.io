@@ -405,7 +405,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"code":"library(survival)\nlibrary(dplyr)\nlibrary(ggsurvfit)\n\nif (Sys.info()[\"nodename\"] == \"emscripten\") {\n  base_url \u003c- sub(\"/[^/]*$\", \"/\", quarto_page_url)\n  download.file(\n    paste0(base_url, \"data_bone.csv\"),\n    \"data_bone.csv\", quiet = TRUE\n  )\n}\nbone \u003c- read.csv2(\"data_bone.csv\")\nbone$dat_sel\u003c-as.Date(bone$dat_sel, format=\"%d/%m/%Y\")\nbone$date_dc\u003c-as.Date(bone$date_dc, format=\"%d/%m/%Y\")\nbone$ddn\u003c-as.Date(bone$ddn, format=\"%d/%m/%Y\")\nbone$date_rec\u003c-as.Date(bone$date_rec, format=\"%d/%m/%Y\")\nbone$date_fn\u003c-as.Date(bone$date_fn, format=\"%d/%m/%Y\")\nbone$date_cc\u003c-as.Date(bone$date_cc, format=\"%d/%m/%Y\")\nbone$date_ca\u003c-as.Date(bone$date_ca, format=\"%d/%m/%Y\")\n\n# délai de survie\nbone$delsv\u003c-difftime( bone$date_dc, bone$dat_sel,units=\"days\")\nbone$delsv\u003c-ifelse(bone$etat==1, bone$delsv, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\nfit_km \u003c- survfit(Surv(delsv, etat) ~ 1, data = bone)\np \u003c- ggsurvfit(fit_km)\n\n# facteurs\nbone$leuc.f \u003c- factor(bone$leuc, 1:3, c(\"LAM B\", \"LAM C\", \"LAL\"))\nbone$fab.f \u003c- factor(bone$fab, 0:1, c(\"Grade 4 ou 5 ou LMA \", \"Autres\"))\n# bone$sexe.pat.f \u003c- factor(bone$sexe.pat, 0:1, c(\"Femme\", \"Homme\"))\nbone$mtx.f \u003c- factor(bone$mtx, 0:1, c(\"Pas de MTX\", \"MTX\"))\n\nfit_km_leuc \u003c- survfit(Surv(delsv, etat) ~ leuc.f, data = bone)\nfit_km_leuc2 \u003c- survfit2(Surv(delsv, etat) ~ leuc.f, data = bone)\n\n# délai de récidive\nbone$delrec \u003c- difftime(bone$date_rec, bone$dat_sel, units=\"days\")\nbone$delrec \u003c-ifelse(bone$rec == 1, bone$delrec, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n\n# #délai de complication aigue \n# bone$delca\u003c-difftime( bone$date_ca, bone$dat_sel,units=\"days\")\n# bone$delca\u003c-ifelse(bone$ca==1, bone$delca, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n# \n# #délai de complication chronique \n# bone$delcc\u003c-difftime( bone$date_cc, bone$dat_sel,units=\"days\")\n# bone$delcc\u003c-ifelse(bone$cc==1, bone$delcc, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n# \n# #délai de fin de neutropénie\n# bone$delfn\u003c-difftime( bone$date_fn, bone$dat_sel,units=\"days\")\n# bone$delfn\u003c-ifelse(bone$fn==1, bone$delfn, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n# \n# #délai de DFS\n# bone$deldfs\u003c-pmin(bone$delrec, bone$delsv)\n# bone$dfs\u003c-ifelse(bone$rec==1 | bone$etat==1 , 1, 0)","id":1,"options":{"autorun":"true","classes":"","comment":"","context":"setup","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"head(bone[, c(\"delrec\", \"rec\")])\nsummary(bone[, c(\"delrec\", \"rec\")])","id":2,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-2","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":3,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-3","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"## Fonction d'incidence cumulée (F(t) = 1-S(t))\nplot(survfit(Surv(deldfs, dfs) ~ 1, data = bone), fun = \"F\") ","id":4,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-4","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":5,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-5","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"plot(survfit(Surv(deldfs, compevent == \"death without relapse\") ~ 1, data = bone), \n     fun = \"F\", conf.int = FALSE)\nlines(survfit(Surv(deldfs, compevent == \"relapse\") ~ 1, data = bone), \n      fun = \"F\", conf.int = FALSE, col = 2)","id":6,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-6","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"library(tidycmprsk)","id":7,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-7","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":8,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-8","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":9,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-9","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"coxph(Surv(deldfs, compevent) ~ fab.f, data = bone, id = num)","id":10,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-10","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"crr(Surv(deldfs, compevent) ~ fab.f, data = bone, failcode = c(\"relapse\"))\ncrr(Surv(deldfs, compevent) ~ fab.f, data = bone, failcode = c(\"death without relapse\"))","id":11,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-11","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"ggcuminc(cuminc(Surv(deldfs, compevent) ~ fab.f, data = bone), \n         outcome = c(\"relapse\", \"death without relapse\")) + \n  facet_grid(~ outcome)","id":12,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-12","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+globalThis.qwebrCellDetails = [{"code":"library(survival)\nlibrary(dplyr)\nlibrary(ggsurvfit)\n\nif (Sys.info()[\"nodename\"] == \"emscripten\") {\n  base_url \u003c- sub(\"/[^/]*$\", \"/\", quarto_page_url)\n  download.file(\n    paste0(base_url, \"data_bone.csv\"),\n    \"data_bone.csv\", quiet = TRUE\n  )\n}\nbone \u003c- read.csv2(\"data_bone.csv\")\nbone$dat_sel\u003c-as.Date(bone$dat_sel, format=\"%d/%m/%Y\")\nbone$date_dc\u003c-as.Date(bone$date_dc, format=\"%d/%m/%Y\")\nbone$ddn\u003c-as.Date(bone$ddn, format=\"%d/%m/%Y\")\nbone$date_rec\u003c-as.Date(bone$date_rec, format=\"%d/%m/%Y\")\nbone$date_fn\u003c-as.Date(bone$date_fn, format=\"%d/%m/%Y\")\nbone$date_cc\u003c-as.Date(bone$date_cc, format=\"%d/%m/%Y\")\nbone$date_ca\u003c-as.Date(bone$date_ca, format=\"%d/%m/%Y\")\n\n# délai de survie\nbone$delsv\u003c-difftime( bone$date_dc, bone$dat_sel,units=\"days\")\nbone$delsv\u003c-ifelse(bone$etat==1, bone$delsv, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\nfit_km \u003c- survfit(Surv(delsv, etat) ~ 1, data = bone)\np \u003c- ggsurvfit(fit_km)\n\n# facteurs\nbone$leuc.f \u003c- factor(bone$leuc, 1:3, c(\"LAM B\", \"LAM C\", \"LAL\"))\nbone$fab.f \u003c- factor(bone$fab, 0:1, c(\"Grade 4 ou 5 ou LMA \", \"Autres\"))\n# bone$sexe.pat.f \u003c- factor(bone$sexe.pat, 0:1, c(\"Femme\", \"Homme\"))\nbone$mtx.f \u003c- factor(bone$mtx, 0:1, c(\"Pas de MTX\", \"MTX\"))\n\nfit_km_leuc \u003c- survfit(Surv(delsv, etat) ~ leuc.f, data = bone)\nfit_km_leuc2 \u003c- survfit2(Surv(delsv, etat) ~ leuc.f, data = bone)\n\n# délai de récidive\nbone$delrec \u003c- difftime(bone$date_rec, bone$dat_sel, units=\"days\")\nbone$delrec \u003c-ifelse(bone$rec == 1, bone$delrec, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n\n# #délai de complication aigue \n# bone$delca\u003c-difftime( bone$date_ca, bone$dat_sel,units=\"days\")\n# bone$delca\u003c-ifelse(bone$ca==1, bone$delca, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n# \n# #délai de complication chronique \n# bone$delcc\u003c-difftime( bone$date_cc, bone$dat_sel,units=\"days\")\n# bone$delcc\u003c-ifelse(bone$cc==1, bone$delcc, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n# \n# #délai de fin de neutropénie\n# bone$delfn\u003c-difftime( bone$date_fn, bone$dat_sel,units=\"days\")\n# bone$delfn\u003c-ifelse(bone$fn==1, bone$delfn, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n# \n# #délai de DFS\n# bone$deldfs\u003c-pmin(bone$delrec, bone$delsv)\n# bone$dfs\u003c-ifelse(bone$rec==1 | bone$etat==1 , 1, 0)","id":1,"options":{"autorun":"true","classes":"","comment":"","context":"setup","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"head(bone[, c(\"delrec\", \"rec\")])\nsummary(bone[, c(\"delrec\", \"rec\")])","id":2,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-2","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":3,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-3","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"## Fonction d'incidence cumulée (F(t) = 1-S(t))\nplot(survfit(Surv(deldfs, dfs) ~ 1, data = bone), fun = \"F\") ","id":4,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-4","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":5,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-5","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"plot(survfit(Surv(deldfs, compevent == \"death without relapse\") ~ 1, data = bone), \n     fun = \"F\", conf.int = FALSE)\nlines(survfit(Surv(deldfs, compevent == \"relapse\") ~ 1, data = bone), \n      fun = \"F\", conf.int = FALSE, col = 2)","id":6,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-6","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"library(tidycmprsk)","id":7,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-7","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":8,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-8","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":9,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-9","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"coxph(Surv(deldfs, compevent) ~ fab.f, data = bone, id = num)","id":10,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-10","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"coxph(Surv(deldfs, compevent) ~ fab.f, data = bone, id = num, ties = \"efron\")","id":11,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-11","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"crr(Surv(deldfs, compevent) ~ fab.f, data = bone, failcode = c(\"relapse\"))\ncrr(Surv(deldfs, compevent) ~ fab.f, data = bone, failcode = c(\"death without relapse\"))","id":12,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-12","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"ggcuminc(cuminc(Surv(deldfs, compevent) ~ fab.f, data = bone), \n         outcome = c(\"relapse\", \"death without relapse\")) + \n  facet_grid(~ outcome)","id":13,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-13","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 </script><script type="module">
 // Declare startupMessageQWebR globally
@@ -2086,7 +2086,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
     <div>
     <div class="quarto-title-meta-heading">Modifié</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">12 novembre 2026</p>
+      <p class="date-modified">16 novembre 2026</p>
     </div>
   </div>
     
@@ -2140,6 +2140,9 @@ div.blue { background-color:#e6f0ff; border-radius: 20px; padding: 20px;}
 bone$delrec &lt;- ifelse(bone$rec == 1, 
                       bone$delrec, 
                       difftime(bone$ddn, bone$dat_sel, units = "days"))</code></pre>
+<div class="blue">
+<p><strong>Attention à ne pas confondre avec la partie précédente.</strong> Dans le modèle de Cox, la récidive était une <em>variable explicative</em> dont la valeur dépend du temps (<code>rec_t</code>, construite à partir de <code>delrec_obs</code>, qui vaut <code>NA</code> en l’absence de récidive) : on étudiait son effet sur le risque de décès. Ici, la récidive devient un <em>évènement</em> (un critère de jugement) : <code>delrec</code> est un délai de participation, défini pour tous les patients (délai jusqu’à la récidive, ou jusqu’à la censure en l’absence de récidive), comme <code>delsv</code> pour le décès.</p>
+</div>
 <!-- *Estimez la probabilité de récidive au cours du temps dans l'ensemble de l'échantillon à l'aide de la méthode de Kaplan-Meïer, et stockez le résultat dans un objet nommé `fitrec_km`.* -->
 <!-- ``` {r rec_km, exercise = TRUE, exercise.eval = FALSE} -->
 <!-- ``` -->
@@ -2187,7 +2190,15 @@ bone$delrec &lt;- ifelse(bone$rec == 1,
 <p>Jusqu’ici, nous avons à chaque fois représenté la fonction de survie <span class="math inline">\(S(t)\)</span>. Mais il est très facile de représenter son complémentaire, la fonction d’incidence cumulée, en ajoutant l’option <code>fun = "F"</code> :</p>
 <div id="qwebr-insertion-location-4"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-</section><section id="délai-jusquà-récidive-ou-décès-sans-récidive-en-risques-compétitifs" class="level2" data-number="5.2"><h2 data-number="5.2" class="anchored" data-anchor-id="délai-jusquà-récidive-ou-décès-sans-récidive-en-risques-compétitifs">
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="compet_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details></section><section id="délai-jusquà-récidive-ou-décès-sans-récidive-en-risques-compétitifs" class="level2" data-number="5.2"><h2 data-number="5.2" class="anchored" data-anchor-id="délai-jusquà-récidive-ou-décès-sans-récidive-en-risques-compétitifs">
 <span class="header-section-number">5.2</span> Délai jusqu’à récidive ou décès sans récidive en risques compétitifs</h2>
 <p>En risques compétitifs, la variable de délai <code>deldfs</code> est inchangée, mais les deux types d’évènement (récidive, ou décès sans récidive) doivent rester séparés. Nous devons créer une colonne de type <code>factor</code>, avec trois niveaux :</p>
 <ul>
@@ -2237,9 +2248,18 @@ bone$delrec &lt;- ifelse(bone$rec == 1,
 <p>Sans risque en compétition, l’incidence cumulée d’un évènement est le complémentaire de la fonction de survie (<span class="math inline">\(F(t) = 1-S(t)\)</span>). Avec le package <code>survival</code>, on estime de nouveau avec la fonction <code>survfit()</code>, puis il suffit de rajouter l’option <code>fun = "F"</code> à la fonction <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code>. Ci-dessous, les fonctions d’incidence cumulée des évènements <code>"death without relapse"</code> (noir) et <code>"relapse"</code> (rouge) ont chacune été représentées, en censurant les patients ayant fait l’autre évènement. (Les intervalles de confiance ont été supprimés avec l’option <code>conf.int = FALSE</code> afin de rendre le graphique plus lisible).</p>
 <div id="qwebr-insertion-location-6"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="compet_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
 Cette approche est-elle correcte ?
-<div id="radio_ZGGGSLCWWX" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_ZGGGSLCWWX" value=""><span>Oui, pas de soucis.</span></label><label><input type="radio" autocomplete="off" name="radio_ZGGGSLCWWX" value="answer"><span>Non, car à l'infini, la probabilité de faire l'un des deux évènements est &gt; 1.</span></label>
+<div id="radio_DROWKYLEDG" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_DROWKYLEDG" value=""><span>Oui, pas de soucis.</span></label><label><input type="radio" autocomplete="off" name="radio_DROWKYLEDG" value="answer"><span>Non, car à l'infini, la probabilité de faire l'un des deux évènements est &gt; 1.</span></label>
 </div>
 </section><section id="approche-correcte" class="level3" data-number="5.3.2"><h3 data-number="5.3.2" class="anchored" data-anchor-id="approche-correcte">
 <span class="header-section-number">5.3.2</span> Approche correcte</h3>
@@ -2293,7 +2313,7 @@ Cette approche est-elle correcte ?
 <details><summary>Voir le résultat</summary><div class="cell">
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="compet_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="compet_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2341,8 +2361,50 @@ n= 137, number of events= 41 </code></pre>
 <p>Les deux modèles peuvent être estimés en une seule commande. Avec cette syntaxe, il est nécessaire d’ajouter l’option <code>id = num</code>, (<code>num</code> étant la colonne identifiant chaque individu) :</p>
 <div id="qwebr-insertion-location-10"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>Par défaut, cette approche calcule en plus une variance dite ‘robuste’ (<code>robust se</code>), c’est pourquoi les degrés de signification diffèrent légèrement (mais les coefficients estimés sont bien les mêmes que précédemment).</p>
-</section></section><section id="modèle-de-fine-et-gray" class="level2" data-number="5.5"><h2 data-number="5.5" class="anchored" data-anchor-id="modèle-de-fine-et-gray">
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+coxph(formula = Surv(deldfs, compevent) ~ fab.f, data = bone, 
+    id = num)
+
+             
+1:2             coef exp(coef) robust se     z     p
+  fab.fAutres 0.1888    1.2078    0.3300 0.572 0.567
+
+             
+1:3            coef exp(coef) robust se    z       p
+  fab.fAutres 1.044     2.839     0.306 3.41 0.00065
+
+ States:  1= (s0), 2= death without relapse, 3= relapse 
+
+Likelihood ratio test=11.34  on 2 df, p=0.003442
+n= 137, unique id= 137, number of events= 83 </code></pre>
+</div>
+</div>
+</details><p>Par défaut, cette approche calcule en plus une variance dite ‘robuste’ (<code>robust se</code>), c’est pourquoi les degrés de signification diffèrent légèrement. Les coefficients estimés diffèrent eux aussi très légèrement : avec cette syntaxe, <code>coxph()</code> utilise par défaut une autre méthode de gestion des ex-aequo (temps d’évènement identiques) : la méthode de Breslow, au lieu de celle d’Efron. En ajoutant l’option <code>ties = "efron"</code>, on retrouve exactement les coefficients des deux modèles précédents :</p>
+<div id="qwebr-insertion-location-11"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+coxph(formula = Surv(deldfs, compevent) ~ fab.f, data = bone, 
+    ties = "efron", id = num)
+
+             
+1:2             coef exp(coef) robust se     z     p
+  fab.fAutres 0.1893    1.2084    0.3302 0.573 0.567
+
+             
+1:3             coef exp(coef) robust se    z        p
+  fab.fAutres 1.0441    2.8408    0.3062 3.41 0.000649
+
+ States:  1= (s0), 2= death without relapse, 3= relapse 
+
+Likelihood ratio test=11.36  on 2 df, p=0.00342
+n= 137, unique id= 137, number of events= 83 </code></pre>
+</div>
+</div>
+</details></section></section><section id="modèle-de-fine-et-gray" class="level2" data-number="5.5"><h2 data-number="5.5" class="anchored" data-anchor-id="modèle-de-fine-et-gray">
 <span class="header-section-number">5.5</span> Modèle de Fine et Gray</h2>
 <p>Une seconde approche consiste à modéliser le risque de sous-répartition à l’aide d’un modèle de Fine et Gray. Techniquement parlant, la seule différence avec l’approche cause-spécifique concerne les individus à risque au cours du temps :</p>
 <ul>
@@ -2351,37 +2413,63 @@ n= 137, number of events= 41 </code></pre>
 </ul>
 <p>Estimer un modèle de Fine et Gray est donc très simple en réalité : il suffit d’attribuer aux individus ayant fait l’évènement en compétition un délai factice supérieur à tous les autres délais de suivi, afin qu’ils restent dans le risk set en permanence. Le modèle de Fine et Gray prend également en compte le fait que les censures peuvent elles-mêmes être masquées par l’évènement en compétition, par une approche de pondération des individus au cours du temps.</p>
 <p>La fonction <code><a href="https://mskcc-epi-bio.github.io/tidycmprsk/reference/crr.html">crr()</a></code> (pour ‘competing risk regression’) du package <code>tidycmprsk</code> permet d’estimer un modèle de Fine et Gray.</p>
-<div id="qwebr-insertion-location-11"></div>
+<div id="qwebr-insertion-location-12"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<!-- Implémentation alternative (à adapter si je décide de l'inclure un jour) -->
-<!-- d$erc<-factor(d$e, 0:2, labels=c("censor", "evt1", "evt2")) -->
-<!-- dfg1<-finegray(Surv(d, erc) ~z, data=d, etype = "evt1") -->
-<!-- fg1 <- coxph(Surv(fgstart, fgstop, fgstatus) ~ z, weight=fgwt, data=dfg1) -->
-<!-- coef(fg1) -->
-<!-- mt<-survSplit(m, start="start", end="stop", event="evt", cut=t1) -->
-<!-- km<-survfit(Surv(etime, event=="censor")~1, data=m, se.fit=FALSE) -->
-<!-- skm<-summary(km, censored=TRUE) -->
-<!-- skm<-data.frame(t=skm$time, G=skm$surv) -->
-<!-- head(skm) -->
-<!-- #travail sur mt -->
-<!-- head(mt) -->
-<!-- mt$i<-findInterval(mt$stop, skm$t, left.open = TRUE) -->
-<!-- mt$Gi<-skm$G[mt$i] -->
-<!-- mt$j<-findInterval(mt$ptime, skm$t, left.open = TRUE) -->
-<!-- mt$Gj<-c(1, skm$G)[mt$j+1] -->
-<!-- head(mt) -->
-<!-- mt$Gmij<-ifelse(mt$ptime<mt$stop, mt$Gj, mt$Gi) -->
-<!-- mt$w<-mt$Gi/mt$Gmij -->
-<!-- head(mt) -->
-<!-- coxt <- coxph(Surv(start, stop, evt) ~ age + sex+cluster(id), weight=w, data=mt) -->
-<!-- summary(coxt) -->
-</section><section id="comparaison-des-modèles-causes-spécifiques-et-de-sous-répartition" class="level2" data-number="5.6"><h2 data-number="5.6" class="anchored" data-anchor-id="comparaison-des-modèles-causes-spécifiques-et-de-sous-répartition">
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── crr() ───────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Call Surv(deldfs, compevent) ~ fab.f</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Failure type of interest "relapse"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Variable      Coef   SE      HR     95% CI       p-value    
+fab.fAutres   1.00   0.306   2.72   1.49, 4.96   0.001      </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── crr() ───────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Call Surv(deldfs, compevent) ~ fab.f</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Failure type of interest "death without relapse"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Variable      Coef     SE      HR     95% CI       p-value    
+fab.fAutres   -0.080   0.332   0.92   0.48, 1.77   0.81       </code></pre>
+</div>
+</div>
+</details><!-- Implémentation alternative (à adapter si je décide de l'inclure un jour) --><!-- d$erc<-factor(d$e, 0:2, labels=c("censor", "evt1", "evt2")) --><!-- dfg1<-finegray(Surv(d, erc) ~z, data=d, etype = "evt1") --><!-- fg1 <- coxph(Surv(fgstart, fgstop, fgstatus) ~ z, weight=fgwt, data=dfg1) --><!-- coef(fg1) --><!-- mt<-survSplit(m, start="start", end="stop", event="evt", cut=t1) --><!-- km<-survfit(Surv(etime, event=="censor")~1, data=m, se.fit=FALSE) --><!-- skm<-summary(km, censored=TRUE) --><!-- skm<-data.frame(t=skm$time, G=skm$surv) --><!-- head(skm) --><!-- #travail sur mt --><!-- head(mt) --><!-- mt$i<-findInterval(mt$stop, skm$t, left.open = TRUE) --><!-- mt$Gi<-skm$G[mt$i] --><!-- mt$j<-findInterval(mt$ptime, skm$t, left.open = TRUE) --><!-- mt$Gj<-c(1, skm$G)[mt$j+1] --><!-- head(mt) --><!-- mt$Gmij<-ifelse(mt$ptime<mt$stop, mt$Gj, mt$Gi) --><!-- mt$w<-mt$Gi/mt$Gmij --><!-- head(mt) --><!-- coxt <- coxph(Surv(start, stop, evt) ~ age + sex+cluster(id), weight=w, data=mt) --><!-- summary(coxt) --></section><section id="comparaison-des-modèles-causes-spécifiques-et-de-sous-répartition" class="level2" data-number="5.6"><h2 data-number="5.6" class="anchored" data-anchor-id="comparaison-des-modèles-causes-spécifiques-et-de-sous-répartition">
 <span class="header-section-number">5.6</span> Comparaison des modèles causes-spécifiques et de sous-répartition</h2>
 <p>Les deux approches conduisent à des résultats assez similaires.</p>
 <p>On peut cependant remarquer que, pour l’évènement ‘death without relapse’, le <em>sub hazard ratio</em> estimé par le modèle de Fine et Gray est cohérent avec les incidences cumulées estimées :</p>
-<div id="qwebr-insertion-location-12"></div>
+<div id="qwebr-insertion-location-13"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>Ainsi :</p>
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_step()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="compet_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details><p>Ainsi :</p>
 <ul>
 <li>l’incidence cumulée de ‘death without relapse’ chez les individus ‘Autres’ est légèrement plus faible que chez les individus ‘Grade 4 ou 5 ou LMA’</li>
 <li>le <em>sub hazard ratio</em> estimé par le modèle de Fine et Gray est &lt; 1 (sHR = 0.92) <span class="math inline">\(\Rightarrow\)</span> cohérence avec ce qui est observé sur les incidences cumulées</li>

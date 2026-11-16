@@ -196,6 +196,8 @@ bone$delsv <- ifelse(bone$etat == 1, bone$delsv,
                      difftime(bone$ddn, bone$dat_sel,units = "days"))
 bone$leuc.f <- factor(bone$leuc, 1:3, c("LAM B", "LAM C", "LAL"))
 bone$mtx.f <- factor(bone$mtx, 0:1, c("Pas de MTX", "MTX"))
+bone$delca <- as.numeric(difftime(bone$date_ca, bone$dat_sel, units = "days"))
+bone$delrec_obs <- as.numeric(difftime(bone$date_rec, bone$dat_sel, units = "days"))
 
 # --- Modèle de Cox univariable
 
@@ -229,6 +231,44 @@ summary(fit_cox_leuc_age)
 
 fit_cox_age <- coxph(Surv(delsv, etat) ~ age.pat, data = bone)
 anova(fit_cox_leuc_age, fit_cox_age)
+
+# --- Approche naïve
+
+fit_cox_ca_naif <- coxph(Surv(delsv, etat) ~ ca, data = bone)
+summary(fit_cox_ca_naif)
+
+summary(bone$delca)
+
+# --- Découpage des données
+
+bone_td <- tmerge(bone[, c("num", "age.pat", "leuc.f")], bone, id = num,
+                  deces = event(delsv, etat))
+bone_td <- tmerge(bone_td, bone, id = num, ca_t = tdc(delca))
+## Données d'origine : une ligne par patient
+bone[bone$num %in% c(1, 2, 15, 18), c("num", "ca", "delca", "etat", "delsv")]
+## Données découpées : une ligne par intervalle
+bone_td[bone_td$num %in% c(1, 2, 15, 18), ]
+
+# --- Modèle de Cox avec une variable dépendante du temps
+
+fit_cox_ca_td <- coxph(Surv(tstart, tstop, deces) ~ ca_t, data = bone_td)
+summary(fit_cox_ca_td)
+
+# --- À vous : la récidive
+
+## Approche naïve
+fit_cox_rec_naif <- coxph(Surv(delsv, etat) ~ rec, data = bone)
+summary(fit_cox_rec_naif)
+## Variable dépendante du temps
+bone_td <- tmerge(bone_td, bone, id = num, rec_t = tdc(delrec_obs))
+fit_cox_rec_td <- coxph(Surv(tstart, tstop, deces) ~ rec_t, data = bone_td)
+summary(fit_cox_rec_td)
+
+# --- Modèle multivariable
+
+fit_cox_td <- coxph(Surv(tstart, tstop, deces) ~ ca_t + rec_t + age.pat + leuc.f,
+                    data = bone_td)
+summary(fit_cox_td)
 
 
 # ========================================================================
@@ -319,6 +359,8 @@ coxph(Surv(deldfs, compevent == "death without relapse") ~ fab.f, data = bone)
 # --- En une seule commande
 
 coxph(Surv(deldfs, compevent) ~ fab.f, data = bone, id = num)
+
+coxph(Surv(deldfs, compevent) ~ fab.f, data = bone, id = num, ties = "efron")
 
 # --- Modèle de Fine et Gray
 

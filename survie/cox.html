@@ -405,7 +405,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"code":"library(survival)\nlibrary(dplyr)\nlibrary(ggsurvfit)\n\nif (Sys.info()[\"nodename\"] == \"emscripten\") {\n  base_url \u003c- sub(\"/[^/]*$\", \"/\", quarto_page_url)\n  download.file(\n    paste0(base_url, \"data_bone.csv\"),\n    \"data_bone.csv\", quiet = TRUE\n  )\n}\nbone \u003c- read.csv2(\"data_bone.csv\")\nbone$dat_sel\u003c-as.Date(bone$dat_sel, format=\"%d/%m/%Y\")\nbone$date_dc\u003c-as.Date(bone$date_dc, format=\"%d/%m/%Y\")\nbone$ddn\u003c-as.Date(bone$ddn, format=\"%d/%m/%Y\")\nbone$date_rec\u003c-as.Date(bone$date_rec, format=\"%d/%m/%Y\")\nbone$date_fn\u003c-as.Date(bone$date_fn, format=\"%d/%m/%Y\")\nbone$date_cc\u003c-as.Date(bone$date_cc, format=\"%d/%m/%Y\")\nbone$date_ca\u003c-as.Date(bone$date_ca, format=\"%d/%m/%Y\")\n\n# délai de survie\nbone$delsv\u003c-difftime( bone$date_dc, bone$dat_sel,units=\"days\")\nbone$delsv\u003c-ifelse(bone$etat==1, bone$delsv, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\nfit_km \u003c- survfit(Surv(delsv, etat) ~ 1, data = bone)\np \u003c- ggsurvfit(fit_km)\n\n# facteurs\nbone$leuc.f \u003c- factor(bone$leuc, 1:3, c(\"LAM B\", \"LAM C\", \"LAL\"))\n# bone$sexe.pat.f \u003c- factor(bone$sexe.pat, 0:1, c(\"Femme\", \"Homme\"))\nbone$mtx.f \u003c- factor(bone$mtx, 0:1, c(\"Pas de MTX\", \"MTX\"))\n\nfit_km_leuc \u003c- survfit(Surv(delsv, etat) ~ leuc.f, data = bone)\nfit_km_leuc2 \u003c- survfit2(Surv(delsv, etat) ~ leuc.f, data = bone)\n\n# #délai de récidive\n# bone$delrec\u003c-difftime( bone$date_rec, bone$dat_sel,units=\"days\")\n# bone$delrec\u003c-ifelse(bone$rec==1, bone$delrec, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n# \n# \n# #délai de complication aigue \n# bone$delca\u003c-difftime( bone$date_ca, bone$dat_sel,units=\"days\")\n# bone$delca\u003c-ifelse(bone$ca==1, bone$delca, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n# \n# #délai de complication chronique \n# bone$delcc\u003c-difftime( bone$date_cc, bone$dat_sel,units=\"days\")\n# bone$delcc\u003c-ifelse(bone$cc==1, bone$delcc, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n# \n# #délai de fin de neutropénie\n# bone$delfn\u003c-difftime( bone$date_fn, bone$dat_sel,units=\"days\")\n# bone$delfn\u003c-ifelse(bone$fn==1, bone$delfn, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n# \n# #délai de DFS\n# bone$deldfs\u003c-pmin(bone$delrec, bone$delsv)\n# bone$dfs\u003c-ifelse(bone$rec==1 | bone$etat==1 , 1, 0)","id":1,"options":{"autorun":"true","classes":"","comment":"","context":"setup","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":2,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-2","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":3,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-3","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"cox.zph(fit_cox_leuc, transform = \"rank\", terms = FALSE)","id":4,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-4","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"plot(cox.zph(fit_cox_leuc, transform = \"identity\", terms = FALSE))","id":5,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-5","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":6,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-6","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":7,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-7","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":8,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-8","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":9,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-9","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+globalThis.qwebrCellDetails = [{"code":"library(survival)\nlibrary(dplyr)\nlibrary(ggsurvfit)\n\nif (Sys.info()[\"nodename\"] == \"emscripten\") {\n  base_url \u003c- sub(\"/[^/]*$\", \"/\", quarto_page_url)\n  download.file(\n    paste0(base_url, \"data_bone.csv\"),\n    \"data_bone.csv\", quiet = TRUE\n  )\n}\nbone \u003c- read.csv2(\"data_bone.csv\")\nbone$dat_sel\u003c-as.Date(bone$dat_sel, format=\"%d/%m/%Y\")\nbone$date_dc\u003c-as.Date(bone$date_dc, format=\"%d/%m/%Y\")\nbone$ddn\u003c-as.Date(bone$ddn, format=\"%d/%m/%Y\")\nbone$date_rec\u003c-as.Date(bone$date_rec, format=\"%d/%m/%Y\")\nbone$date_fn\u003c-as.Date(bone$date_fn, format=\"%d/%m/%Y\")\nbone$date_cc\u003c-as.Date(bone$date_cc, format=\"%d/%m/%Y\")\nbone$date_ca\u003c-as.Date(bone$date_ca, format=\"%d/%m/%Y\")\n\n# délai de survie\nbone$delsv\u003c-difftime( bone$date_dc, bone$dat_sel,units=\"days\")\nbone$delsv\u003c-ifelse(bone$etat==1, bone$delsv, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\nfit_km \u003c- survfit(Surv(delsv, etat) ~ 1, data = bone)\np \u003c- ggsurvfit(fit_km)\n\n# facteurs\nbone$leuc.f \u003c- factor(bone$leuc, 1:3, c(\"LAM B\", \"LAM C\", \"LAL\"))\n# bone$sexe.pat.f \u003c- factor(bone$sexe.pat, 0:1, c(\"Femme\", \"Homme\"))\nbone$mtx.f \u003c- factor(bone$mtx, 0:1, c(\"Pas de MTX\", \"MTX\"))\n\nfit_km_leuc \u003c- survfit(Surv(delsv, etat) ~ leuc.f, data = bone)\nfit_km_leuc2 \u003c- survfit2(Surv(delsv, etat) ~ leuc.f, data = bone)\n\n# délais jusqu'à complication aigue / récidive (NA si pas d'évènement)\nbone$delca \u003c- as.numeric(difftime(bone$date_ca, bone$dat_sel, units = \"days\"))\nbone$delrec_obs \u003c- as.numeric(difftime(bone$date_rec, bone$dat_sel, units = \"days\"))\n\n# Contournement d'un bug de survival::tmerge sous webR : la routine C\n# Ctmerge2 lit hors limites (nid[-1]) et tdc() renvoie alors 0 partout.\n# On la remplace par un équivalent en R (même résultat qu'en R natif).\nlocal({\n  tmerge2_r \u003c- function(id, time1, nid, ntime) {\n    vapply(seq_along(id), function(i) {\n      k \u003c- which(nid == id[i] & ntime \u003c= time1[i])\n      if (length(k)) max(k) else 0L\n    }, integer(1))\n  }\n  f \u003c- survival::tmerge\n  b \u003c- deparse(body(f))\n  b \u003c- sub(\".Call(Ctmerge2,\", \"tmerge2_r(\", b, fixed = TRUE)\n  body(f) \u003c- parse(text = b)[[1]]\n  e \u003c- new.env(parent = asNamespace(\"survival\"))\n  e$tmerge2_r \u003c- tmerge2_r\n  environment(f) \u003c- e\n  assign(\"tmerge\", f, envir = globalenv())\n})\n\n# #délai de récidive\n# bone$delrec\u003c-difftime( bone$date_rec, bone$dat_sel,units=\"days\")\n# bone$delrec\u003c-ifelse(bone$rec==1, bone$delrec, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n# \n# \n# #délai de complication aigue \n# bone$delca\u003c-difftime( bone$date_ca, bone$dat_sel,units=\"days\")\n# bone$delca\u003c-ifelse(bone$ca==1, bone$delca, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n# \n# #délai de complication chronique \n# bone$delcc\u003c-difftime( bone$date_cc, bone$dat_sel,units=\"days\")\n# bone$delcc\u003c-ifelse(bone$cc==1, bone$delcc, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n# \n# #délai de fin de neutropénie\n# bone$delfn\u003c-difftime( bone$date_fn, bone$dat_sel,units=\"days\")\n# bone$delfn\u003c-ifelse(bone$fn==1, bone$delfn, difftime(bone$ddn, bone$dat_sel,units=\"days\"))\n# \n# #délai de DFS\n# bone$deldfs\u003c-pmin(bone$delrec, bone$delsv)\n# bone$dfs\u003c-ifelse(bone$rec==1 | bone$etat==1 , 1, 0)","id":1,"options":{"autorun":"true","classes":"","comment":"","context":"setup","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":2,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-2","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":3,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-3","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"cox.zph(fit_cox_leuc, transform = \"rank\", terms = FALSE)","id":4,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-4","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"plot(cox.zph(fit_cox_leuc, transform = \"identity\", terms = FALSE))","id":5,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-5","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":6,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-6","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":7,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-7","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":8,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-8","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":9,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-9","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":10,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-10","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"summary(bone$delca)","id":11,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-11","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"bone_td \u003c- tmerge(bone[, c(\"num\", \"age.pat\", \"leuc.f\")], bone, id = num,\n                  deces = event(delsv, etat))\nbone_td \u003c- tmerge(bone_td, bone, id = num, ca_t = tdc(delca))\n## Données d'origine : une ligne par patient\nbone[bone$num %in% c(1, 2, 15, 18), c(\"num\", \"ca\", \"delca\", \"etat\", \"delsv\")]\n## Données découpées : une ligne par intervalle\nbone_td[bone_td$num %in% c(1, 2, 15, 18), ]","id":12,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-12","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":13,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-13","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":14,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-14","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"","id":15,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-15","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 </script><script type="module">
 // Declare startupMessageQWebR globally
@@ -1767,6 +1767,16 @@ window.Quarto = {
 <li><a href="#mod%C3%A8le-de-cox-univariable" id="toc-modèle-de-cox-univariable" class="nav-link active" data-scroll-target="#mod%C3%A8le-de-cox-univariable"><span class="header-section-number">4.1</span> Modèle de Cox univariable</a></li>
   <li><a href="#hypoth%C3%A8se-des-hasards-proportionnels" id="toc-hypothèse-des-hasards-proportionnels" class="nav-link" data-scroll-target="#hypoth%C3%A8se-des-hasards-proportionnels"><span class="header-section-number">4.2</span> Hypothèse des hasards proportionnels</a></li>
   <li><a href="#mod%C3%A8le-de-cox-multivariable" id="toc-modèle-de-cox-multivariable" class="nav-link" data-scroll-target="#mod%C3%A8le-de-cox-multivariable"><span class="header-section-number">4.3</span> Modèle de Cox multivariable</a></li>
+  <li>
+<a href="#covariable-dont-la-valeur-d%C3%A9pend-du-temps" id="toc-covariable-dont-la-valeur-dépend-du-temps" class="nav-link" data-scroll-target="#covariable-dont-la-valeur-d%C3%A9pend-du-temps"><span class="header-section-number">4.4</span> Covariable dont la valeur dépend du temps</a>
+  <ul class="collapse">
+<li><a href="#approche-na%C3%AFve" id="toc-approche-naïve" class="nav-link" data-scroll-target="#approche-na%C3%AFve"><span class="header-section-number">4.4.1</span> Approche naïve</a></li>
+  <li><a href="#d%C3%A9coupage-des-donn%C3%A9es" id="toc-découpage-des-données" class="nav-link" data-scroll-target="#d%C3%A9coupage-des-donn%C3%A9es"><span class="header-section-number">4.4.2</span> Découpage des données</a></li>
+  <li><a href="#mod%C3%A8le-de-cox-avec-une-variable-d%C3%A9pendante-du-temps" id="toc-modèle-de-cox-avec-une-variable-dépendante-du-temps" class="nav-link" data-scroll-target="#mod%C3%A8le-de-cox-avec-une-variable-d%C3%A9pendante-du-temps"><span class="header-section-number">4.4.3</span> Modèle de Cox avec une variable dépendante du temps</a></li>
+  <li><a href="#%C3%A0-vous-la-r%C3%A9cidive" id="toc-à-vous-la-récidive" class="nav-link" data-scroll-target="#%C3%A0-vous-la-r%C3%A9cidive"><span class="header-section-number">4.4.4</span> À vous : la récidive</a></li>
+  <li><a href="#mod%C3%A8le-multivariable" id="toc-modèle-multivariable" class="nav-link" data-scroll-target="#mod%C3%A8le-multivariable"><span class="header-section-number">4.4.5</span> Modèle multivariable</a></li>
+  </ul>
+</li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -2071,7 +2081,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
     <div>
     <div class="quarto-title-meta-heading">Modifié</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">12 novembre 2026</p>
+      <p class="date-modified">16 novembre 2026</p>
     </div>
   </div>
     
@@ -2100,7 +2110,9 @@ div.blue { background-color:#e6f0ff; border-radius: 20px; padding: 20px;}
 <span><span class="va">bone</span><span class="op">$</span><span class="va">delsv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">bone</span><span class="op">$</span><span class="va">etat</span> <span class="op">==</span> <span class="fl">1</span>, <span class="va">bone</span><span class="op">$</span><span class="va">delsv</span>, </span>
 <span>                     <span class="fu"><a href="https://rdrr.io/r/base/difftime.html">difftime</a></span><span class="op">(</span><span class="va">bone</span><span class="op">$</span><span class="va">ddn</span>, <span class="va">bone</span><span class="op">$</span><span class="va">dat_sel</span>,units <span class="op">=</span> <span class="st">"days"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">bone</span><span class="op">$</span><span class="va">leuc.f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">bone</span><span class="op">$</span><span class="va">leuc</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LAM B"</span>, <span class="st">"LAM C"</span>, <span class="st">"LAL"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">bone</span><span class="op">$</span><span class="va">mtx.f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">bone</span><span class="op">$</span><span class="va">mtx</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Pas de MTX"</span>, <span class="st">"MTX"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<span><span class="va">bone</span><span class="op">$</span><span class="va">mtx.f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">bone</span><span class="op">$</span><span class="va">mtx</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Pas de MTX"</span>, <span class="st">"MTX"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">bone</span><span class="op">$</span><span class="va">delca</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/difftime.html">difftime</a></span><span class="op">(</span><span class="va">bone</span><span class="op">$</span><span class="va">date_ca</span>, <span class="va">bone</span><span class="op">$</span><span class="va">dat_sel</span>, units <span class="op">=</span> <span class="st">"days"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">bone</span><span class="op">$</span><span class="va">delrec_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/difftime.html">difftime</a></span><span class="op">(</span><span class="va">bone</span><span class="op">$</span><span class="va">date_rec</span>, <span class="va">bone</span><span class="op">$</span><span class="va">dat_sel</span>, units <span class="op">=</span> <span class="st">"days"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="qwebr-insertion-location-1"></div>
@@ -2138,28 +2150,28 @@ n= 137, number of events= 81 </code></pre>
 <li>la p-value associée au ‘Likelihood ratio test’</li>
 </ul>
 Pourquoi aucun résultat n’est-il affiché pour la catégorie <code>LAM B</code> ?
-<div id="radio_SJNNIZOBKM" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_SJNNIZOBKM" value=""><span>Cette catégorie ne comporte aucun patient.</span></label><label><input type="radio" autocomplete="off" name="radio_SJNNIZOBKM" value=""><span>Cette catégorie ne comporte aucun évènement.</span></label><label><input type="radio" autocomplete="off" name="radio_SJNNIZOBKM" value=""><span>Cette catégorie n'a aucun intérêt, c'est bien connu.</span></label><label><input type="radio" autocomplete="off" name="radio_SJNNIZOBKM" value="answer"><span>Cette catégorie est la catégorie de référence.</span></label><label><input type="radio" autocomplete="off" name="radio_SJNNIZOBKM" value=""><span>42</span></label>
+<div id="radio_UCUNKTQOVY" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_UCUNKTQOVY" value=""><span>Cette catégorie ne comporte aucun patient.</span></label><label><input type="radio" autocomplete="off" name="radio_UCUNKTQOVY" value=""><span>Cette catégorie ne comporte aucun évènement.</span></label><label><input type="radio" autocomplete="off" name="radio_UCUNKTQOVY" value=""><span>Cette catégorie n'a aucun intérêt, c'est bien connu.</span></label><label><input type="radio" autocomplete="off" name="radio_UCUNKTQOVY" value="answer"><span>Cette catégorie est la catégorie de référence.</span></label><label><input type="radio" autocomplete="off" name="radio_UCUNKTQOVY" value=""><span>42</span></label>
 </div>
 Que représente l’exponentiel de chaque coefficient ?
-<div id="radio_EQRLFAHSEX" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_EQRLFAHSEX" value=""><span>Une probabilité d'évènement.</span></label><label><input type="radio" autocomplete="off" name="radio_EQRLFAHSEX" value=""><span>Un odds ratio</span></label><label><input type="radio" autocomplete="off" name="radio_EQRLFAHSEX" value=""><span>Un risque relatif</span></label><label><input type="radio" autocomplete="off" name="radio_EQRLFAHSEX" value=""><span>Une différence de risque.</span></label><label><input type="radio" autocomplete="off" name="radio_EQRLFAHSEX" value="answer"><span>Un rapport de risque instantané (hazard ratio).</span></label>
+<div id="radio_XSTZYSGWCP" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_XSTZYSGWCP" value=""><span>Une probabilité d'évènement.</span></label><label><input type="radio" autocomplete="off" name="radio_XSTZYSGWCP" value=""><span>Un odds ratio</span></label><label><input type="radio" autocomplete="off" name="radio_XSTZYSGWCP" value=""><span>Un risque relatif</span></label><label><input type="radio" autocomplete="off" name="radio_XSTZYSGWCP" value=""><span>Une différence de risque.</span></label><label><input type="radio" autocomplete="off" name="radio_XSTZYSGWCP" value="answer"><span>Un rapport de risque instantané (hazard ratio).</span></label>
 </div>
 A quoi peut bien servir l’écart-type des coefficients ?
-<div id="radio_DXTIDUYAYL" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_DXTIDUYAYL" value=""><span>à calculer un intervalle de pari</span></label><label><input type="radio" autocomplete="off" name="radio_DXTIDUYAYL" value="answer"><span>à calculer un intervalle de confiance et une statistique de test</span></label><label><input type="radio" autocomplete="off" name="radio_DXTIDUYAYL" value=""><span>à mesurer la force de l'association</span></label><label><input type="radio" autocomplete="off" name="radio_DXTIDUYAYL" value=""><span>à rien</span></label>
+<div id="radio_MFINZAICNY" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_MFINZAICNY" value=""><span>à calculer un intervalle de pari</span></label><label><input type="radio" autocomplete="off" name="radio_MFINZAICNY" value="answer"><span>à calculer un intervalle de confiance et une statistique de test</span></label><label><input type="radio" autocomplete="off" name="radio_MFINZAICNY" value=""><span>à mesurer la force de l'association</span></label><label><input type="radio" autocomplete="off" name="radio_MFINZAICNY" value=""><span>à rien</span></label>
 </div>
 Comment s’appelle le test affiché pour chaque coefficient ?
-<div id="radio_RVNUBOCUJG" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_RVNUBOCUJG" value=""><span>Le test du score.</span></label><label><input type="radio" autocomplete="off" name="radio_RVNUBOCUJG" value=""><span>Le test du logrank</span></label><label><input type="radio" autocomplete="off" name="radio_RVNUBOCUJG" value="answer"><span>Le test de Wald</span></label><label><input type="radio" autocomplete="off" name="radio_RVNUBOCUJG" value=""><span>Le test du <span class="math inline">\(\chi^2\)</span>.</span></label><label><input type="radio" autocomplete="off" name="radio_RVNUBOCUJG" value=""><span>Le test du rapport de vraisemblance.</span></label>
+<div id="radio_QLENTLCQPJ" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_QLENTLCQPJ" value=""><span>Le test du score.</span></label><label><input type="radio" autocomplete="off" name="radio_QLENTLCQPJ" value=""><span>Le test du logrank</span></label><label><input type="radio" autocomplete="off" name="radio_QLENTLCQPJ" value="answer"><span>Le test de Wald</span></label><label><input type="radio" autocomplete="off" name="radio_QLENTLCQPJ" value=""><span>Le test du <span class="math inline">\(\chi^2\)</span>.</span></label><label><input type="radio" autocomplete="off" name="radio_QLENTLCQPJ" value=""><span>Le test du rapport de vraisemblance.</span></label>
 </div>
 Quelle(s) hypothèse(s) nulle(s) teste-t-il ? (β : la valeur théorique du coefficient concerné)
-<div id="radio_GEIHQDBIRT" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_GEIHQDBIRT" value="answer"><span><span class="math inline">\(H_0 : \beta = 0\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_GEIHQDBIRT" value=""><span><span class="math inline">\(H_0 : \beta = 1\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_GEIHQDBIRT" value=""><span><span class="math inline">\(H_0 : \beta &lt; 0\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_GEIHQDBIRT" value=""><span><span class="math inline">\(H_0 : \beta &gt; 0\)</span></span></label>
+<div id="radio_DMQMYRCBDO" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_DMQMYRCBDO" value="answer"><span><span class="math inline">\(H_0 : \beta = 0\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_DMQMYRCBDO" value=""><span><span class="math inline">\(H_0 : \beta = 1\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_DMQMYRCBDO" value=""><span><span class="math inline">\(H_0 : \beta &lt; 0\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_DMQMYRCBDO" value=""><span><span class="math inline">\(H_0 : \beta &gt; 0\)</span></span></label>
 </div>
 Même question pour le ‘Likelihood ratio test’ affiché ? (β₁ et β₂ : la valeur théorique de chaque coefficient)
-<div id="radio_CCAFIMFCOG" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_CCAFIMFCOG" value=""><span><span class="math inline">\(H_0 : \beta_1 = 0\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_CCAFIMFCOG" value=""><span><span class="math inline">\(H_0 : \beta_2 = 0\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_CCAFIMFCOG" value=""><span><span class="math inline">\(H_0 : \beta_1 \text{ ou } \beta_2 = 0\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_CCAFIMFCOG" value="answer"><span><span class="math inline">\(H_0 : \beta_1 \text{ et } \beta_2 = 0\)</span></span></label>
+<div id="radio_IWTQPHCXIM" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_IWTQPHCXIM" value=""><span><span class="math inline">\(H_0 : \beta_1 = 0\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_IWTQPHCXIM" value=""><span><span class="math inline">\(H_0 : \beta_2 = 0\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_IWTQPHCXIM" value=""><span><span class="math inline">\(H_0 : \beta_1 \text{ ou } \beta_2 = 0\)</span></span></label><label><input type="radio" autocomplete="off" name="radio_IWTQPHCXIM" value="answer"><span><span class="math inline">\(H_0 : \beta_1 \text{ et } \beta_2 = 0\)</span></span></label>
 </div>
 <p>Comme pour les objets produits par <code>survfit()</code>, il est possible d’enrichir la sortie par défaut, à l’aide de la fonction <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code>.</p>
 <p><em>Appliquez <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> à l’objet <code>fit_cox_leuc</code>.</em></p>
@@ -2199,16 +2211,38 @@ Score (logrank) test = 15.22  on 2 df,   p=5e-04</code></pre>
 <p><em>Lancer la ligne de code suivante.</em></p>
 <div id="qwebr-insertion-location-4"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>On obtient un tableau une ligne par coefficient estimé + un test global. La colonne <code>p</code> indique le degré de signification du test. Ici, l’hypothèse des hasards proportionnels n’est pas rejetée, pour les deux coefficients estimés : on n’a pas mis en évidence d’écart à l’hypothèse des hasards proportionnels.</p>
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>            chisq df    p
+leuc.fLAM C 0.453  1 0.50
+leuc.fLAL   2.303  1 0.13
+GLOBAL      2.398  2 0.30</code></pre>
+</div>
+</div>
+</details><p>On obtient un tableau une ligne par coefficient estimé + un test global. La colonne <code>p</code> indique le degré de signification du test. Ici, l’hypothèse des hasards proportionnels n’est pas rejetée, pour les deux coefficients estimés : on n’a pas mis en évidence d’écart à l’hypothèse des hasards proportionnels.</p>
 <p>Le résultat de la fonction <code>cox.zph</code> peut également être représenté graphiquement. La ligne obtenue (courbe lissée passant au milieu des <em>résidus de Schoenfeld</em>, entourée de son intervalle de confiance à 95%) est une estimation de l’effet dépendant du temps de la variable explicative. Si l’hypothèse des hazards proportionnels est valide, alors la ligne obtenue devrait être globalement horizontale (en pratique, on regarde si une droite horizontale peut être tracée sans déborder de l’intervalle de confiance à 95%). Voici ce qu’on obtient pour la variable <code>leuc.f</code> (remarquez que pour obtenir ce graphique, on n’utilise pas l’option <code>transform = "rank"</code>, mais <code>transform = "identity"</code>) :</p>
 <p><em>Lancer la ligne de code suivante.</em></p>
 <div id="qwebr-insertion-location-5"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p><em>Fittez un modèle de Cox évaluant l’effet de la variable <code>mtx.f</code> sur la survie globale, stockez le résultat dans un objet nommé <code>fit_cox_mtx</code>, puis évaluez l’hypothèse des hasards proportionnels.</em></p>
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="cox_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="cox_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details><p><em>Fittez un modèle de Cox évaluant l’effet de la variable <code>mtx.f</code> sur la survie globale, stockez le résultat dans un objet nommé <code>fit_cox_mtx</code>, puis évaluez l’hypothèse des hasards proportionnels.</em></p>
 <div id="qwebr-insertion-location-6"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="cell">
-<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## mtx.f a été préalablement générée avec la commande suivante :</span></span>
+<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## mtx.f a été préalablement générée avec la commande suivante :</span></span>
 <span><span class="co"># bone$mtx.f &lt;- factor(bone$mtx, 0:1, c("Pas de MTX", "MTX"))</span></span>
 <span><span class="va">fit_cox_mtx</span> <span class="op">&lt;-</span> <span class="fu">coxph</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">delsv</span>, <span class="va">etat</span><span class="op">)</span> <span class="op">~</span> <span class="va">mtx.f</span>, data <span class="op">=</span> <span class="va">bone</span><span class="op">)</span></span>
 <span><span class="va">fit_cox_mtx</span></span>
@@ -2234,7 +2268,7 @@ GLOBAL    6.25  1 0.012</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="cox_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="cox_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2243,7 +2277,7 @@ GLOBAL    6.25  1 0.012</code></pre>
 <div id="qwebr-insertion-location-7"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="cell">
-<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_km_mtx</span> <span class="op">&lt;-</span> <span class="fu">survfit2</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">delsv</span>, <span class="va">etat</span><span class="op">)</span> <span class="op">~</span> <span class="va">mtx.f</span>, data <span class="op">=</span> <span class="va">bone</span><span class="op">)</span></span>
+<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_km_mtx</span> <span class="op">&lt;-</span> <span class="fu">survfit2</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">delsv</span>, <span class="va">etat</span><span class="op">)</span> <span class="op">~</span> <span class="va">mtx.f</span>, data <span class="op">=</span> <span class="va">bone</span><span class="op">)</span></span>
 <span><span class="fu">ggsurvfit</span><span class="op">(</span><span class="va">fit_km_mtx</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2500</span>, <span class="fl">500</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">add_risktable</span><span class="op">(</span>risktable_stats <span class="op">=</span> <span class="st">"n.risk"</span>, times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2500</span>, <span class="fl">500</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2252,7 +2286,7 @@ GLOBAL    6.25  1 0.012</code></pre>
 <details><summary>Voir le résultat</summary><div class="cell">
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="cox_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="cox_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -2261,9 +2295,9 @@ GLOBAL    6.25  1 0.012</code></pre>
 <ul>
 <li>le modèle de Cox stratifié,</li>
 <li>le test du logrank pondéré,</li>
-<li>la modélisation d’une variable dont l’effet dépend du temps.</li>
+<li>la modélisation d’une variable dont l’<em>effet</em> dépend du temps.</li>
 </ul>
-<p>Ces approches sortent du cadre de cette introduction aux analyses de survie.</p>
+<p>Ces approches sortent du cadre de cette introduction aux analyses de survie. Attention à ne pas confondre une variable dont l’<em>effet</em> change au cours du temps (le HR n’est pas constant : c’est un écart à l’hypothèse des hasards proportionnels) avec une variable dont la <em>valeur</em> change au cours du temps (par exemple, la survenue d’une complication pendant le suivi). Ce second cas, lui, est abordé à la fin de cette partie.</p>
 </section><section id="modèle-de-cox-multivariable" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="modèle-de-cox-multivariable">
 <span class="header-section-number">4.3</span> Modèle de Cox multivariable</h2>
 <p>Pour fitter un modèle de Cox incluant plusieurs variables explicatives, il suffit de les ajouter à la formule précédente, séparées du signe <code>+</code>.</p>
@@ -2271,7 +2305,7 @@ GLOBAL    6.25  1 0.012</code></pre>
 <div id="qwebr-insertion-location-8"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="cell">
-<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_cox_leuc_age</span> <span class="op">&lt;-</span> <span class="fu">coxph</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">delsv</span>, <span class="va">etat</span><span class="op">)</span> <span class="op">~</span> <span class="va">leuc.f</span> <span class="op">+</span> <span class="va">age.pat</span>, data <span class="op">=</span> <span class="va">bone</span><span class="op">)</span></span>
+<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_cox_leuc_age</span> <span class="op">&lt;-</span> <span class="fu">coxph</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">delsv</span>, <span class="va">etat</span><span class="op">)</span> <span class="op">~</span> <span class="va">leuc.f</span> <span class="op">+</span> <span class="va">age.pat</span>, data <span class="op">=</span> <span class="va">bone</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit_cox_leuc_age</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
@@ -2302,8 +2336,8 @@ Score (logrank) test = 16.15  on 3 df,   p=0.001</code></pre>
 </div>
 </details>
 Comment s’interprète la valeur du HR associé à l’âge du patient ?
-<div id="radio_ADIBQWDGTF" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_ADIBQWDGTF" value=""><span>Les patients âgés ont 1.01 fois plus de risque de décès que les patients jeunes.</span></label><label><input type="radio" autocomplete="off" name="radio_ADIBQWDGTF" value=""><span>Les patients jeunes ont 1.01 fois plus de risque de décès que les patients âgés.</span></label><label><input type="radio" autocomplete="off" name="radio_ADIBQWDGTF" value="answer"><span>Le risque de décès est multiplié par 1.01 à chaque incrément d'un an de l'âge du patient.</span></label><label><input type="radio" autocomplete="off" name="radio_ADIBQWDGTF" value=""><span>Le risque de décès est multiplié par 1.01 à chaque année de suivi en plus.</span></label>
+<div id="radio_PJFIMXEWPT" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_PJFIMXEWPT" value=""><span>Les patients âgés ont 1.01 fois plus de risque de décès que les patients jeunes.</span></label><label><input type="radio" autocomplete="off" name="radio_PJFIMXEWPT" value=""><span>Les patients jeunes ont 1.01 fois plus de risque de décès que les patients âgés.</span></label><label><input type="radio" autocomplete="off" name="radio_PJFIMXEWPT" value="answer"><span>Le risque de décès est multiplié par 1.01 à chaque incrément d'un an de l'âge du patient.</span></label><label><input type="radio" autocomplete="off" name="radio_PJFIMXEWPT" value=""><span>Le risque de décès est multiplié par 1.01 à chaque année de suivi en plus.</span></label>
 </div>
 <p>Le résultat détaillé de ce modèle multivarié fournit :</p>
 <ul>
@@ -2315,7 +2349,7 @@ Comment s’interprète la valeur du HR associé à l’âge du patient ?
 <div id="qwebr-insertion-location-9"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="cell">
-<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_cox_age</span> <span class="op">&lt;-</span> <span class="fu">coxph</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">delsv</span>, <span class="va">etat</span><span class="op">)</span> <span class="op">~</span> <span class="va">age.pat</span>, data <span class="op">=</span> <span class="va">bone</span><span class="op">)</span></span>
+<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_cox_age</span> <span class="op">&lt;-</span> <span class="fu">coxph</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">delsv</span>, <span class="va">etat</span><span class="op">)</span> <span class="op">~</span> <span class="va">age.pat</span>, data <span class="op">=</span> <span class="va">bone</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">fit_cox_leuc_age</span>, <span class="va">fit_cox_age</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
@@ -2332,11 +2366,257 @@ Comment s’interprète la valeur du HR associé à l’âge du patient ?
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-</details><p>Bravo, vous avez terminé cette partie du TP !</p>
+</details></section><section id="covariable-dont-la-valeur-dépend-du-temps" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="covariable-dont-la-valeur-dépend-du-temps">
+<span class="header-section-number">4.4</span> Covariable dont la valeur dépend du temps</h2>
+<p>Jusqu’ici, toutes les variables explicatives étaient connues au début du suivi (le “temps zéro”, ici la date d’inclusion) : type de leucémie, âge, méthotrexate… Mais certaines caractéristiques apparaissent <em>pendant</em> le suivi. C’est le cas de la complication aigue (variable <code>ca</code>) : tous les patients en sont indemnes à l’inclusion, puis certains la développent au cours du suivi.</p>
+<p>On souhaite évaluer l’effet de la survenue d’une complication aigue sur le risque de décès.</p>
+<section id="approche-naïve" class="level3" data-number="4.4.1"><h3 data-number="4.4.1" class="anchored" data-anchor-id="approche-naïve">
+<span class="header-section-number">4.4.1</span> Approche naïve</h3>
+<p><em>Fittez un modèle de Cox évaluant l’effet de la variable <code>ca</code> sur la survie globale, comme vous l’avez fait pour les autres variables.</em></p>
+<div id="qwebr-insertion-location-10"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="cell">
+<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_cox_ca_naif</span> <span class="op">&lt;-</span> <span class="fu">coxph</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">delsv</span>, <span class="va">etat</span><span class="op">)</span> <span class="op">~</span> <span class="va">ca</span>, data <span class="op">=</span> <span class="va">bone</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit_cox_ca_naif</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+coxph(formula = Surv(delsv, etat) ~ ca, data = bone)
+
+  n= 137, number of events= 81 
+
+     coef exp(coef) se(coef)     z Pr(&gt;|z|)
+ca 0.2239    1.2510   0.2794 0.802    0.423
+
+   exp(coef) exp(-coef) lower .95 upper .95
+ca     1.251     0.7994    0.7235     2.163
+
+Concordance= 0.525  (se = 0.024 )
+Likelihood ratio test= 0.61  on 1 df,   p=0.4
+Wald test            = 0.64  on 1 df,   p=0.4
+Score (logrank) test = 0.65  on 1 df,   p=0.4</code></pre>
+</div>
+</div>
+</details><p>La variable <code>delca</code> (déjà créée) contient le délai entre l’inclusion et la survenue de la complication aigue (en jours). Elle vaut <code>NA</code> chez les patients qui n’ont pas présenté de complication.</p>
+<p><em>Lancer la ligne de code suivante.</em></p>
+<div id="qwebr-insertion-location-11"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  10.00   21.00   28.50   34.04   38.00   88.00     111 </code></pre>
+</div>
+</div>
+</details>
+Dans le modèle précédent, un patient avec <code>ca = 1</code> est considéré comme ‘exposé’ à la complication dès le début de son suivi. Quel est le problème ?
+<div id="radio_URIBXCLALR" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_URIBXCLALR" value=""><span>Le nombre de complications est trop faible pour estimer un HR.</span></label><label><input type="radio" autocomplete="off" name="radio_URIBXCLALR" value=""><span>La variable <code>ca</code> aurait dû être transformée en facteur.</span></label><label><input type="radio" autocomplete="off" name="radio_URIBXCLALR" value="answer"><span>La valeur de <code>ca</code> n'est pas connue au temps zéro : pour être classé <code>ca = 1</code>, un patient doit avoir survécu jusqu'à sa complication.</span></label><label><input type="radio" autocomplete="off" name="radio_URIBXCLALR" value=""><span>Il n'y a aucun problème.</span></label>
+</div>
+<p>Un patient décédé à J5 n’a pas eu “le temps” de présenter une complication aigue : il sera forcément classé <code>ca = 0</code>. Inversement, tous les patients classés <code>ca = 1</code> étaient vivants au moins jusqu’à leur complication (au minimum 10 jours). Dans l’approche naïve, cette période, pendant laquelle ils ne pouvaient pas décéder et n’avaient pas encore de complication, est comptée comme du temps “exposé” : c’est le <strong>biais de temps immortel</strong>. Il fait paraître le groupe <code>ca = 1</code> artificiellement moins à risque qu’il ne l’est.</p>
+</section><section id="découpage-des-données" class="level3" data-number="4.4.2"><h3 data-number="4.4.2" class="anchored" data-anchor-id="découpage-des-données">
+<span class="header-section-number">4.4.2</span> Découpage des données</h3>
+<p>Comme vu en cours, il faut découper chaque patient ayant présenté une complication en deux “pseudo-sujets” : un premier intervalle de temps sans complication, puis un second intervalle avec complication. Le statut vital n’est porté que par le dernier intervalle. La fonction <code>tmerge()</code> du package <code>survival</code> permet de faire ce découpage :</p>
+<ul>
+<li>le premier appel définit le délai de participation et l’évènement (<code>event()</code>), ainsi que les variables fixes que l’on souhaite conserver (ici <code>age.pat</code> et <code>leuc.f</code>) ;</li>
+<li>le second appel ajoute la variable dépendante du temps (<code>tdc()</code>, pour <em>time-dependent covariate</em>), qui vaut 0 avant le délai <code>delca</code>, puis 1 à partir de ce délai.</li>
+</ul>
+<p><em>Lancer les lignes de code suivantes, qui créent une nouvelle data.frame <code>bone_td</code>, puis comparent, pour 4 patients, les données d’origine et les données découpées.</em></p>
+<div id="qwebr-insertion-location-12"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   num ca delca etat delsv
+1    1  1    67    0  2081
+2    2  0    NA    0  1602
+15  15  0    NA    1   418
+18  18  1    28    1   156</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   num age.pat leuc.f tstart tstop deces ca_t
+1    1      26  LAM B      0    67     0    0
+2    1      26  LAM B     67  2081     0    1
+3    2      21  LAM B      0  1602     0    0
+20  15      18  LAM B      0   418     1    0
+23  18      20  LAM B      0    28     0    0
+24  18      20  LAM B     28   156     1    1</code></pre>
+</div>
+</div>
+</details><p>La nouvelle data.frame contient une ligne par intervalle de temps pendant lequel la variable <code>ca_t</code> est constante. Chaque intervalle est défini par son début (<code>tstart</code>) et sa fin (<code>tstop</code>). Elle comporte 163 lignes pour 137 patients. Les 4 patients affichés illustrent les 4 situations possibles :</p>
+<ul>
+<li>patient n°1 : complication aigue à J67, vivant aux dernières nouvelles ;</li>
+<li>patient n°2 : ni complication, ni décès ;</li>
+<li>patient n°15 : décédé sans avoir présenté de complication ;</li>
+<li>patient n°18 : complication aigue à J28, puis décès à J156.</li>
+</ul>
+Le patient n°1 a présenté une complication aigue à J67, et était vivant aux dernières nouvelles, à J2081. Pourquoi apparaît-il sur deux lignes ?
+<div id="radio_DYRWECMLPT" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_DYRWECMLPT" value=""><span>Parce qu'il a été inclus deux fois.</span></label><label><input type="radio" autocomplete="off" name="radio_DYRWECMLPT" value="answer"><span>Il est découpé en deux pseudo-sujets : de J0 à J67 sans complication (<code>ca_t = 0</code>), puis de J67 à J2081 avec complication (<code>ca_t = 1</code>).</span></label><label><input type="radio" autocomplete="off" name="radio_DYRWECMLPT" value=""><span>Parce qu'il a présenté deux évènements.</span></label><label><input type="radio" autocomplete="off" name="radio_DYRWECMLPT" value=""><span>C'est une erreur de <code>tmerge()</code>.</span></label>
+</div>
+Le patient n°18 a présenté une complication aigue à J28 et est décédé à J156. Quelles valeurs prend la variable <code>deces</code> sur ses deux lignes ?
+<div id="radio_AFCASSSKUO" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_AFCASSSKUO" value=""><span>1 puis 1</span></label><label><input type="radio" autocomplete="off" name="radio_AFCASSSKUO" value=""><span>1 puis 0</span></label><label><input type="radio" autocomplete="off" name="radio_AFCASSSKUO" value="answer"><span>0 puis 1</span></label><label><input type="radio" autocomplete="off" name="radio_AFCASSSKUO" value=""><span>0 puis 0</span></label>
+</div>
+</section><section id="modèle-de-cox-avec-une-variable-dépendante-du-temps" class="level3" data-number="4.4.3"><h3 data-number="4.4.3" class="anchored" data-anchor-id="modèle-de-cox-avec-une-variable-dépendante-du-temps">
+<span class="header-section-number">4.4.3</span> Modèle de Cox avec une variable dépendante du temps</h3>
+<p>Avec des données découpées, le délai de participation n’est plus défini par une seule durée, mais par le début et la fin de chaque intervalle : <code>Surv(tstart, tstop, deces)</code>.</p>
+<p><em>Fittez un modèle de Cox évaluant l’effet de la variable <code>ca_t</code> sur la survie globale, à partir de la data.frame <code>bone_td</code>, et comparez le HR obtenu à celui de l’approche naïve.</em></p>
+<div id="qwebr-insertion-location-13"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="cell">
+<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_cox_ca_td</span> <span class="op">&lt;-</span> <span class="fu">coxph</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">tstart</span>, <span class="va">tstop</span>, <span class="va">deces</span><span class="op">)</span> <span class="op">~</span> <span class="va">ca_t</span>, data <span class="op">=</span> <span class="va">bone_td</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit_cox_ca_td</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+coxph(formula = Surv(tstart, tstop, deces) ~ ca_t, data = bone_td)
+
+  n= 163, number of events= 81 
+
+       coef exp(coef) se(coef)     z Pr(&gt;|z|)
+ca_t 0.3197    1.3768   0.2810 1.138    0.255
+
+     exp(coef) exp(-coef) lower .95 upper .95
+ca_t     1.377     0.7263    0.7937     2.388
+
+Concordance= 0.534  (se = 0.024 )
+Likelihood ratio test= 1.21  on 1 df,   p=0.3
+Wald test            = 1.29  on 1 df,   p=0.3
+Score (logrank) test = 1.31  on 1 df,   p=0.3</code></pre>
+</div>
+</div>
+</details><p>Le HR passe de 1.25 (approche naïve) à 1.38 (variable dépendante du temps) : comme attendu, l’approche naïve sous-estimait l’effet délétère de la complication. La différence est ici modeste, car les complications aigues surviennent tôt (entre J10 et J88) : le temps immortel est court au regard de plusieurs années de suivi. Voyons ce qu’il en est pour un évènement plus tardif.</p>
+</section><section id="à-vous-la-récidive" class="level3" data-number="4.4.4"><h3 data-number="4.4.4" class="anchored" data-anchor-id="à-vous-la-récidive">
+<span class="header-section-number">4.4.4</span> À vous : la récidive</h3>
+<p>La récidive (variable <code>rec</code>) survient elle aussi pendant le suivi. La variable <code>delrec_obs</code> (déjà créée) contient le délai entre l’inclusion et la récidive (en jours), et vaut <code>NA</code> chez les patients n’ayant pas récidivé.</p>
+<p><em>Évaluez l’effet de la récidive sur la survie globale, d’abord avec l’approche naïve (variable <code>rec</code>), puis en tant que variable dépendante du temps. Pour cela, ajoutez à <code>bone_td</code> une variable <code>rec_t</code> à l’aide de <code>tmerge()</code> et <code>tdc()</code>, en vous inspirant du code précédent.</em></p>
+<div id="qwebr-insertion-location-14"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="cell">
+<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Approche naïve</span></span>
+<span><span class="va">fit_cox_rec_naif</span> <span class="op">&lt;-</span> <span class="fu">coxph</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">delsv</span>, <span class="va">etat</span><span class="op">)</span> <span class="op">~</span> <span class="va">rec</span>, data <span class="op">=</span> <span class="va">bone</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit_cox_rec_naif</span><span class="op">)</span></span>
+<span><span class="co">## Variable dépendante du temps</span></span>
+<span><span class="va">bone_td</span> <span class="op">&lt;-</span> <span class="fu">tmerge</span><span class="op">(</span><span class="va">bone_td</span>, <span class="va">bone</span>, id <span class="op">=</span> <span class="va">num</span>, rec_t <span class="op">=</span> <span class="fu">tdc</span><span class="op">(</span><span class="va">delrec_obs</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">fit_cox_rec_td</span> <span class="op">&lt;-</span> <span class="fu">coxph</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">tstart</span>, <span class="va">tstop</span>, <span class="va">deces</span><span class="op">)</span> <span class="op">~</span> <span class="va">rec_t</span>, data <span class="op">=</span> <span class="va">bone_td</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit_cox_rec_td</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+coxph(formula = Surv(delsv, etat) ~ rec, data = bone)
+
+  n= 137, number of events= 81 
+
+      coef exp(coef) se(coef)     z Pr(&gt;|z|)    
+rec 1.1920    3.2936   0.2293 5.198 2.02e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    exp(coef) exp(-coef) lower .95 upper .95
+rec     3.294     0.3036     2.101     5.163
+
+Concordance= 0.606  (se = 0.026 )
+Likelihood ratio test= 25.82  on 1 df,   p=4e-07
+Wald test            = 27.02  on 1 df,   p=2e-07
+Score (logrank) test = 30.04  on 1 df,   p=4e-08</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+coxph(formula = Surv(tstart, tstop, deces) ~ rec_t, data = bone_td)
+
+  n= 205, number of events= 81 
+
+         coef exp(coef) se(coef)     z Pr(&gt;|z|)    
+rec_t  2.6067   13.5547   0.2345 11.12   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+      exp(coef) exp(-coef) lower .95 upper .95
+rec_t     13.55    0.07378      8.56     21.46
+
+Concordance= 0.702  (se = 0.027 )
+Likelihood ratio test= 104.8  on 1 df,   p=&lt;2e-16
+Wald test            = 123.6  on 1 df,   p=&lt;2e-16
+Score (logrank) test = 207.5  on 1 df,   p=&lt;2e-16</code></pre>
+</div>
+</div>
+</details>
+Le HR passe de 3.29 (approche naïve) à 13.55 (variable dépendante du temps) : le HR naïf est environ 4 fois plus faible que le HR correct, alors que pour la complication aigue les deux HR étaient proches (1.25 et 1.38). Quelle est la principale raison de cette différence ?
+<div id="radio_KESLDULVMQ" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_KESLDULVMQ" value=""><span>Parce que la récidive est une variable binaire.</span></label><label><input type="radio" autocomplete="off" name="radio_KESLDULVMQ" value="answer"><span>Parce que les récidives surviennent plus tard : une part beaucoup plus importante du suivi des patients 'récidive' est en réalité du temps immortel.</span></label><label><input type="radio" autocomplete="off" name="radio_KESLDULVMQ" value=""><span>Parce que le modèle dépendant du temps comporte plus de lignes que de patients.</span></label><label><input type="radio" autocomplete="off" name="radio_KESLDULVMQ" value=""><span>Parce que le modèle naïf ne respecte pas l'hypothèse de log-linéarité.</span></label>
+</div>
+<p>Chez les patients ayant récidivé, 58 % du temps de suivi précède la récidive (contre 5 % pour la complication aigue). Dans l’approche naïve, tout ce temps, pendant lequel aucun décès ne peut survenir, est attribué au groupe “récidive” : le risque de décès de ce groupe est alors fortement sous-estimé.</p>
+</section><section id="modèle-multivariable" class="level3" data-number="4.4.5"><h3 data-number="4.4.5" class="anchored" data-anchor-id="modèle-multivariable">
+<span class="header-section-number">4.4.5</span> Modèle multivariable</h3>
+<p>Un même modèle peut contenir à la fois des variables fixes (définies au temps zéro, notées <span class="math inline">\(Z\)</span> dans le cours) et des variables dépendantes du temps (notées <span class="math inline">\(W(t)\)</span>).</p>
+<p><em>Fittez un modèle de Cox évaluant simultanément l’effet de <code>ca_t</code>, <code>rec_t</code>, <code>age.pat</code> et <code>leuc.f</code> sur la survie globale. Stockez le résultat dans un objet nommé <code>fit_cox_td</code> avant d’afficher le résultat détaillé.</em> (On n’inclut pas <code>mtx.f</code>, pour laquelle l’hypothèse des hasards proportionnels était rejetée.)</p>
+<div id="qwebr-insertion-location-15"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<div class="cell">
+<details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit_cox_td</span> <span class="op">&lt;-</span> <span class="fu">coxph</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">tstart</span>, <span class="va">tstop</span>, <span class="va">deces</span><span class="op">)</span> <span class="op">~</span> <span class="va">ca_t</span> <span class="op">+</span> <span class="va">rec_t</span> <span class="op">+</span> <span class="va">age.pat</span> <span class="op">+</span> <span class="va">leuc.f</span>,</span>
+<span>                    data <span class="op">=</span> <span class="va">bone_td</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit_cox_td</span><span class="op">)</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<details><summary>Voir le résultat</summary><div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+coxph(formula = Surv(tstart, tstop, deces) ~ ca_t + rec_t + age.pat + 
+    leuc.f, data = bone_td)
+
+  n= 205, number of events= 81 
+
+                coef exp(coef) se(coef)      z Pr(&gt;|z|)    
+ca_t         0.75626   2.13028  0.30037  2.518   0.0118 *  
+rec_t        2.65522  14.22809  0.24826 10.695   &lt;2e-16 ***
+age.pat      0.02112   1.02135  0.01146  1.844   0.0652 .  
+leuc.fLAM C -0.41801   0.65836  0.31464 -1.329   0.1840    
+leuc.fLAL    0.23796   1.26865  0.28260  0.842   0.3998    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+            exp(coef) exp(-coef) lower .95 upper .95
+ca_t           2.1303    0.46942    1.1824     3.838
+rec_t         14.2281    0.07028    8.7464    23.145
+age.pat        1.0213    0.97910    0.9987     1.045
+leuc.fLAM C    0.6584    1.51893    0.3553     1.220
+leuc.fLAL      1.2687    0.78824    0.7291     2.207
+
+Concordance= 0.768  (se = 0.032 )
+Likelihood ratio test= 119.3  on 5 df,   p=&lt;2e-16
+Wald test            = 132.3  on 5 df,   p=&lt;2e-16
+Score (logrank) test = 220.4  on 5 df,   p=&lt;2e-16</code></pre>
+</div>
+</div>
+</details>
+Comment s’interprète le HR de 14.23 associé à <code>rec_t</code> ?
+<div id="radio_VDZHRELMGE" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_VDZHRELMGE" value=""><span>Les patients qui récidivent au cours du suivi ont, dès leur inclusion, un risque de décès multiplié par 14.23.</span></label><label><input type="radio" autocomplete="off" name="radio_VDZHRELMGE" value=""><span>La probabilité de décéder au cours du suivi est multipliée par 14.23 chez les patients qui récidivent.</span></label><label><input type="radio" autocomplete="off" name="radio_VDZHRELMGE" value="answer"><span>À tout instant <span class="math inline">\(t\)</span>, le risque instantané de décès d'un patient ayant déjà récidivé est multiplié par 14.23 par rapport à un patient n'ayant pas (encore) récidivé, à complication aigue, âge et type de leucémie égaux.</span></label><label><input type="radio" autocomplete="off" name="radio_VDZHRELMGE" value=""><span>Le risque de décès est multiplié par 14.23 à chaque jour écoulé depuis la récidive.</span></label>
+</div>
+Le HR associé à <code>ca_t</code> vaut 2.13. Que se passe-t-il quand un patient présente une complication aigue ?
+<div id="radio_DTCBTCYCFK" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_DTCBTCYCFK" value="answer"><span>À partir de ce moment, son risque instantané de décès est multiplié par 2.13 (soit une augmentation de 113 %), à récidive, âge et type de leucémie égaux.</span></label><label><input type="radio" autocomplete="off" name="radio_DTCBTCYCFK" value=""><span>Son risque instantané de décès est multiplié par 2.13, rétroactivement depuis son inclusion.</span></label><label><input type="radio" autocomplete="off" name="radio_DTCBTCYCFK" value=""><span>Sa probabilité de survie est divisée par 2.13.</span></label><label><input type="radio" autocomplete="off" name="radio_DTCBTCYCFK" value=""><span>Son risque instantané de décès augmente de 2.13 %.</span></label>
+</div>
+<p>Le HR associé à une variable dépendante du temps s’interprète donc comme un changement de risque <em>à partir du moment où la variable change de valeur</em> : quand <code>ca_t</code> passe de 0 à 1, le risque instantané de décès est multiplié par 2.13 ; quand <code>rec_t</code> passe de 0 à 1, il est multiplié par 14.23. La comparaison se fait à chaque instant entre les patients qui ont déjà présenté l’évènement intermédiaire et ceux qui ne l’ont pas encore présenté.</p>
+<p>Remarquez que le HR associé à la complication aigue est plus élevé dans ce modèle que dans le modèle univarié (1.38). Dans ces données, les patients ayant présenté une complication aigue récidivent moins souvent : ne pas tenir compte de la récidive masquait en partie l’effet délétère de la complication.</p>
+<div class="blue">
+<p><strong>À retenir</strong></p>
+<ul>
+<li>Une variable dont la valeur n’est pas connue au temps zéro ne doit jamais être utilisée comme une variable “initiale” dans un modèle de Cox : on s’expose au biais de temps immortel.</li>
+<li>Il faut la traiter comme une variable dépendante du temps : découpage des données en intervalles (<code>tmerge()</code>), puis <code>Surv(tstart, tstop, evenement)</code>.</li>
+<li>Le biais est d’autant plus fort que l’évènement intermédiaire survient tard dans le suivi.</li>
+</ul>
+</div>
+<p>Bravo, vous avez terminé cette partie du TP !</p>
 <p>Pour passer à la suite, appuyez sur le lien en bas à droite de cette page (ou sur la partie suivante à gauche)&nbsp;!</p>
 
 
-</section></main><!-- /main --><script>
+</section></section></main><!-- /main --><script>
 
 /* update total correct if #webex-total_correct exists */
 update_total_correct = function() {
