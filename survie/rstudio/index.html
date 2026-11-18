@@ -4,10 +4,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <title>TP analyses de survie</title>
+  <title>Sorbonne Université - Faculté de Santé</title>
   <link rel="stylesheet" href="./exlibris-r.8914b174.css" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23B84130'/%3E%3Cpath d='M9 8h9a5 5 0 0 1 5 5v11H14a5 5 0 0 0-5-5z' fill='%23F8F1E0'/%3E%3C/svg%3E" />
-  <meta property="og:title" content="TP analyses de survie" />
+  <link rel="icon" type="image/png" href="assets/custom/favicon.png" />
+  <link rel="stylesheet" href="assets/custom/custom.css" />
+  <style>@font-face { font-family: "Fira Sans"; src: url('assets/fonts/FiraSans-Regular.ttf'); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Fira Sans"; src: url('assets/fonts/FiraSans-Italic.ttf'); font-weight: 400; font-style: italic; }
+@font-face { font-family: "Fira Sans"; src: url('assets/fonts/FiraSans-Medium.ttf'); font-weight: 500; font-style: normal; }
+@font-face { font-family: "Fira Sans"; src: url('assets/fonts/FiraSans-Bold.ttf'); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Fira Mono"; src: url('assets/fonts/FiraMono-Regular.ttf'); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Fira Mono"; src: url('assets/fonts/FiraMono-Bold.ttf'); font-weight: 700; font-style: normal; }</style>
+  <style>:root { --accent-color: #AC182E; --accent-hover: #921427; --font-body: "Fira Sans", system-ui, sans-serif; --font-mono: "Fira Mono", ui-monospace, monospace; } @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --bg-primary: #FFFFFF; --text-primary: #263068; --bg-secondary: #eeeef3; --bg-tertiary: #dcdee7; --border-color: #c2c5d5; --text-secondary: #676e95; } } :root[data-theme="light"] { --bg-primary: #FFFFFF; --text-primary: #263068; --bg-secondary: #eeeef3; --bg-tertiary: #dcdee7; --border-color: #c2c5d5; --text-secondary: #676e95; }</style>
+  <style>.cm-editor { font-family: "Fira Mono", monospace; }</style>
+  <meta property="og:title" content="Sorbonne Université - Faculté de Santé" />
   <meta name="description" content="TP analyses de survie : R dans le navigateur" />
   <meta property="og:description" content="TP analyses de survie : R dans le navigateur" />
   <meta property="og:type" content="website" />
@@ -17,7 +26,7 @@
     #webrarian-loading {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: #ffffff;
+      background: #FFFFFF;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -29,18 +38,22 @@
     .webrarian-spinner {
       width: 50px; height: 50px;
       border: 4px solid #e0e0e0;
-      border-top-color: #2196F3;
+      border-top-color: #AC182E;
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin-bottom: 20px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    #webrarian-title { color: #666666; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; opacity: 0.7; }
-    #webrarian-subtitle { color: #666666; font-size: 28px; font-weight: 600; margin-bottom: 30px; }
-    #webrarian-status { color: #666666; font-size: 14px; opacity: 0.8; }
+    #webrarian-title { color: #263068; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; opacity: 0.7; }
+    #webrarian-subtitle { color: #263068; font-size: 28px; font-weight: 600; margin-bottom: 30px; }
+    #webrarian-status { color: #263068; font-size: 14px; opacity: 0.8; }
   
-    @media (prefers-color-scheme: dark) { :where(:root:not([data-theme="light"])) #webrarian-loading { background: #1e1e1e; } :where(:root:not([data-theme="light"])) .webrarian-spinner { border-color: #444444; border-top-color: #2196F3; } :where(:root:not([data-theme="light"])) #webrarian-title { color: #aaaaaa; } :where(:root:not([data-theme="light"])) #webrarian-subtitle { color: #aaaaaa; } :where(:root:not([data-theme="light"])) #webrarian-status { color: #aaaaaa; } }
-    :where(:root[data-theme="dark"]) #webrarian-loading { background: #1e1e1e; } :where(:root[data-theme="dark"]) .webrarian-spinner { border-color: #444444; border-top-color: #2196F3; } :where(:root[data-theme="dark"]) #webrarian-title { color: #aaaaaa; } :where(:root[data-theme="dark"]) #webrarian-subtitle { color: #aaaaaa; } :where(:root[data-theme="dark"]) #webrarian-status { color: #aaaaaa; }
+    @media (prefers-color-scheme: dark) { :where(:root:not([data-theme="light"])) #webrarian-loading { background: #1e1e1e; } :where(:root:not([data-theme="light"])) .webrarian-spinner { border-color: #444444; border-top-color: #AC182E; } :where(:root:not([data-theme="light"])) #webrarian-title { color: #aaaaaa; } :where(:root:not([data-theme="light"])) #webrarian-subtitle { color: #aaaaaa; } :where(:root:not([data-theme="light"])) #webrarian-status { color: #aaaaaa; } }
+    :where(:root[data-theme="dark"]) #webrarian-loading { background: #1e1e1e; } :where(:root[data-theme="dark"]) .webrarian-spinner { border-color: #444444; border-top-color: #AC182E; } :where(:root[data-theme="dark"]) #webrarian-title { color: #aaaaaa; } :where(:root[data-theme="dark"]) #webrarian-subtitle { color: #aaaaaa; } :where(:root[data-theme="dark"]) #webrarian-status { color: #aaaaaa; }
+  
+    .webrarian-logo-dark { display: none; }
+    @media (prefers-color-scheme: dark) { :where(:root:not([data-theme="light"])) .webrarian-logo-light { display: none; } :where(:root:not([data-theme="light"])) .webrarian-logo-dark { display: block; } }
+    :where(:root[data-theme="dark"]) .webrarian-logo-light { display: none; } :where(:root[data-theme="dark"]) .webrarian-logo-dark { display: block; }
   </style>
 </head>
 
@@ -49,7 +62,7 @@
   <div id="webrarian-loading">
     <div id="webrarian-title">Opening Webrarian Project</div>
     <div id="webrarian-subtitle">TP analyses de survie</div>
-    
+    <img class="webrarian-logo-light" src="assets/custom/logo.png" alt="Logo" style="width: 200px; height: 80px; margin-bottom: 20px;" /><img class="webrarian-logo-dark" src="assets/custom/logo-dark.png" alt="Logo" style="width: 200px; height: 80px; margin-bottom: 20px;" />
     <div class="webrarian-spinner"></div>
     <div id="webrarian-status">Chargement de R dans votre navigateur (cela peut prendre une minute)…</div>
   </div>
