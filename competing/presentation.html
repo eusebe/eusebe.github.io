@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.20">
+<meta name="generator" content="quarto-1.11.9">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Au-delà du hazard ratio : IPTW, g-formula, IPCW et estimands en présence de risques compétitifs.">
 <title>Présentation des données – TP Analyse causale de la survie : censure dépendante, confusion et risques compétitifs</title>
@@ -72,14 +72,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-d3f7f8e73c8d287b30bcf59c2b563615.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-01a495efc5497ac6e3f5457e7ed18e65.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -404,7 +405,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"code":"if (Sys.info()[\"nodename\"] == \"emscripten\") {\n  base_url <- sub(\"/[^/]*$\", \"/\", quarto_page_url)\n  download.file(\n    paste0(base_url, \"df.csv\"),\n    \"df.csv\", quiet = TRUE\n  )\n}\nlibrary(survival)\nlibrary(dplyr)\nlibrary(ggplot2)\ndf <- read.csv(\"df.csv\")","id":1,"options":{"autorun":"true","classes":"","comment":"","context":"setup","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"library(survival)\nlibrary(dplyr)\ndf <- read.csv(\"df.csv\")\n\n## Affichez les premières lignes, les dimensions, le nombre d'individus,\n## le nombre de lignes où Y = 1 et le nombre de lignes où D = 1","id":2,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-2","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"## Créez df_base : une ligne par individu, avec A, L1-L4 (baseline),\n## time (derniere valeur de k), et les statuts finaux Y, D, C","id":3,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-3","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"## Surv(time, Y) : Y = 1 si evenement d'interet, 0 sinon (censure, y compris D et C\n## pour l'instant : c'est une simplification qu'on lèvera en Partie 2)","id":4,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-4","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+globalThis.qwebrCellDetails = [{"code":"if (Sys.info()[\"nodename\"] == \"emscripten\") {\n  base_url <- sub(\"/[^/]*$\", \"/\", quarto_page_url)\n  download.file(\n    paste0(base_url, \"df.csv\"),\n    \"df.csv\", quiet = TRUE\n  )\n}\nlibrary(survival)\nlibrary(dplyr)\nlibrary(ggplot2)\ndf <- read.csv(\"df.csv\")","id":1,"options":{"autorun":"true","classes":"","comment":"","context":"setup","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"library(survival)\nlibrary(dplyr)\ndf <- read.csv(\"df.csv\")\n\n## Affichez les premières lignes, les dimensions, le nombre d'individus,\n## le nombre de lignes où Y = 1 et le nombre de lignes où D = 1","id":2,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-2","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"## Créez df_base : une ligne par individu, avec A, L1-L4 (à l'inclusion),\n## time (derniere valeur de k), et les statuts finaux Y, D, C","id":3,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-3","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"## Surv(time, Y) : Y = 1 si evenement d'interet, 0 sinon (censure, y compris D et C\n## pour l'instant : c'est une simplification qu'on lèvera en Partie 2)","id":4,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-4","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 </script><script type="module">
 // Declare startupMessageQWebR globally
@@ -1685,15 +1686,15 @@ window.Quarto = {
 };
 </script><link rel="stylesheet" href="include/webex.css">
 </head>
-<body class="nav-sidebar floating quarto-light">
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Aller au contenu principal</a>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav" aria-label="Barre d'outils"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./presentation.html">Présentation des données</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="Fil d'Ariane"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./presentation.html">Présentation des données</a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
@@ -1701,7 +1702,7 @@ window.Quarto = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Site web"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">TP Analyse causale de la survie : censure dépendante, confusion et risques compétitifs</a> 
     </div>
@@ -1754,17 +1755,17 @@ window.Quarto = {
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active"><h2 id="toc-title">Table des matières</h2>
    
   <ul>
 <li><a href="#pr%C3%A9sentation" id="toc-présentation" class="nav-link active" data-scroll-target="#pr%C3%A9sentation">Présentation</a></li>
   <li><a href="#chargement-et-exploration" id="toc-chargement-et-exploration" class="nav-link" data-scroll-target="#chargement-et-exploration">Chargement et exploration</a></li>
-  <li><a href="#construire-la-base-baseline" id="toc-construire-la-base-baseline" class="nav-link" data-scroll-target="#construire-la-base-baseline">Construire la base <em>baseline</em></a></li>
+  <li><a href="#construire-une-base-%C3%A0-une-ligne-par-individu" id="toc-construire-une-base-à-une-ligne-par-individu" class="nav-link" data-scroll-target="#construire-une-base-%C3%A0-une-ligne-par-individu">Construire une base à une ligne par individu</a></li>
   <li><a href="#analyse-brute-non-ajust%C3%A9e" id="toc-analyse-brute-non-ajustée" class="nav-link" data-scroll-target="#analyse-brute-non-ajust%C3%A9e">Analyse brute (non ajustée)</a></li>
   </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/loader.js"></script><script type="module" id="qwebr-monaco-editor-init">
+<main class="content" id="quarto-document-content" tabindex="-1"><script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/loader.js"></script><script type="module" id="qwebr-monaco-editor-init">
 
   // Configure the Monaco Editor's loader
   require.config({
@@ -2062,8 +2063,8 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </header><div id="qwebr-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <section id="présentation" class="level2"><h2 class="anchored" data-anchor-id="présentation">Présentation</h2>
-<p>Dans ce TP, nous utilisons les données de l’essai DES (Byar &amp; Green), portant sur <strong>252 patients</strong> atteints d’un cancer de la prostate avancé, randomisés entre un traitement hormonal <span class="math inline">\(A\)</span> (DES, œstrogène de synthèse, 5 mg/jour) et un placebo. L’objectif est d’évaluer l’effet de <span class="math inline">\(A\)</span> sur le <strong>décès par cancer de la prostate</strong> <span class="math inline">\(Y\)</span> (évènement d’intérêt), en présence d’un <strong>risque compétitif</strong> <span class="math inline">\(D\)</span> (décès de toute autre cause) et d’une <strong>censure</strong> <span class="math inline">\(C\)</span> (patient vivant à la fin de l’étude).</p>
-<p>Les données sont au format <strong>person-period</strong> (une ligne par individu et par mois de suivi <span class="math inline">\(k\)</span>), qui correspond aux notations en hazards discrets vues en cours.</p>
+<p>Dans ce TP, nous utilisons les données de l’essai DES (Byar &amp; Green), portant sur 252 patients atteints d’un cancer de la prostate avancé, randomisés entre un traitement hormonal <span class="math inline">\(A\)</span> (DES, œstrogène de synthèse, 5 mg/jour) et un placebo. L’objectif est d’évaluer l’effet de <span class="math inline">\(A\)</span> sur le décès par cancer de la prostate <span class="math inline">\(Y\)</span> (évènement d’intérêt), en présence d’un risque compétitif <span class="math inline">\(D\)</span> (décès de toute autre cause) et d’une censure <span class="math inline">\(C\)</span> (patient vivant à la fin de l’étude).</p>
+<p>Les données sont au format <em>person-period</em> : une ligne par individu et par mois de suivi <span class="math inline">\(k\)</span>, ce qui correspond aux notations en hazards discrets vues en cours.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 43%">
@@ -2084,8 +2085,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </tr>
 <tr class="odd">
 <td><code>A</code></td>
-<td>Traitement à l’inclusion (0 = placebo, 1 = DES), <strong>randomisé et fixé pour tout le suivi</strong>
-</td>
+<td>Traitement à l’inclusion (0 = placebo, 1 = DES), randomisé et fixé pour tout le suivi</td>
 </tr>
 <tr class="even">
 <td><code>L1</code></td>
@@ -2105,12 +2105,11 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </tr>
 <tr class="even">
 <td><code>Y</code></td>
-<td>Décès par cancer de la prostate pendant la période <span class="math inline">\(k\)</span> (0/1) : <strong>évènement d’intérêt</strong>
-</td>
+<td>Décès par cancer de la prostate pendant la période <span class="math inline">\(k\)</span> (0/1) : évènement d’intérêt</td>
 </tr>
 <tr class="odd">
 <td><code>D</code></td>
-<td>Décès par une autre cause pendant la période <span class="math inline">\(k\)</span> (0/1) : <strong>risque compétitif</strong> de <span class="math inline">\(Y\)</span>
+<td>Décès par une autre cause pendant la période <span class="math inline">\(k\)</span> (0/1) : risque compétitif de <span class="math inline">\(Y\)</span>
 </td>
 </tr>
 <tr class="even">
@@ -2129,7 +2128,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </div>
 </div>
 </div>
-<p><strong>Lecture du DAG :</strong> <span class="math inline">\(A\)</span> est <strong>randomisé</strong> (aucune flèche entrante) : il influence <span class="math inline">\(Y\)</span> et <span class="math inline">\(D\)</span> (en rouge). <span class="math inline">\(L\)</span> (covariables baseline) influence <span class="math inline">\(Y\)</span>, <span class="math inline">\(D\)</span> et potentiellement <span class="math inline">\(C\)</span>, mais pas <span class="math inline">\(A\)</span> : ce n’est donc <strong>pas</strong> un facteur de confusion ici (contrairement à une étude observationnelle), même s’il reste utile de l’inclure dans les modèles pour la précision et pour la censure dépendante.</p>
+<p>Dans ce DAG, <span class="math inline">\(A\)</span> est randomisé (aucune flèche entrante) et influence <span class="math inline">\(Y\)</span> et <span class="math inline">\(D\)</span> (flèches rouges). Les covariables <span class="math inline">\(L\)</span> influencent <span class="math inline">\(Y\)</span>, <span class="math inline">\(D\)</span> et éventuellement <span class="math inline">\(C\)</span>, mais pas <span class="math inline">\(A\)</span>. Elles ne sont donc pas des facteurs de confusion ici, contrairement à ce qui se passerait dans une étude observationnelle. On les inclut quand même dans les modèles, pour la précision et pour tenir compte d’une éventuelle censure dépendante.</p>
 </section><section id="chargement-et-exploration" class="level2"><h2 class="anchored" data-anchor-id="chargement-et-exploration">Chargement et exploration</h2>
 <p><em>Chargez les données et affichez les premières lignes. Vérifiez les dimensions de la base, le nombre d’individus, et le nombre total d’évènements <span class="math inline">\(Y\)</span> et <span class="math inline">\(D\)</span>.</em></p>
 <div id="qwebr-insertion-location-2"></div>
@@ -2182,29 +2181,28 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 6     5     3     0     0 [60,75)     0     0     0     0     0</code></pre>
 </div>
 </div>
-</details><p>La base comporte <strong>8865</strong> lignes, <strong>252</strong> individus distincts, <strong>64</strong> décès par cancer de la prostate et <strong>124</strong> décès par une autre cause.</p>
+</details><p>La base comporte 8865 lignes, 252 individus distincts, 64 décès par cancer de la prostate et 124 décès par une autre cause.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Note
+<span class="screen-reader-only">Note</span>Format <em>person-period</em>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Format person-period :</strong> chaque individu a autant de lignes que de mois suivis avant l’évènement, le décès, la censure, ou la fin d’étude. La dernière ligne d’un individu indique son statut final (<span class="math inline">\(Y\)</span>, <span class="math inline">\(D\)</span>, ou <span class="math inline">\(C\)</span> à 1 si l’évènement correspondant est survenu pendant cette période).</p>
+<p>Chaque individu a autant de lignes que de mois suivis avant l’évènement, le décès, la censure, ou la fin d’étude. La dernière ligne d’un individu indique son statut final (<span class="math inline">\(Y\)</span>, <span class="math inline">\(D\)</span>, ou <span class="math inline">\(C\)</span> à 1 si l’évènement correspondant est survenu pendant cette période).</p>
 </div>
 </div>
-</section><section id="construire-la-base-baseline" class="level2"><h2 class="anchored" data-anchor-id="construire-la-base-baseline">Construire la base <em>baseline</em>
-</h2>
-<p>Pour les analyses de cette première partie du TP, il est pratique de résumer les données en <strong>une ligne par individu</strong>, avec le statut final et le temps de suivi total.</p>
-<p><em>Créez <code>df_base</code> contenant : <code>id</code>, <code>A</code>, <code>L1</code>-<code>L4</code> (valeurs baseline, constantes pour chaque individu), <code>time</code> (dernière valeur de <code>k</code>, c’est-à-dire le nombre de mois suivis), <code>Y</code>, <code>D</code>, <code>C</code> (statuts à la dernière période observée).</em></p>
+</section><section id="construire-une-base-à-une-ligne-par-individu" class="level2"><h2 class="anchored" data-anchor-id="construire-une-base-à-une-ligne-par-individu">Construire une base à une ligne par individu</h2>
+<p>Pour les analyses de cette première partie du TP, il est pratique de résumer les données en une ligne par individu, avec le statut final et le temps de suivi total.</p>
+<p><em>Créez <code>df_base</code> contenant : <code>id</code>, <code>A</code>, <code>L1</code>-<code>L4</code> (valeurs à l’inclusion, constantes pour chaque individu), <code>time</code> (dernière valeur de <code>k</code>, c’est-à-dire le nombre de mois suivis), <code>Y</code>, <code>D</code>, <code>C</code> (statuts à la dernière période observée).</em></p>
 <div id="qwebr-insertion-location-3"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="cell">
 <details class="code-fold"><summary>Montrez moi comment faire !</summary><div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## On resume df (format person-period) en une ligne par individu :</span></span>
-<span><span class="co">## - first() pour les covariables baseline (constantes pour un individu donne)</span></span>
+<span><span class="co">## - first() pour les covariables mesurees a l'inclusion (constantes pour un individu)</span></span>
 <span><span class="co">## - last() pour le temps de suivi total et les statuts finaux</span></span>
 <span><span class="va">df_base</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -2239,7 +2237,7 @@ Note
 </div>
 </div>
 </details></section><section id="analyse-brute-non-ajustée" class="level2"><h2 class="anchored" data-anchor-id="analyse-brute-non-ajustée">Analyse brute (non ajustée)</h2>
-<p>Avant tout ajustement, et <strong>en ignorant pour l’instant le risque compétitif <span class="math inline">\(D\)</span></strong> (traité comme une censure, comme si <span class="math inline">\(Y\)</span> était le seul évènement possible), comparons les courbes de survie selon <span class="math inline">\(A\)</span>.</p>
+<p>Avant tout ajustement, comparons les courbes de survie selon <span class="math inline">\(A\)</span>, en traitant pour l’instant le risque compétitif <span class="math inline">\(D\)</span> comme une censure, comme si <span class="math inline">\(Y\)</span> était le seul évènement possible.</p>
 <p><em>Tracez les courbes de Kaplan-Meier de l’évènement <span class="math inline">\(Y\)</span> selon <span class="math inline">\(A\)</span> (traitez <span class="math inline">\(D\)</span> et <span class="math inline">\(C\)</span> comme des censures pour l’instant), puis extrayez la survie estimée à 36 mois dans chaque groupe.</em></p>
 <div id="qwebr-insertion-location-4"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -2294,8 +2292,8 @@ upper 95% CI
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>On observe une différence de survie entre les groupes <span class="math inline">\(A=0\)</span> et <span class="math inline">\(A=1\)</span>. Comme <span class="math inline">\(A\)</span> est <strong>randomisé</strong>, cette différence brute a bien une interprétation causale sur “<span class="math inline">\(Y\)</span> traité comme seul évènement possible”. Ce n’est cependant pas la bonne quantité à regarder : <span class="math inline">\(D\)</span> (décès par une autre cause) est un risque compétitif, pas une censure ordinaire. Le traiter comme une censure suppose implicitement que les personnes décédées d’une autre cause auraient pu, plus tard, mourir du cancer de la prostate.</p>
-<p>La Partie 1 pratique IPTW, g-formula et IPCW sur cette même simplification (utile même en essai randomisé, pour la censure dépendante et par souci d’exercice). La Partie 2 montrera comment estimer correctement le risque de <span class="math inline">\(Y\)</span> en tenant compte de <span class="math inline">\(D\)</span> comme risque compétitif.</p>
+<p>On observe une différence de survie entre les groupes <span class="math inline">\(A=0\)</span> et <span class="math inline">\(A=1\)</span>. Comme <span class="math inline">\(A\)</span> est randomisé, cette différence a bien une interprétation causale, mais pour une quantité mal choisie, où <span class="math inline">\(Y\)</span> serait le seul évènement possible. Or <span class="math inline">\(D\)</span> (décès par une autre cause) est un risque compétitif, pas une censure ordinaire. Le traiter comme une censure revient à supposer que les patients décédés d’une autre cause auraient pu, plus tard, mourir du cancer de la prostate.</p>
+<p>La Partie 1 conserve cette simplification pour pratiquer l’IPTW, la g-formula et l’IPCW. La Partie 2 montrera comment estimer le risque de <span class="math inline">\(Y\)</span> en tenant compte de <span class="math inline">\(D\)</span>.</p>
 </div>
 </div>
 </div>
@@ -2736,7 +2734,8 @@ document.addEventListener("DOMContentLoaded", () => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -2745,8 +2744,69 @@ document.addEventListener("DOMContentLoaded", () => {
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -2760,6 +2820,7 @@ document.addEventListener("DOMContentLoaded", () => {
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -2922,44 +2983,54 @@ document.addEventListener("DOMContentLoaded", () => {
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -3057,7 +3128,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
-  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+  </script><script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Code défilable","output":"Sortie défilable"};
+  </script><nav class="page-navigation" aria-label="Page"><div class="nav-page nav-page-previous">
       <a href="./index.html" class="pagination-link" aria-label="Introduction">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Introduction</span>
       </a>          

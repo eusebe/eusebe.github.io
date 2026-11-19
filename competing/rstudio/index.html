@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Sorbonne Université - Faculté de Santé</title>
+  <link rel="stylesheet" href="./exlibris-r.8914b174.css" />
+  <link rel="icon" type="image/png" href="assets/custom/favicon.png" />
+  <link rel="stylesheet" href="assets/custom/custom.css" />
+  <style>@font-face { font-family: "Fira Sans"; src: url('assets/fonts/FiraSans-Regular.ttf'); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Fira Sans"; src: url('assets/fonts/FiraSans-Italic.ttf'); font-weight: 400; font-style: italic; }
+@font-face { font-family: "Fira Sans"; src: url('assets/fonts/FiraSans-Medium.ttf'); font-weight: 500; font-style: normal; }
+@font-face { font-family: "Fira Sans"; src: url('assets/fonts/FiraSans-Bold.ttf'); font-weight: 700; font-style: normal; }
+@font-face { font-family: "Fira Mono"; src: url('assets/fonts/FiraMono-Regular.ttf'); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Fira Mono"; src: url('assets/fonts/FiraMono-Bold.ttf'); font-weight: 700; font-style: normal; }</style>
+  <style>:root { --accent-color: #AC182E; --accent-hover: #921427; --font-body: "Fira Sans", system-ui, sans-serif; --font-mono: "Fira Mono", ui-monospace, monospace; } @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --bg-primary: #FFFFFF; --text-primary: #263068; --bg-secondary: #eeeef3; --bg-tertiary: #dcdee7; --border-color: #c2c5d5; --text-secondary: #676e95; } } :root[data-theme="light"] { --bg-primary: #FFFFFF; --text-primary: #263068; --bg-secondary: #eeeef3; --bg-tertiary: #dcdee7; --border-color: #c2c5d5; --text-secondary: #676e95; }</style>
+  <style>.cm-editor { font-family: "Fira Mono", monospace; }</style>
+  <meta property="og:title" content="Sorbonne Université - Faculté de Santé" />
+  <meta name="description" content="TP survie causale et risques compétitifs : R dans le navigateur" />
+  <meta property="og:description" content="TP survie causale et risques compétitifs : R dans le navigateur" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <script>(function () { try { var root = document.documentElement; if (!root.hasAttribute("data-theme")) { var stored = localStorage.getItem("exlibris-theme:" + location.origin + location.pathname.replace(/\/index\.html$/, "/")); if (stored === "light" || stored === "dark") root.setAttribute("data-theme", stored); } } catch (e) {} })();</script>
+  <style>
+    #webrarian-loading {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    #webrarian-loading.hidden { display: none; }
+    .webrarian-spinner {
+      width: 50px; height: 50px;
+      border: 4px solid #e0e0e0;
+      border-top-color: #AC182E;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #webrarian-title { color: #263068; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; opacity: 0.7; }
+    #webrarian-subtitle { color: #263068; font-size: 28px; font-weight: 600; margin-bottom: 30px; }
+    #webrarian-status { color: #263068; font-size: 14px; opacity: 0.8; }
+  
+    @media (prefers-color-scheme: dark) { :where(:root:not([data-theme="light"])) #webrarian-loading { background: #1e1e1e; } :where(:root:not([data-theme="light"])) .webrarian-spinner { border-color: #444444; border-top-color: #AC182E; } :where(:root:not([data-theme="light"])) #webrarian-title { color: #aaaaaa; } :where(:root:not([data-theme="light"])) #webrarian-subtitle { color: #aaaaaa; } :where(:root:not([data-theme="light"])) #webrarian-status { color: #aaaaaa; } }
+    :where(:root[data-theme="dark"]) #webrarian-loading { background: #1e1e1e; } :where(:root[data-theme="dark"]) .webrarian-spinner { border-color: #444444; border-top-color: #AC182E; } :where(:root[data-theme="dark"]) #webrarian-title { color: #aaaaaa; } :where(:root[data-theme="dark"]) #webrarian-subtitle { color: #aaaaaa; } :where(:root[data-theme="dark"]) #webrarian-status { color: #aaaaaa; }
+  
+    .webrarian-logo-dark { display: none; }
+    @media (prefers-color-scheme: dark) { :where(:root:not([data-theme="light"])) .webrarian-logo-light { display: none; } :where(:root:not([data-theme="light"])) .webrarian-logo-dark { display: block; } }
+    :where(:root[data-theme="dark"]) .webrarian-logo-light { display: none; } :where(:root[data-theme="dark"]) .webrarian-logo-dark { display: block; }
+  </style>
+</head>
+
+<body>
+  
+  <div id="webrarian-loading">
+    <div id="webrarian-title">Opening Webrarian Project</div>
+    <div id="webrarian-subtitle">TP survie causale et risques compétitifs</div>
+    <img class="webrarian-logo-light" src="assets/custom/logo.png" alt="Logo" style="width: 200px; height: 80px; margin-bottom: 20px;" /><img class="webrarian-logo-dark" src="assets/custom/logo-dark.png" alt="Logo" style="width: 200px; height: 80px; margin-bottom: 20px;" />
+    <div class="webrarian-spinner"></div>
+    <div id="webrarian-status">Chargement de R dans votre navigateur (cela peut prendre une minute)…</div>
+  </div>
+  
+  <div id="root"></div>
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+  <script>window.__VIEWER_CONFIG__ = {"schema-version":1,"engine":"webr","engine-version":"0.6.0","engine-base-url":"https://webr.r-wasm.org/v0.6.0/","project-name":"TP survie causale et risques compétitifs","packages":{"install":["survival","dplyr","ggplot2","knitr"],"repos":[],"repo-url":"https://repo.r-wasm.org"},"files":[{"name":"scripts/01-presentation-donnees.R","vfs-path":"/home/web_user/scripts/01-presentation-donnees.R","fetch-path":"vfs-files/scripts/01-presentation-donnees.R"},{"name":"scripts/02-confusion-censure.R","vfs-path":"/home/web_user/scripts/02-confusion-censure.R","fetch-path":"vfs-files/scripts/02-confusion-censure.R"},{"name":"scripts/03-risques-competitifs.R","vfs-path":"/home/web_user/scripts/03-risques-competitifs.R","fetch-path":"vfs-files/scripts/03-risques-competitifs.R"},{"name":"scripts/04-ponderation-decomposition.R","vfs-path":"/home/web_user/scripts/04-ponderation-decomposition.R","fetch-path":"vfs-files/scripts/04-ponderation-decomposition.R"},{"name":"correction/correction.R","vfs-path":"/home/web_user/correction/correction.R","fetch-path":"vfs-files/correction/correction.R"},{"name":"df.csv","vfs-path":"/home/web_user/df.csv","fetch-path":"vfs-files/df.csv"}],"mount-point":"/home/web_user","panels":{"editor":true,"terminal":true,"files":true,"plot":true,"environment":true},"auto-open":["/home/web_user/scripts/01-presentation-donnees.R"],"auto-run":[],"startup-script":null,"share-links":"fixed","persist-edits":true};</script>
+  <script>
+  (function () {
+    // webR resolves its engine and package repository URLs inside its worker
+    // (served from webr/v<version>/, or a blob: URL when the engine comes from
+    // the CDN), never against this page. Make every relative one absolute
+    // before the viewer reads the config.
+    var config = window.__VIEWER_CONFIG__;
+    if (!config) return;
+    function absolute(url) {
+      if (typeof url !== "string" || url === "" || /^[a-z][a-z0-9+.-]*:/i.test(url)) return url;
+      return new URL(url, document.baseURI).href;
+    }
+    if (config["engine-base-url"]) config["engine-base-url"] = absolute(config["engine-base-url"]);
+    var packages = config.packages;
+    if (packages) {
+      if (packages["repo-url"]) packages["repo-url"] = absolute(packages["repo-url"]);
+      if (Array.isArray(packages.repos)) packages.repos = packages.repos.map(absolute);
+    }
+  })();
+  </script>
+  <script>
+  (function () {
+    var splash = document.getElementById("webrarian-loading");
+    var root = document.getElementById("root");
+    if (!splash || !root) return;
+    var mounted = false;
+    var failed = false;
+    var obs = null;
+    function dismiss() {
+      if (mounted) return;
+      mounted = true;
+      if (obs) obs.disconnect();
+      splash.removeAttribute("data-state");
+      splash.classList.add("hidden");
+    }
+    function showError(message) {
+      if (mounted) return;
+      splash.setAttribute("data-state", "error");
+      var spinner = splash.querySelector(".webrarian-spinner");
+      if (spinner) spinner.style.display = "none";
+      var status = document.getElementById("webrarian-status");
+      if (!status) return;
+      status.textContent = message + " ";
+      var retry = document.createElement("button");
+      retry.type = "button";
+      retry.textContent = "Reload";
+      retry.addEventListener("click", function () { location.reload(); });
+      status.appendChild(retry);
+    }
+    if (root.childElementCount > 0) { dismiss(); return; }
+    obs = new MutationObserver(function () {
+      if (root.childElementCount > 0) dismiss();
+    });
+    obs.observe(root, { childList: true });
+    // The viewer bundle itself failed to load: terminal.
+    window.addEventListener("error", function (event) {
+      var el = event.target;
+      if (!mounted && el && el.tagName === "SCRIPT" && el.type === "module") {
+        failed = true;
+        obs.disconnect();
+        showError("The viewer (" + (el.getAttribute("src") || "script") + ") could not be loaded.");
+      }
+    }, true);
+    // Soft: say so, but keep observing, so a late mount still takes over.
+    setTimeout(function () {
+      if (!mounted && !failed) {
+        showError("The viewer is taking longer than expected to start. Check your connection, or reload.");
+      }
+    }, 60000);
+  })();
+  </script>
+  <script type="module" src="./exlibris-r.0f36498a.js"></script>
+</body>
+
+</html>

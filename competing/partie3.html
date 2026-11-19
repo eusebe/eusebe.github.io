@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.20">
+<meta name="generator" content="quarto-1.11.9">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Au-delà du hazard ratio : IPTW, g-formula, IPCW et estimands en présence de risques compétitifs.">
 <title>3&nbsp; Partie 3 : pondération (IPW) et décomposition – TP Analyse causale de la survie : censure dépendante, confusion et risques compétitifs</title>
@@ -72,14 +72,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="./partie2.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-d3f7f8e73c8d287b30bcf59c2b563615.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-01a495efc5497ac6e3f5457e7ed18e65.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -1685,15 +1686,15 @@ window.Quarto = {
 };
 </script><link rel="stylesheet" href="include/webex.css">
 </head>
-<body class="nav-sidebar floating quarto-light">
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Aller au contenu principal</a>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav" aria-label="Barre d'outils"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./partie3.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Partie 3 : pondération (IPW) et décomposition</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="Fil d'Ariane"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./partie3.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Partie 3 : pondération (IPW) et décomposition</span></a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
@@ -1701,7 +1702,7 @@ window.Quarto = {
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Site web"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">TP Analyse causale de la survie : censure dépendante, confusion et risques compétitifs</a> 
     </div>
@@ -1754,13 +1755,13 @@ window.Quarto = {
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active"><h2 id="toc-title">Table des matières</h2>
    
   <ul>
 <li><a href="#objectif" id="toc-objectif" class="nav-link active" data-scroll-target="#objectif">Objectif</a></li>
   <li><a href="#note-sur-la-session-r" id="toc-note-sur-la-session-r" class="nav-link" data-scroll-target="#note-sur-la-session-r">Note sur la session R</a></li>
   <li><a href="#%C3%A9tape-1---mod%C3%A8le-de-censure-et-poids-ipcw" id="toc-étape-1---modèle-de-censure-et-poids-ipcw" class="nav-link" data-scroll-target="#%C3%A9tape-1---mod%C3%A8le-de-censure-et-poids-ipcw">Étape 1 - Modèle de censure et poids IPCW</a></li>
-  <li><a href="#%C3%A9tape-2---poids-risque-net-censure-d" id="toc-étape-2---poids-risque-net-censure-d" class="nav-link" data-scroll-target="#%C3%A9tape-2---poids-risque-net-censure-d">Étape 2 - Poids “risque net” (censure × D)</a></li>
+  <li><a href="#%C3%A9tape-2---poids-risque-net-censure-d" id="toc-étape-2---poids-risque-net-censure-d" class="nav-link" data-scroll-target="#%C3%A9tape-2---poids-risque-net-censure-d">Étape 2 - Poids « risque net » (censure × D)</a></li>
   <li><a href="#%C3%A9tape-3---effet-total-et-risque-net-par-ipw" id="toc-étape-3---effet-total-et-risque-net-par-ipw" class="nav-link" data-scroll-target="#%C3%A9tape-3---effet-total-et-risque-net-par-ipw">Étape 3 - Effet total et risque net, par IPW</a></li>
   <li><a href="#%C3%A9tape-4---effet-s%C3%A9parable-par-ipw" id="toc-étape-4---effet-séparable-par-ipw" class="nav-link" data-scroll-target="#%C3%A9tape-4---effet-s%C3%A9parable-par-ipw">Étape 4 - Effet séparable, par IPW</a></li>
   <li><a href="#%C3%A9tape-5---comparer-g-formula-et-ipw" id="toc-étape-5---comparer-g-formula-et-ipw" class="nav-link" data-scroll-target="#%C3%A9tape-5---comparer-g-formula-et-ipw">Étape 5 - Comparer g-formula et IPW</a></li>
@@ -1768,7 +1769,7 @@ window.Quarto = {
   </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/loader.js"></script><script type="module" id="qwebr-monaco-editor-init">
+<main class="content" id="quarto-document-content" tabindex="-1"><script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/loader.js"></script><script type="module" id="qwebr-monaco-editor-init">
 
   // Configure the Monaco Editor's loader
   require.config({
@@ -2068,15 +2069,17 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </header><div id="qwebr-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <section id="objectif" class="level2"><h2 class="anchored" data-anchor-id="objectif">Objectif</h2>
-<p>Cette partie reproduit les trois mêmes estimands que la Partie 2 (effet total, risque net, effet séparable), mais par <strong>pondération (IPW)</strong> plutôt que par g-formula, comme dans la Partie 4 du cours. Elle termine par la <strong>décomposition</strong> de l’effet total en effet direct + effet indirect séparables.</p>
+<p>Cette partie reproduit les trois mêmes estimands que la Partie 2 (effet total, risque net, effet séparable), mais par pondération (IPW) plutôt que par g-formula, comme dans la Partie 4 du cours. Elle se termine par la décomposition de l’effet total en effets direct et indirect séparables.</p>
 </section><section id="note-sur-la-session-r" class="level2"><h2 class="anchored" data-anchor-id="note-sur-la-session-r">Note sur la session R</h2>
+<p>Les variables suivantes sont disponibles (elles sont reconstruites au chargement de la page) :</p>
 <ul>
 <li>
-<code>df</code> : base person-period (reconstruite dans le contexte de setup)</li>
+<code>df</code> : base au format <em>person-period</em>
+</li>
 <li>
 <code>K &lt;- 36</code> : nombre de périodes de suivi</li>
 </ul></section><section id="étape-1---modèle-de-censure-et-poids-ipcw" class="level2"><h2 class="anchored" data-anchor-id="étape-1---modèle-de-censure-et-poids-ipcw">Étape 1 - Modèle de censure et poids IPCW</h2>
-<p><em>Modélisez <span class="math inline">\(\Pr(C=1\mid A, L)\)</span> et calculez le poids IPCW cumulé (poids “effet total”).</em></p>
+<p><em>Modélisez <span class="math inline">\(\Pr(C=1\mid A, L)\)</span> et calculez le poids IPCW cumulé (poids « effet total »).</em></p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2087,8 +2090,8 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Comme en Partie 1, <strong>personne n’est censuré avant le mois 51</strong> dans ces données (<code>range(df$k[df$C == 1])</code>) : on ajuste donc le modèle de censure uniquement sur <span class="math inline">\(k&gt;50\)</span>, et on fixe le poids à 1 avant cette période. La variante “classique” (un seul modèle sur tout le suivi, sans restriction) est rappelée à la fin de cette étape : c’est celle qu’il faudrait utiliser si la censure survenait de façon uniforme tout au long du suivi.</p>
-<p>Comme en Partie 1, ces poids valent 1 sur toute la fenêtre analysée (36 mois) : <code>w_total</code> ne modifie donc pas les résultats, et <code>w_net</code> se réduit au poids lié à <span class="math inline">\(D\)</span>.</p>
+<p>Personne n’est censuré avant le mois 51 dans ces données (<code>range(df$k[df$C == 1])</code>). On ajuste donc le modèle de censure uniquement sur <span class="math inline">\(k&gt;50\)</span>, et on fixe le poids à 1 avant cette période. La variante « classique », avec un seul modèle sur tout le suivi, est rappelée à la fin de cette étape : c’est celle qu’il faudrait utiliser si la censure survenait de façon uniforme tout au long du suivi.</p>
+<p>Ces poids valent donc 1 sur toute la fenêtre analysée (36 mois) : <code>w_total</code> ne modifie pas les résultats, et <code>w_net</code> se réduit au poids lié à <span class="math inline">\(D\)</span>.</p>
 </div>
 </div>
 <div id="qwebr-insertion-location-2"></div>
@@ -2119,7 +2122,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Astuce</span>Variante “classique” : censure uniforme sur tout le suivi
+<span class="screen-reader-only">Astuce</span>Variante « classique » : censure uniforme sur tout le suivi
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -2132,8 +2135,8 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </div>
 </div>
 </div>
-</section><section id="étape-2---poids-risque-net-censure-d" class="level2"><h2 class="anchored" data-anchor-id="étape-2---poids-risque-net-censure-d">Étape 2 - Poids “risque net” (censure × D)</h2>
-<p>Pour le risque net, <span class="math inline">\(D\)</span> est traité comme une <strong>seconde censure</strong> : on multiplie le poids IPCW par un poids qui gère la sortie du risque via <span class="math inline">\(D\)</span>, de la même façon.</p>
+</section><section id="étape-2---poids-risque-net-censure-d" class="level2"><h2 class="anchored" data-anchor-id="étape-2---poids-risque-net-censure-d">Étape 2 - Poids « risque net » (censure × D)</h2>
+<p>Pour le risque net, <span class="math inline">\(D\)</span> est traité comme une seconde censure : on multiplie le poids IPCW par un poids qui gère la sortie du risque via <span class="math inline">\(D\)</span>, de la même façon.</p>
 <p><em>Modélisez <span class="math inline">\(\Pr(D=1\mid A, L, k)\)</span> (sur les lignes non censurées, sans exclure <span class="math inline">\(D=1\)</span> : c’est lui l’évènement modélisé), avec le même choix de dépendance temporelle qu’en Partie 2 (polynôme en <span class="math inline">\(k\)</span>), et calculez <code>w_net = w_total * 1/cumPredO</code> où <code>cumPredO</code> est le produit cumulé de <span class="math inline">\(1-\Pr(D=1\mid \cdot)\)</span>.</em></p>
 <div id="qwebr-insertion-location-3"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -2162,11 +2165,11 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Note
+<span class="screen-reader-only">Note</span>Pourquoi « censure × D » et pas seulement D ?
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Pourquoi “censure × D” et pas seulement D ?</strong> Le poids <code>w_net</code> combine deux mécanismes de sortie du risque (la censure <span class="math inline">\(C\)</span> et <span class="math inline">\(D\)</span>), comme on combinait IPTW × IPCW en Partie 1 : ici c’est IPCW-censure × IPCW-<span class="math inline">\(D\)</span>.</p>
+<p>Le poids <code>w_net</code> combine deux mécanismes de sortie du risque, la censure <span class="math inline">\(C\)</span> et <span class="math inline">\(D\)</span>, comme on combinait IPTW et IPCW en Partie 1. Ici, on multiplie un poids IPCW pour la censure et un poids IPCW pour <span class="math inline">\(D\)</span>.</p>
 </div>
 </div>
 </section><section id="étape-3---effet-total-et-risque-net-par-ipw" class="level2"><h2 class="anchored" data-anchor-id="étape-3---effet-total-et-risque-net-par-ipw">Étape 3 - Effet total et risque net, par IPW</h2>
@@ -2207,7 +2210,7 @@ Note
 </div>
 </div>
 </details></section><section id="étape-4---effet-séparable-par-ipw" class="level2"><h2 class="anchored" data-anchor-id="étape-4---effet-séparable-par-ipw">Étape 4 - Effet séparable, par IPW</h2>
-<p>L’effet séparable demande un poids “croisé” : pour les patients sous <span class="math inline">\(A=1\)</span>, on transporte leur hazard de <span class="math inline">\(D\)</span> vers ce qu’il serait sous <span class="math inline">\(A=a_D=0\)</span>.</p>
+<p>L’effet séparable demande un poids « croisé » : pour les patients sous <span class="math inline">\(A=1\)</span>, on transporte leur hazard de <span class="math inline">\(D\)</span> vers ce qu’il serait sous <span class="math inline">\(A=a_D=0\)</span>.</p>
 <div id="qwebr-insertion-location-5"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="cell">
@@ -2240,7 +2243,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>On utilise ici une <strong>somme pondérée directe</strong> (Stensrud et al., JASA 2022, éq. 11) plutôt qu’un chaînage hazard/survie : elle évite d’avoir à estimer, en plus, un facteur de survie à <span class="math inline">\(D\)</span> sous <span class="math inline">\(a_D\)</span>, étape plus délicate qu’il n’y paraît.</p>
+<p>On utilise ici une somme pondérée directe (Stensrud et al., JASA 2022, éq. 11) plutôt qu’un chaînage hazard/survie : elle évite d’avoir à estimer, en plus, un facteur de survie à <span class="math inline">\(D\)</span> sous <span class="math inline">\(a_D\)</span>.</p>
 </div>
 </div>
 </section><section id="étape-5---comparer-g-formula-et-ipw" class="level2"><h2 class="anchored" data-anchor-id="étape-5---comparer-g-formula-et-ipw">Étape 5 - Comparer g-formula et IPW</h2>
@@ -2257,7 +2260,7 @@ Note
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Les deux estimateurs (modèle des hazards d’un côté, pondération des observations de l’autre) donnent le même ordre entre les trois estimands, en valeur absolue : l’effet est le plus marqué sur le risque net, puis sur l’effet total, puis sur l’effet séparable. Les valeurs peuvent en revanche nettement différer, notamment pour le risque net (−0,068 par g-formula contre −0,088 par IPW). Les deux approches reposent sur des modèles différents (hazards d’un côté, poids de l’autre) et n’ont aucune raison de coïncider sur un échantillon de 252 patients.</p>
+<p>Les deux estimateurs (modèle des hazards d’un côté, pondération des observations de l’autre) donnent le même ordre entre les trois estimands, en valeur absolue : l’effet est le plus marqué sur le risque net, puis sur l’effet total, puis sur l’effet séparable. Les valeurs peuvent en revanche nettement différer, notamment pour le risque net (−0,068 par g-formula contre −0,088 par IPW). Les deux approches reposent sur des modèles différents et n’ont aucune raison de coïncider sur un échantillon de 252 patients.</p>
 </div>
 </div>
 </div>
@@ -2276,7 +2279,7 @@ Note
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Les deux sommes tombent exactement sur l’effet total. Il s’agit d’une identité algébrique (<span class="math inline">\(A-B + B-C = A-C\)</span> sur les 4 coins du carré <span class="math inline">\((a_Y,a_D)\)</span>), vraie dès qu’on utilise les mêmes deux modèles de hazard pour les 4 combinaisons. Comme en médiation classique, il existe deux décompositions valables, selon la valeur à laquelle on fixe l’autre composante.</p>
+<p>Les deux sommes redonnent exactement l’effet total. C’est une identité algébrique (<span class="math inline">\(A-B + B-C = A-C\)</span> sur les 4 coins du carré <span class="math inline">\((a_Y,a_D)\)</span>), vraie dès qu’on utilise les deux mêmes modèles de hazard pour les 4 combinaisons. Comme en médiation classique, il existe deux décompositions valables, selon la valeur à laquelle on fixe l’autre composante.</p>
 </div>
 </div>
 </div>
@@ -2717,7 +2720,8 @@ document.addEventListener("DOMContentLoaded", () => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -2726,8 +2730,69 @@ document.addEventListener("DOMContentLoaded", () => {
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -2741,6 +2806,7 @@ document.addEventListener("DOMContentLoaded", () => {
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -2903,44 +2969,54 @@ document.addEventListener("DOMContentLoaded", () => {
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -3038,7 +3114,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
-  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+  </script><script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Code défilable","output":"Sortie défilable"};
+  </script><nav class="page-navigation" aria-label="Page"><div class="nav-page nav-page-previous">
       <a href="./partie2.html" class="pagination-link" aria-label="Partie 2 : risques compétitifs et estimands">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Partie 2 : risques compétitifs et estimands</span></span>
       </a>          

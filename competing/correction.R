@@ -4,16 +4,22 @@
 
 library(survival)
 library(dplyr)
-library(cobalt)
 
 # Chargement des donnees (format person-period : une ligne par individu et par
-# periode k = 0, ..., 11)
+# mois de suivi k)
 df <- read.csv("df.csv")
 
 
 # ========================================================================
 # Presentation des donnees
 # ========================================================================
+
+# --- Preparation (variables reconstruites au debut de la partie)
+
+library(survival)
+library(dplyr)
+library(ggplot2)
+df <- read.csv("df.csv")
 
 # --- Chargement et exploration
 
@@ -29,10 +35,10 @@ sum(df$D)                # nombre de deces par une autre cause (risque competiti
 df |> filter(id %in% unique(df$id)[1:2]) |> group_by(id) |>
   slice_head(n = 3) |> ungroup()  # 3 premiers mois des 2 premiers individus
 
-# --- Construire la base baseline
+# --- Construire une base à une ligne par individu
 
 ## On resume df (format person-period) en une ligne par individu :
-## - first() pour les covariables baseline (constantes pour un individu donne)
+## - first() pour les covariables mesurees a l'inclusion (constantes pour un individu)
 ## - last() pour le temps de suivi total et les statuts finaux
 df_base <- df |>
   group_by(id) |>
@@ -68,6 +74,17 @@ summary(km_brut, times = 36)
 # ========================================================================
 # Partie 1 : confusion et censure dependante
 # ========================================================================
+
+# --- Preparation (variables reconstruites au debut de la partie)
+
+library(survival)
+library(dplyr)
+df <- read.csv("df.csv")
+df_base <- df |>
+  group_by(id) |>
+  summarise(A = first(A), L1 = first(L1), L2 = first(L2), L3 = first(L3), L4 = first(L4),
+            time = last(k), Y = last(Y), D = last(D), C = last(C)) |>
+  ungroup()
 
 # --- Étape 1 - Score de propension et poids IPTW
 
@@ -145,7 +162,20 @@ summary(km_combine, times = 36)
 # Partie 2 : risques competitifs et estimands
 # ========================================================================
 
-# --- Étape 1 - CIF naïve vs CIF correcte
+# --- Preparation (variables reconstruites au debut de la partie)
+
+library(survival)
+library(dplyr)
+df <- read.csv("df.csv")
+df_base <- df |>
+  group_by(id) |>
+  summarise(A = first(A), L1 = first(L1), L2 = first(L2), L3 = first(L3), L4 = first(L4),
+            time = last(k), Y = last(Y), D = last(D), C = last(C)) |>
+  ungroup()
+haz_mod_Y <- glm(Y ~ A + k + I(k^2) + I(k^3) + A:k + A:I(k^2) + L1 + L2 + L3 + L4,
+                 data = subset(df, D == 0 & C == 0), family = binomial)
+
+# --- Étape 1 - CIF naïve ou CIF correcte ?
 
 df_base$statut <- factor(
   ifelse(df_base$Y == 1, "evenement", ifelse(df_base$D == 1, "deces", "censore")),
@@ -224,6 +254,13 @@ data.frame(
 # Partie 3 : ponderation (IPW) et decomposition
 # ========================================================================
 
+# --- Preparation (variables reconstruites au debut de la partie)
+
+library(survival)
+library(dplyr)
+df <- read.csv("df.csv")
+K <- 36
+
 # --- Étape 1 - Modèle de censure et poids IPCW
 
 late <- subset(df, k > 50)
@@ -238,7 +275,7 @@ df <- df |>
 w_total <- 1 / df$cumPredC          # poids "effet total" : censure seule
 summary(w_total)
 
-# --- Étape 2 - Poids "risque net" (censure × D)
+# --- Étape 2 - Poids « risque net » (censure × D)
 
 modD <- glm(D ~ A + k + I(k^2) + L1 + L2 + L3 + L4,
             data = subset(df, C == 0), family = binomial)

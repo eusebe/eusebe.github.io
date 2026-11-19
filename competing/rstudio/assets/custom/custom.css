@@ -1,0 +1,18 @@
+/* Logo de la faculte a gauche du pied de page de l'interface.
+   Ce fichier est copie par webrarian dans assets/custom/, a cote de logo.png
+   et logo-dark.png (logos declares dans _brand.yml). */
+.shell-footer::before {
+  content: "";
+  width: 75px;
+  height: 30px;
+  margin-right: auto;
+  background: url("logo.png") left center / contain no-repeat;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .shell-footer::before {
+    background-image: url("logo-dark.png");
+  }
+}
+:root[data-theme="dark"] .shell-footer::before {
+  background-image: url("logo-dark.png");
+}
